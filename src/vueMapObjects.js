@@ -60,3 +60,12 @@ export class VueCircleObject{
     this.options = (typeof settings.options === 'undefined')?{}:settings.options;
   }
 }
+
+export class VueRectangleObject{
+  constructor(settings) {
+    this.bounds = (typeof settings.bounds === 'undefined')?null:settings.bounds;
+    this.draggable = (typeof settings.draggable === 'undefined')?false:settings.draggable;
+    this.editable = (typeof settings.editable === 'undefined')?false:settings.editable;
+    this.options = (typeof settings.options === 'undefined')?{}:settings.options;
+  }
+}
