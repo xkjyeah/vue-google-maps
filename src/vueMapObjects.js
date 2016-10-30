@@ -69,3 +69,13 @@ export class VueRectangleObject{
     this.options = (typeof settings.options === 'undefined')?{}:settings.options;
   }
 }
+
+export class VuePolygonObject{
+  constructor(settings) {
+    this.path = (typeof settings.path === 'undefined')?null:settings.path;
+    this.paths = (typeof settings.paths === 'undefined')?null:settings.paths;
+    this.draggable = (typeof settings.draggable === 'undefined')?false:settings.draggable;
+    this.editable = (typeof settings.editable === 'undefined')?false:settings.editable;
+    this.options = (typeof settings.options === 'undefined')?{}:settings.options;
+  }
+}
