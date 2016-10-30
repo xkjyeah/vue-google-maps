@@ -49,3 +49,14 @@ export class VueMarkerInfoWindowObject extends VueMarkerObject{
     }
   }
 }
+
+export class VueCircleObject{
+  constructor(settings) {
+    this.center = (typeof settings.center === 'undefined')?null:settings.center;
+    this.radius = (typeof settings.radius === 'undefined')?1000:settings.radius;
+    this.bounds = (typeof settings.bounds === 'undefined')?null:settings.bounds;
+    this.draggable = (typeof settings.draggable === 'undefined')?false:settings.draggable;
+    this.editable = (typeof settings.editable === 'undefined')?false:settings.editable;
+    this.options = (typeof settings.options === 'undefined')?{}:settings.options;
+  }
+}
