@@ -79,3 +79,12 @@ export class VuePolygonObject{
     this.options = (typeof settings.options === 'undefined')?{}:settings.options;
   }
 }
+
+export class VuePolylineObject{
+  constructor(settings) {
+    this.path = (typeof settings.path === 'undefined')?null:settings.path;
+    this.draggable = (typeof settings.draggable === 'undefined')?false:settings.draggable;
+    this.editable = (typeof settings.editable === 'undefined')?false:settings.editable;
+    this.options = (typeof settings.options === 'undefined')?{}:settings.options;
+  }
+}
