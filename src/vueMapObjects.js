@@ -1,5 +1,7 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
+import _ from 'lodash';
+
 export class VueMapObject {
   constructor(settings) {
     this.center = (typeof settings.center === 'undefined')?null:settings.center;
@@ -25,5 +27,25 @@ export class VueMarkerObject {
     this.title = (typeof settings.title  === 'undefined')?null:settings.title;
     this.zIndex = (typeof settings.zIndex  === 'undefined')?null:settings.zIndex;
     this.visible = (typeof settings.visible  === 'undefined')?'auto':settings.visible;
+  }
+}
+
+export class VueInfoWindowObject{
+  constructor(settings){
+    this.options = (typeof settings.options  === 'undefined')?{}:settings.options;
+    this.content = (typeof settings.content  === 'undefined')?null:settings.content;
+    this.opened = (typeof settings.opened  === 'undefined')?true:settings.opened;
+    this.position = (typeof settings.position  === 'undefined')?null:settings.position;
+    this.zIndex = (typeof settings.zIndex  === 'undefined')?null:settings.zIndex;
+  }
+}
+
+export class VueMarkerInfoWindowObject extends VueMarkerObject{
+  constructor(settings) {
+    super(settings);
+    this.infoWindowObj = new VueInfoWindowObject(settings.infoWindowObj?settings.infoWindowObj:{});
+    if (this.infoWindowObj.position === null){
+      this.infoWindowObj.position = _.clone(this.position);
+    }
   }
 }
