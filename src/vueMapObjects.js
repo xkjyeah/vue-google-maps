@@ -5,10 +5,11 @@ import _ from "lodash";
 export class VueMapObject {
   constructor(settings) {
     this.center = (typeof settings.center === 'undefined') ? null : settings.center;
-    this.zoom = (typeof settings.zoom === 'undefined') ? null : settings.zoom;
+    this.zoom = (typeof settings.zoom === 'undefined') ? 8 : settings.zoom;
     this.heading = (typeof settings.heading === 'undefined') ? null : settings.heading;
-    this.mapTypeId = (typeof settings.mapTypeId === 'undefined') ? null : settings.mapTypeId;
+    this.mapTypeId = (typeof settings.mapTypeId === 'undefined') ? 'roadmap' : settings.mapTypeId;
     this.bounds = (typeof settings.bounds === 'undefined') ? null : settings.bounds;
+    this.options = (typeof settings.options === 'undefined') ? {} : settings.options;
   }
 }
 
