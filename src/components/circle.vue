@@ -1,5 +1,8 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
+<template>
+</template>
+
 <script>
 
 import _ from 'lodash';
@@ -9,15 +12,13 @@ import propsBinder from '../utils/propsBinder.js'
 import MapComponent from './mapComponent';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
 
-const props = {
+const circleProps = {
     center: {
         type: Object,
-        twoWay: true,
-        required: true
+        twoWay: true
     },
     radius: {
         type: Number,
-        default: 1000,
         twoWay: true
     },
     bounds: {
@@ -25,16 +26,22 @@ const props = {
         twoWay: true
     },
     draggable: {
-        type: Boolean,
-        default: false,
+        type: Boolean
     },
     editable: {
-        type: Boolean,
-        default: false,
+        type: Boolean
     },
     options: {
+        type: Object
+    }
+}
+const props = {
+    circleObj:{
         type: Object,
-        twoWay: false
+        required: true,
+        validator: function (value) {
+            return (typeof value.center === 'object');
+        }
     }
 }
 
@@ -57,13 +64,70 @@ export default MapComponent.extend({
     mixins: [getPropsValuesMixin],
     props: props,
     version: 2,
-
-    ready () {
+    computed:{
+        center:{
+            get(){
+                return this.circleObj.center;
+            },
+            set(value){
+                this.circleObj.center = value;
+            }
+        },
+        radius:{
+            get(){
+                return this.circleObj.radius;
+            },
+            set(value){
+                this.circleObj.radius = value;
+            }
+        },
+        bounds:{
+            get(){
+                return this.circleObj.bounds;
+            },
+            set(value){
+                this.circleObj.bounds = value;
+            }
+        },
+        draggable:{
+            get(){
+                return this.circleObj.draggable;
+            },
+            set(value){
+                this.circleObj.draggable = value;
+            }
+        },
+        editable:{
+            get(){
+                return this.circleObj.editable;
+            },
+            set(value){
+                this.circleObj.editable = value;
+            }
+        },
+        options:{
+            get(){
+                return this.circleObj.options;
+            },
+            set(value){
+                this.circleObj.options = value;
+            }
+        }
+    },
+    created(){
+        this.circleObj.center = (typeof this.circleObj.center === 'undefined')?null:this.circleObj.center;
+        this.circleObj.radius = (typeof this.circleObj.radius === 'undefined')?1000:this.circleObj.radius;
+        this.circleObj.bounds = (typeof this.circleObj.bounds === 'undefined')?null:this.circleObj.bounds;
+        this.circleObj.draggable = (typeof this.circleObj.draggable === 'undefined')?false:this.circleObj.draggable;
+        this.circleObj.editable = (typeof this.circleObj.editable === 'undefined')?false:this.circleObj.editable;
+        this.circleObj.options = (typeof this.circleObj.options === 'undefined')?{}:this.circleObj.options;
+    },
+    mounted () {
         this.destroyed = false;
     },
 
     deferredReady() {
-        const options = _.clone(this.getPropsValues());
+        const options = _.clone(this.circleObj);
         options.map = this.$map;
         delete options.bounds;
         this.createCircle(options, this.$map);
@@ -75,7 +139,7 @@ export default MapComponent.extend({
                 this.$circleObject = new google.maps.Circle(options);
                 // we cant bind bounds because there is no `setBounds` method
                 // on the Circle object
-                const boundProps = _.clone(props);
+                const boundProps = _.clone(circleProps);
                 delete boundProps.bounds;
                 propsBinder(this, this.$circleObject, boundProps);
                 eventBinder(this, this.$circleObject, events);
@@ -90,7 +154,6 @@ export default MapComponent.extend({
                 updateBounds();
             }
         }
-
     },
 
     destroyed () {
@@ -99,7 +162,5 @@ export default MapComponent.extend({
         this.$circleObject.setMap(null);
       }
     },
-})
-
-
+});
 </script>

@@ -1,6 +1,6 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
-import _ from 'lodash'
+import _ from 'lodash';
 
 export default (vueElement, googleMapObject, events) => {
   _.forEach(events, (eventName) => {
@@ -9,5 +9,5 @@ export default (vueElement, googleMapObject, events) => {
       vueElement.$emit(exposedName, ev);
     });
   });
-}
+};
 

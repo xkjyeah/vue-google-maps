@@ -10,28 +10,23 @@
 
 <script>
 
-import _ from 'lodash'
-import propsBinder from '../utils/propsBinder.js'
-import eventsBinder from '../utils/eventsBinder.js'
-import mutationObserver from '../utils/mutationObserver.js'
+import _ from 'lodash';
+import eventHub from '../utils/eventHub';
+import propsBinder from '../utils/propsBinder.js';
+import eventsBinder from '../utils/eventsBinder.js';
+import mutationObserver from '../utils/mutationObserver.js';
 import MapComponent from './mapComponent';
 
-const props = {
+const infoWindowProps = {
   options: {
     type: Object,
     twoWay: false,
-    required: false,
-    default () {
-      return {};
-    }
   },
   content: {
-    twoWay: false,
-  default: null
+    twoWay: false
   },
   opened: {
     type: Boolean,
-  default: true,
     twoWay: true
   },
   position: {
@@ -44,6 +39,13 @@ const props = {
   }
 }
 
+const props = {
+  infoWindowObj: {
+    required: true,
+    type: Object,
+  }
+}
+
 const events = [
   'domready',
   'closeclick'
@@ -51,14 +53,60 @@ const events = [
 
 
 export default MapComponent.extend({
-  replace: false,
   props: props,
-  
+  computed:{
+    options:{
+      get(){
+        return this.infoWindowObj.options;
+      },
+      set(value){
+        this.infoWindowObj.options = value?value:{};
+      }
+    },
+    content:{
+      get(){
+        return this.infoWindowObj.content;
+      },
+      set(value){
+        this.infoWindowObj.content = value;
+      }
+    },
+    opened:{
+      get(){
+        return this.infoWindowObj.opened;
+      },
+      set(value){
+        this.infoWindowObj.opened = value;
+      }
+    },
+    position:{
+      get(){
+        return this.infoWindowObj.position;
+      },
+      set(value){
+        this.infoWindowObj.position = value;
+      }
+    },
+    zIndex:{
+      get(){
+        return this.infoWindowObj.zIndex;
+      },
+      set(value){
+        this.infoWindowObj.zIndex = value;
+      }
+    },
+  },
   created() {
+    this.$on('marker-ready',this.markerReady);
     this.$markerObject = null;
+    this.infoWindowObj.options = (typeof this.infoWindowObj.options  === 'undefined')?{}:this.infoWindowObj.options;
+    this.infoWindowObj.content = (typeof this.infoWindowObj.content  === 'undefined')?null:this.infoWindowObj.content;
+    this.infoWindowObj.opened = (typeof this.infoWindowObj.opened  === 'undefined')?true:this.infoWindowObj.opened;
+    this.infoWindowObj.position = (typeof this.infoWindowObj.position  === 'undefined')?null:this.infoWindowObj.position;
+    this.infoWindowObj.zIndex = (typeof this.infoWindowObj.zIndex  === 'undefined')?null:this.infoWindowObj.zIndex;
   },
 
-  ready () {
+  mounted () {
     this.destroyed = false;
 
     // if the user set the content of the info window by adding children to the 
@@ -74,7 +122,7 @@ export default MapComponent.extend({
   },
 
   deferredReady() {
-    this.$dispatch('register-infoWindow', this);
+    eventHub.$emit('register-info-window', this);
     this.createInfoWindow(this.$map);
   },
 
@@ -86,6 +134,7 @@ export default MapComponent.extend({
       this.$infoWindow.setMap(null);
     }
     this.destroyed = true;
+    this.$off('marker-ready',this.markerReady);
   },
 
   methods: {
@@ -122,7 +171,7 @@ export default MapComponent.extend({
       this.$infoWindow = new google.maps.InfoWindow(options);
 
       // Binding
-      const propsToBind = _.clone(props);
+      const propsToBind = _.clone(infoWindowProps);
       delete propsToBind.opened;
       propsBinder(this, this.$infoWindow, propsToBind);
       eventsBinder(this, this.$infoWindow, events);
@@ -138,18 +187,14 @@ export default MapComponent.extend({
 
       // Open if needed
       this.openInfoWindow();
-    }
-  },
-
-  events: {
-    'marker-ready' (marker, map) {
+    },
+    markerReady(marker, map) {
       this.$markerObject = marker.$markerObject;
       marker.$on('g-click', () => {
         this.opened = !this.opened;
       });
     }
   }
-})
-
+});
 </script>
 

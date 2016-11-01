@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .search-box-input{
+            margin-top: 9px;
+            max-width: 300px;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+<div id="marker-app" style="width: 100%; height: 500px">
+    <place-input
+            :place-input-obj="placeInputObj2"
+            @g-place_changed="paceChanged(placeInputObj2)"
+    ></place-input>
+    <gmap
+            :map-obj="mapObj"
+    >
+        <place-input
+                :place-input-obj="placeInputObj"
+                @g-place_changed="paceChanged(placeInputObj)"
+        ></place-input>
+        <gcluster
+                :max-zoom="maxZoom"
+                :grid-size="gridSize"
+        >
+            <gmarker
+                    v-for="m in markers"
+                    :marker-obj="m"
+            >
+                <ginfo-window
+                        :info-window-obj="m.infoWindowObj"
+                ></ginfo-window>
+            </gmarker>
+        </gcluster>
+        <ginfo-window
+                :info-window-obj="infoWindowObj2"
+        ></ginfo-window>
+        <gcircle
+                :circle-obj="circleObj">
+        </gcircle>
+        <grectangle
+                :rectangle-obj="rectangleObj">
+        </grectangle>
+        <gpolygon
+                :polygon-obj="polygonObj">
+        </gpolygon>
+        <gpolyline
+                :polyline-obj="polylineObj">
+        </gpolyline>
+    </gmap>
+</div>
+
+<button onclick="localStorage.apiKey = prompt('ApiKey'); window.location.reload()">
+    Reset API Key
+</button>
+
+<script>
+
+    console.log(localStorage.apiKey);
+    if (!localStorage.apiKey) {
+        var apiKey = prompt("Paste API Key here")
+        localStorage.apiKey = apiKey;
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.js"></script>
+<script src="../dist/vue-google-maps.js"></script>
+
+<script>
+    var myVue = {};
+    Vue.config.devtools = true;
+    VueGoogleMap.load({
+        key: localStorage['apiKey'],
+        v: '3.26',
+        libraries: ['places']
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        myVue = new Vue({
+            el: '#marker-app',
+            data: {
+                mapObj: new VueGoogleMap.VueMapObject({
+                    center: {lat: 10, lng: 10},
+                    mapTypeId: "terrain",
+                    zoom: 7,
+                    options:{
+                        fullscreenControl: true
+                    }
+                }),
+                markers: [new VueGoogleMap.VueMarkerInfoWindowObject({
+                    position: {lat: 10.0, lng: 10.0},
+                    draggable: true,
+                    infoWindowObj: {
+                        opened: true,
+                        content: "Info Window 1 Text"
+                    }
+                }), new VueGoogleMap.VueMarkerInfoWindowObject({
+                    position: {lat: 11.0, lng: 11.0},
+                    draggable: true,
+                    infoWindowObj: {
+                        opened: false,
+                        content: "Info Window 2 Text"
+                    }
+                })],
+                infoWindowObj2: new VueGoogleMap.VueInfoWindowObject({
+                    content: 'Test InfoWindow!',
+                    position: {lat: 10, lng: 11}
+                }),
+                maxZoom: 14,
+                gridSize: 50,
+                circleObj: new VueGoogleMap.VueCircleObject({
+                    center: {lat: 10, lng: 11},
+                    radius: 100000,
+                    editable: true
+                }),
+                rectangleObj: new VueGoogleMap.VueRectangleObject({
+                    bounds: {
+                        north: 11,
+                        south: 9,
+                        east: 12,
+                        west: 9
+                    },
+                    editable: true
+                }),
+                polygonObj: new VueGoogleMap.VuePolygonObject({
+                    paths: [[
+                        {lat: 10.002442868502236, lng: 10.001330300598056},
+                        {lat: 10.002083628371114, lng: 9.998004300598268},
+                        {lat: 9.99889352035596, lng: 9.997446300598085},
+                        {lat: 9.99739336304884, lng: 10.000386300598166},
+                        {lat: 9.999548738081206, lng: 10.002704300597998}
+                    ], [
+                        {lat: 10.000922429696521, lng: 9.999270300598141},
+                        {lat: 10.001153909612425, lng: 10.000601300598078},
+                        {lat: 9.999949712794216, lng: 10.001159300598033},
+                        {lat: 9.998935261922712, lng: 10.000214300598145},
+                        {lat: 9.999527234741972, lng: 9.999013300598222}
+                    ]],
+                    editable: true
+                }),
+                polylineObj: new VueGoogleMap.VuePolylineObject({
+                    path: [
+                        {lat: 9, lng: 9},
+                        {lat: 9.5, lng: 10},
+                        {lat: 10.5, lng: 10.5},
+                        {lat: 10.9, lng: 11.5},
+                    ],
+                    editable: true,
+                    options:{geodesic:true, strokeColor:'#FF0000'}
+                }),
+                placeInputObj: new VueGoogleMap.VuePlaceInputObject({
+                    selectFirstOnEnter: true,
+                    autoFitOnUpdatePlace:true,
+                    mapEmbedded: true,
+                    className: 'search-box-input'
+
+                }),
+                placeInputObj2: new VueGoogleMap.VuePlaceInputObject({
+                    selectFirstOnEnter: true
+                })
+            },
+            watch:{
+                'placeInputObj2.place.geometry': function (newValue) {
+                    if (typeof newValue === 'undefined') {
+                        return;
+                    }
+                    console.log(newValue);
+                    this.mapObj.center = newValue.location;
+                }
+            },
+            methods:{
+                paceChanged: function(placeInputObj){
+                    console.log(placeInputObj);
+                }
+            },
+            components: {
+                'gmap': VueGoogleMap.Map,
+                'ginfoWindow': VueGoogleMap.InfoWindow,
+                'gmarker': VueGoogleMap.Marker,
+                'gcluster': VueGoogleMap.Cluster,
+                'gcircle': VueGoogleMap.Circle,
+                'grectangle': VueGoogleMap.Rectangle,
+                'gpolygon': VueGoogleMap.Polygon,
+                'gpolyline': VueGoogleMap.Polyline,
+                'placeInput': VueGoogleMap.PlaceInput,
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

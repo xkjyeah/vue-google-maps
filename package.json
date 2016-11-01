@@ -1,6 +1,6 @@
 {
   "name": "vue-google-maps",
-  "version": "0.1.21",
+  "version": "1.0.0",
   "description": "This is a google map component for Vue.js",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,10 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "js-marker-clusterer": "^1.0.0"
+    "marker-clusterer-plus": "^2.1.4"
   },
   "peerDependencies": {
-    "vue": "^1.0.0",
+    "vue": "^2.0.3",
     "lodash": "^4.15.0",
     "q": "^1.4.1"
   },

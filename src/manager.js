@@ -9,7 +9,7 @@ export const loaded = loadingDefered.promise;
 
 window['vueGoogleMapsInit'] = () => {
   loadingDefered.resolve();
-}
+};
 
 /**
  * @param apiKey    API Key, or object with the URL parameters. For example
@@ -93,5 +93,5 @@ export const load = (apiKey, version, libraries, loadCn) => {
   } else {
     throw new Error('You already started the loading of google maps');
   }
-}
+};
 

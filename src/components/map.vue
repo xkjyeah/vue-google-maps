@@ -1,34 +1,32 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 <template>
-<div class="vue-map-container">
-  <div class="vue-map"></div>
-  <slot></slot>
-</div>
+    <div class="vue-map-container">
+        <div class="vue-map"></div>
+        <slot></slot>
+    </div>
 </template>
 
 <script>
 import Q from 'q';
 import _ from 'lodash';
-
+import eventHub from '../utils/eventHub';
 import {loaded} from '../manager.js';
 import {DeferredReadyMixin} from '../deferredReady.js';
 import eventsBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
-import Vue from 'vue'
-import {DeferredReady} from '../deferredReady.js'
-import getPropsMixin from '../utils/getPropsValuesMixin.js'
+import Vue from 'vue';
+import {DeferredReady} from '../deferredReady.js';
+import getPropsMixin from '../utils/getPropsValuesMixin.js';
 
 Vue.use(DeferredReady);
 
-const props = {
+const mapsProps = {
   center: {
-    required: true,
     twoWay: true,
     type: Object
   },
   zoom: {
-    required: false,
     twoWay: true,
     type: Number
   },
@@ -41,13 +39,22 @@ const props = {
     type: String
   },
   bounds: {
-    type: Object,
     twoWay: true,
+    type: Object,
   },
   options: {
     twoWay: false,
     type: Object,
-    default () {return {}}
+  }
+};
+
+const props = {
+  mapObj: {
+    required: true,
+    type: Object,
+    validator: function (value) {
+      return (typeof value.center === 'object');
+    }
   }
 };
 
@@ -74,14 +81,13 @@ const callableMethods = [
   'fitBounds'
 ];
 
-const methods = {};
-
 /**
   Implementation note: this signal should only be
   called after the map has been initialized
 
 **/
 const registerChild = function (child, type) {
+  //console.log('registerChild', this, child);
   if (!this.mapObject)
     throw new Error("Map not initialized");
   child.$emit('map-ready', this.mapObject);
@@ -89,8 +95,9 @@ const registerChild = function (child, type) {
   // modular
 }
 
+const methods = {registerChild:registerChild};
+
 const eventListeners = {
-  'register-component': registerChild,
   'g-bounds_changed' () {
     this.bounds=this.mapObject.getBounds();
   },
@@ -119,29 +126,91 @@ _.each(callableMethods, function (methodName) {
 export default {
   mixins: [getPropsMixin, DeferredReadyMixin],
   props: props,
-  replace:false, // necessary for css styles
+  //replace:false, // necessary for css styles
+  computed:{
+    center:{
+      get() {
+        return this.mapObj.center;
+      },
+      set(value){
+        this.mapObj.center = value;
+      }
+    },
+    zoom:{
+      get() {
+        return this.mapObj.zoom;
+      },
+      set(value){
+        this.mapObj.zoom = value;
+      }
+    },
+    heading:{
+      get() {
+        return this.mapObj.heading;
+      },
+      set(value){
+        this.mapObj.heading = value;
+      }
+    },
+    mapTypeId:{
+      get() {
+        return this.mapObj.mapTypeId;
+      },
+      set(value){
+        this.mapObj.mapTypeId = value;
+      }
+    },
+    bounds:{
+      get() {
+        return this.mapObj.bounds;
+      },
+      set(value){
+        this.mapObj.bounds = value;
+      }
+    },
+    options:{
+      get() {
+        return this.mapObj.options;
+      },
+      set(value){
+        this.mapObj.options = value;
+      }
+    }
+  },
   created() {
+    //console.log('created Map', this);
+    eventHub.$on('register-component', this.registerChild);
+    var self = this;
+    _.forEach(eventListeners, function(event, index){
+      self.$on(index, event);
+    });
     this.mapCreatedDefered = new Q.defer();
     this.mapCreated = this.mapCreatedDefered.promise;
+    this.mapObj.zoom = (typeof this.mapObj.zoom === 'undefined')?8:this.mapObj.zoom;
+    this.mapObj.options = (typeof this.mapObj.options === 'undefined')?{}:this.mapObj.options;
   },
-
-  ready() {
+  destroy(){
+    //console.log('destroy Map', this);
+    var self = this;
+    _.forEach(eventListeners, function(event, index){
+      self.$off(index, event);
+    });
+    eventHub.$off('register-component', this.registerChild);
   },
-
   deferredReady() {
     return loaded.then(() => {
       // getting the DOM element where to create the map
       const element = this.$el.getElementsByClassName('vue-map')[0];
 
       // creating the map
-      const copiedData = _.clone(this.getPropsValues());
+      const copiedData = _.clone(this.mapObj);
       delete copiedData.options;
-      const options = _.clone(this.options);
+      const options = _.clone(this.mapObj.options);
       _.assign(options, copiedData);
       this.mapObject = new google.maps.Map(element, options);
 
       // we con't want to bind props because it's a kind of "computed" property
-      const boundProps = _.clone(props);
+      const boundProps = _.clone(mapsProps);
       delete boundProps.bounds;
       //binding properties (two and one way)
       propsBinder(this, this.mapObject, boundProps);
@@ -161,23 +230,22 @@ export default {
       throw error;
     });
   },
-  events: eventListeners,
   methods: methods
-}
+};
 </script>
 
 <style lang="less">
 
-.full() {
-  width: 100%;
-  height:100%;
-}
+    .full() {
+        width: 100%;
+        height: 100%;
+    }
 
-.vue-map-container {
-  .full();
-  .vue-map {
-    .full();
-  }
-}
+    .vue-map-container {
+        .full();
+        .vue-map {
+            .full();
+        }
+    }
 
 </style>

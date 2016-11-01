@@ -1,15 +1,22 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
+<template>
+</template>
+
 <script>
 
 import _ from 'lodash';
 
-import eventBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
+import eventBinder from '../utils/eventsBinder.js';
+import propsBinder from '../utils/propsBinder.js';
 import MapComponent from './mapComponent';
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import getPropsValuesMixin from '../utils/getPropsValuesMixin.js';
 
-const props = {
+const polylineProps = {
+  path: {
+    type: Array,
+    twoWay: true
+  },
   draggable: {
     type: Boolean
   },
@@ -17,13 +24,18 @@ const props = {
     type: Boolean,
   },
   options: {
-    twoWay: false,
     type: Object
-  },
-  path: {
-    type: Array,
-    twoWay: true
-  },
+  }
+}
+
+const props = {
+  polylineObj:{
+    type: Object,
+    required: true,
+    validator: function (value) {
+      return (typeof value.path[0] !== 'undefined');
+    }
+  }
 }
 
 const events = [
@@ -43,12 +55,48 @@ const events = [
 export default MapComponent.extend({
   mixins: [getPropsValuesMixin],
   props: props,
-  
-  ready () {
-    this.destroyed = false;
+  computed:{
+    path:{
+      get(){
+        return this.polylineObj.path;
+      },
+      set(value){
+        this.polylineObj.path = value;
+      }
+    },
+    draggable:{
+      get(){
+        return this.polylineObj.draggable;
+      },
+      set(value){
+        this.polylineObj.draggable = value;
+      }
+    },
+    editable:{
+      get(){
+        return this.polylineObj.editable;
+      },
+      set(value){
+        this.polylineObj.editable = value;
+      }
+    },
+    options:{
+      get(){
+        return this.polylineObj.options;
+      },
+      set(value){
+        this.polylineObj.options = value;
+      }
+    }
   },
-
-  attached () {
+  created(){
+    this.destroyed = false;
+    this.polylineObj.path = (typeof this.polylineObj.path === 'undefined')?null:this.polylineObj.path;
+    this.polylineObj.draggable = (typeof this.polylineObj.draggable === 'undefined')?false:this.polylineObj.draggable;
+    this.polylineObj.editable = (typeof this.polylineObj.editable === 'undefined')?false:this.polylineObj.editable;
+    this.polylineObj.options = (typeof this.polylineObj.options === 'undefined')?{}:this.polylineObj.options;
+  },
+  mounted () {
     if (this.$map && this.$polyLineObject.getMap() === null) {
       this.$polyLineObject.setMap(this.$map);
     }
@@ -63,14 +111,14 @@ export default MapComponent.extend({
   
   deferredReady() {
     if (this.destroyed) return;
-    const options = _.clone(this.getPropsValues());
+    const options = _.clone(this.polylineObj);
     delete options.options;
     _.assign(options, this.options);
     this.$polyLineObject = new google.maps.Polyline(options);
 
     this.$polyLineObject.setMap(this.$map);
 
-    const localProps = _.clone(props);
+    const localProps = _.clone(polylineProps);
     //we don't want the propBinder to handle this one because it is specific
     delete localProps.path;
 
@@ -113,8 +161,6 @@ export default MapComponent.extend({
     this.$polyLineObject.setMap(this.$map);
   },
 
-})
-
-
+});
 </script>
 

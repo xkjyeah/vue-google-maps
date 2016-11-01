@@ -1,25 +1,18 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
+<template>
+</template>
+
 <script>
 
 import _ from 'lodash';
 
-import eventBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import MapComponent from './mapComponent'
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import eventBinder from '../utils/eventsBinder.js';
+import propsBinder from '../utils/propsBinder.js';
+import MapComponent from './mapComponent';
+import getPropsValuesMixin from '../utils/getPropsValuesMixin.js';
 
-const props = {
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean,
-  },
-  options: {
-    twoWay: false,
-    type: Object
-  },
+const polygonProps = {
   path: {
     type: Array,
     twoWay: true
@@ -28,6 +21,27 @@ const props = {
     type: Array,
     twoWay: true
   },
+  draggable: {
+    type: Boolean
+  },
+  editable: {
+    type: Boolean,
+  },
+  options: {
+    type: Object
+  },
+}
+const props = {
+  polygonObj:{
+    type: Object,
+    required: true,
+    validator: function (value) {
+      return (
+        (typeof value.paths[0] !== 'undefined' && typeof value.paths[0][0] !== 'undefined')
+        ||(typeof value.path[0] !== 'undefined')
+      );
+    }
+  }
 }
 
 const events = [
@@ -47,27 +61,65 @@ const events = [
 export default MapComponent.extend({
   mixins: [getPropsValuesMixin],
   props: props,
-
-  ready () {
-    this.destroyed = false;
+  computed:{
+    path:{
+      get(){
+        return this.polygonObj.path;
+      },
+      set(value){
+        this.polygonObj.path = value;
+      }
+    },
+    paths:{
+      get(){
+        return this.polygonObj.paths;
+      },
+      set(value){
+        this.polygonObj.paths = value;
+      }
+    },
+    draggable:{
+      get(){
+        return this.polygonObj.draggable;
+      },
+      set(value){
+        this.polygonObj.draggable = value;
+      }
+    },
+    editable:{
+      get(){
+        return this.polygonObj.editable;
+      },
+      set(value){
+        this.polygonObj.editable = value;
+      }
+    },
+    options:{
+      get(){
+        return this.polygonObj.options;
+      },
+      set(value){
+        this.polygonObj.options = value;
+      }
+    }
   },
-
-  attached () {
+  created(){
+    this.destroyed = false;
+    this.polygonObj.path = (typeof this.polygonObj.path === 'undefined')?null:this.polygonObj.path;
+    this.polygonObj.paths = (typeof this.polygonObj.paths === 'undefined')?null:this.polygonObj.paths;
+    this.polygonObj.draggable = (typeof this.polygonObj.draggable === 'undefined')?false:this.polygonObj.draggable;
+    this.polygonObj.editable = (typeof this.polygonObj.editable === 'undefined')?false:this.polygonObj.editable;
+    this.polygonObj.options = (typeof this.polygonObj.options === 'undefined')?{}:this.polygonObj.options;
+  },
+  mounted () {
     if (this.$map && this.$polygonObject.getMap() === null) {
       this.$polygonObject.setMap(this.$map);
     }
   },
 
-  destroyed () {
-    this.destroyed = true;
-    if (this.$polygonObject) {
-      this.$polygonObject.setMap(null);
-    }
-  },
-
   deferredReady() {
     if (this.destroyed) return;
-    const options = _.clone(this.getPropsValues());
+    const options = _.clone(this.polygonObj);
     delete options.options;
     _.assign(options, this.options);
     if (!options.path) {
@@ -78,7 +130,7 @@ export default MapComponent.extend({
     }
     this.$polygonObject = new google.maps.Polygon(options);
 
-    const localProps = _.clone(props);
+    const localProps = _.clone(polygonProps);
     //we don't want the propBinder to handle this one because it is specific
     delete localProps.path;
     delete localProps.paths;
@@ -156,8 +208,12 @@ export default MapComponent.extend({
     this.$polygonObject.setMap(this.$map);
   },
 
-})
-
-
+  destroyed () {
+    this.destroyed = true;
+    if (this.$polygonObject) {
+      this.$polygonObject.setMap(null);
+    }
+  },
+});
 </script>
 

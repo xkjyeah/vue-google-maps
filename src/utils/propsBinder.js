@@ -1,6 +1,6 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
-import _ from 'lodash'
+import _ from 'lodash';
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -51,7 +51,7 @@ export default (vueElement, googleMapsElement, props, options) => {
             vueElement[attribute] = value;
           }
         }
-      }
+      };
 
       vueElement.$watch(attribute, modelWatcher, {
         deep: type===Object
@@ -64,4 +64,4 @@ export default (vueElement, googleMapsElement, props, options) => {
         }));
     }
   });
-}
+};

@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 
 export default {
   methods: {
@@ -6,4 +6,4 @@ export default {
       return _.mapValues(this.$options.props, (v, k) => this[k]);
     }
   }
-}
+};
