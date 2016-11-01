@@ -104,7 +104,6 @@ export default MapComponent.extend({
     }
   },
   created(){
-    this.destroyed = false;
     this.polygonObj.path = (typeof this.polygonObj.path === 'undefined')?null:this.polygonObj.path;
     this.polygonObj.paths = (typeof this.polygonObj.paths === 'undefined')?null:this.polygonObj.paths;
     this.polygonObj.draggable = (typeof this.polygonObj.draggable === 'undefined')?false:this.polygonObj.draggable;
@@ -118,7 +117,8 @@ export default MapComponent.extend({
   },
 
   deferredReady() {
-    if (this.destroyed) return;
+    if (this.destroyed)
+      return;
     const options = _.clone(this.polygonObj);
     delete options.options;
     _.assign(options, this.options);
@@ -209,7 +209,6 @@ export default MapComponent.extend({
   },
 
   destroyed () {
-    this.destroyed = true;
     if (this.$polygonObject) {
       this.$polygonObject.setMap(null);
     }

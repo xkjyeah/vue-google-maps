@@ -107,8 +107,6 @@ export default MapComponent.extend({
   },
 
   mounted () {
-    this.destroyed = false;
-
     // if the user set the content of the info window by adding children to the 
     // InfoWindow element
     this.$el.style.display='none';
@@ -122,6 +120,8 @@ export default MapComponent.extend({
   },
 
   deferredReady() {
+    if (this.destroyed)
+      return;
     eventHub.$emit('register-info-window', this);
     this.createInfoWindow(this.$map);
   },
@@ -133,7 +133,6 @@ export default MapComponent.extend({
     if (this.$infoWindow) {
       this.$infoWindow.setMap(null);
     }
-    this.destroyed = true;
     this.$off('marker-ready',this.markerReady);
   },
 
@@ -151,8 +150,6 @@ export default MapComponent.extend({
     },
 
     createInfoWindow(map) {
-      if (this.destroyed) return;
-
       var el = document.createElement('div');
       el.innerHTML = this.content;
 
@@ -189,6 +186,8 @@ export default MapComponent.extend({
       this.openInfoWindow();
     },
     markerReady(marker, map) {
+      if (this.destroyed)
+        return;
       this.$markerObject = marker.$markerObject;
       marker.$on('g-click', () => {
         this.opened = !this.opened;

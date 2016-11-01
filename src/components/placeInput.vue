@@ -145,7 +145,6 @@
       }
     },
     created(){
-        this.destroyed = false;
         this.$on('g-place_changed',this.placeChanged);
         this.placeInputObj.bounds = (typeof this.placeInputObj.bounds === 'undefined')?null:this.placeInputObj.bounds;
         this.placeInputObj.place = {
@@ -165,7 +164,8 @@
     mounted () {
     },
     deferredReady() {
-      if (this.destroyed) return;
+      if (this.destroyed)
+        return;
       const input = this.$refs.input;
       input.value = this.place.name;
       if (this.placeInputObj.mapEmbedded){
@@ -195,7 +195,6 @@
       });
     },
     destroyed(){
-      this.destroyed = true;
       this.$off('g-place_changed',this.placeChanged);
     },
     methods: {

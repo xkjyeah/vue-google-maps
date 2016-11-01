@@ -225,7 +225,7 @@ export default MapComponent.extend({
   created() {
     eventHub.$on('register-info-window',this.registerInfoWindow);
     this.$on('cluster-ready',this.clusterReady);
-    this.destroyed = false;
+    this.$on('cluster-destroyed',this.clusterDestroyed);
     this.markerObj.animation = (typeof this.markerObj.animation  === 'undefined')?null:this.markerObj.animation;
     this.markerObj.attribution = (typeof this.markerObj.attribution  === 'undefined')?null:this.markerObj.attribution;
     this.markerObj.clickable = (typeof this.markerObj.clickable  === 'undefined')?true:this.markerObj.clickable;
@@ -247,16 +247,17 @@ export default MapComponent.extend({
       this.visible = true;
     }
   },
-
-  destroyed() {
+  beforeDestroy(){
     if (this.visible === 'auto') {
       this.visible = false;
     }
-    this.destroyed = true;
+  },
+  destroyed() {
     eventHub.$off('register-info-window', this.registerInfoWindow);
     this.$off('cluster-ready', this.clusterReady);
+    this.$off('cluster-destroyed',this.clusterDestroyed);
     if (!this.$markerObject)
-        return;
+      return;
 
     if (this.$clusterObject) {
       this.$clusterObject.removeMarker(this.$markerObject);
@@ -267,6 +268,8 @@ export default MapComponent.extend({
   },
 
   deferredReady() {
+    if (this.destroyed)
+      return;
     /* Send an event to any <cluster> parent */
     //console.log('emit register-marker', this);
     eventHub.$emit('register-marker', this);
@@ -279,24 +282,31 @@ export default MapComponent.extend({
   methods: {
     createMarker (options, map) {
       // FIXME: @Guillaumne do we need this?
-      if (!this.destroyed) {
-        this.$markerObject = new google.maps.Marker(options);
-        propsBinder(this, this.$markerObject, markerProps);
-        eventsBinder(this, this.$markerObject, events);
+      if (this.destroyed)
+        return;
 
-        if (this.$clusterObject) {
-          this.$clusterObject.addMarker(this.$markerObject);
-        }
+      this.$markerObject = new google.maps.Marker(options);
+      propsBinder(this, this.$markerObject, markerProps);
+      eventsBinder(this, this.$markerObject, events);
+
+      if (this.$clusterObject) {
+        this.$clusterObject.addMarker(this.$markerObject);
       }
     },
     registerInfoWindow(infoWindow) {
-      if (!hasChildInVueComponent(this,infoWindow))
+      if (this.destroyed || !hasChildInVueComponent(this,infoWindow))
         return;
       infoWindow.$emit('marker-ready', this, this.$map);
     },
     clusterReady(cluster, map) {
       //console.log('treat cluster-ready', this, cluster, map);
+      if (this.destroyed)
+        return;
       this.$clusterObject = cluster;
+    },
+    clusterDestroyed(cluster, map) {
+      console.log('treat cluster-Destroyed', this, cluster, map);
+      this.$clusterObject = null;
     }
   }
 });

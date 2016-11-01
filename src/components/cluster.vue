@@ -38,6 +38,8 @@ export default MapComponent.extend({
     eventHub.$on('register-marker', this.clusterReady);
   },
   deferredReady () {
+    if (this.destroyed)
+        return;
     const options = _.clone(this.getPropsValues());
     this.$clusterObject = new MarkerClusterer(this.$map, [], options);
 
@@ -49,13 +51,16 @@ export default MapComponent.extend({
       }
     });
   },
-  destroy() {
+  destroyed() {
     this.$clusterObject.clearMarkers();
     eventHub.$off('register-marker', this.clusterReady);
+    this.$emit('cluster-destroyed', this.$clusterObject, this.$map);
   },
   methods: {
     clusterReady(element) {
       //console.log('emit cluster-ready', this, element);
+      if (this.destroyed)
+        return;
       element.$emit('cluster-ready', this.$clusterObject, this.$map);
     }
   }

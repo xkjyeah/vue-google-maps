@@ -94,10 +94,9 @@ export default MapComponent.extend({
         this.rectangleObj.editable = (typeof this.rectangleObj.editable === 'undefined')?false:this.rectangleObj.editable;
         this.rectangleObj.options = (typeof this.rectangleObj.options === 'undefined')?{}:this.rectangleObj.options;
     },
-    mounted () {
-        this.destroyed = false;
-    },
     deferredReady() {
+        if (this.destroyed)
+            return;
         const options = _.clone(this.rectangleObj);
         options.map = this.$map;
         this.createRectangle(options, this.$map);
@@ -105,7 +104,6 @@ export default MapComponent.extend({
 
     methods: {
         createRectangle (options, map) {
-            if (this.destroyed) return;
             this.$rectangleObject = new google.maps.Rectangle(options);
             propsBinder(this, this.$rectangleObject, rectangleProps);
             eventBinder(this, this.$rectangleObject, events);
@@ -123,7 +121,6 @@ export default MapComponent.extend({
         if (this.$rectangleObject) {
           this.$rectangleObject.setMap(null);
         }
-        this.destroyed = true;
     },
 });
 </script>

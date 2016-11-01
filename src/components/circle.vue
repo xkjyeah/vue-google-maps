@@ -122,11 +122,9 @@ export default MapComponent.extend({
         this.circleObj.editable = (typeof this.circleObj.editable === 'undefined')?false:this.circleObj.editable;
         this.circleObj.options = (typeof this.circleObj.options === 'undefined')?{}:this.circleObj.options;
     },
-    mounted () {
-        this.destroyed = false;
-    },
-
     deferredReady() {
+        if (this.destroyed)
+              return;
         const options = _.clone(this.circleObj);
         options.map = this.$map;
         delete options.bounds;
@@ -135,29 +133,26 @@ export default MapComponent.extend({
 
     methods: {
         createCircle (options, map) {
-            if (!this.destroyed) {
-                this.$circleObject = new google.maps.Circle(options);
-                // we cant bind bounds because there is no `setBounds` method
-                // on the Circle object
-                const boundProps = _.clone(circleProps);
-                delete boundProps.bounds;
-                propsBinder(this, this.$circleObject, boundProps);
-                eventBinder(this, this.$circleObject, events);
+            this.$circleObject = new google.maps.Circle(options);
+            // we cant bind bounds because there is no `setBounds` method
+            // on the Circle object
+            const boundProps = _.clone(circleProps);
+            delete boundProps.bounds;
+            propsBinder(this, this.$circleObject, boundProps);
+            eventBinder(this, this.$circleObject, events);
 
-                const updateBounds = () => {
-                    this.bounds = this.$circleObject.getBounds();
-                }
-
-                this.$watch('radius', updateBounds);
-                // because center is an object and we need to be warned even if only the lat or lng change. not the whole reference
-                this.$watch('center', updateBounds, {deep: true});
-                updateBounds();
+            const updateBounds = () => {
+                this.bounds = this.$circleObject.getBounds();
             }
+
+            this.$watch('radius', updateBounds);
+            // because center is an object and we need to be warned even if only the lat or lng change. not the whole reference
+            this.$watch('center', updateBounds, {deep: true});
+            updateBounds();
         }
     },
 
     destroyed () {
-      this.destroyed = true;
       if (this.$circleObject) {
         this.$circleObject.setMap(null);
       }

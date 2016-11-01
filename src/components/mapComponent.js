@@ -23,16 +23,20 @@ export default Vue.extend({
   mixins: [DeferredReadyMixin],
   beforeCreate(){
     this.$registerComponent = true;
+    this.destroyed = false;
   },
   created() {
     //console.log('create MapComponent', this);
     this.$on('map-ready',this.mapReady);
     this.$map = null;
   },
-  destroy(){
+  destroyed(){
+    this.destroyed = true;
     this.$off('map-ready',this.mapReady);
   },
   deferredReady () {
+    if (this.destroyed)
+      return;
     //console.log('emit register-component', this);
     if (this.$registerComponent) {
       eventHub.$emit('register-component', this);

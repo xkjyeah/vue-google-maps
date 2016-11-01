@@ -18,6 +18,7 @@ import propsBinder from '../utils/propsBinder.js';
 import Vue from 'vue';
 import {DeferredReady} from '../deferredReady.js';
 import getPropsMixin from '../utils/getPropsValuesMixin.js';
+import {hasChildInVueComponent} from '../utils/hasChildInVueComponent';
 
 Vue.use(DeferredReady);
 
@@ -90,7 +91,8 @@ const registerChild = function (child, type) {
   //console.log('registerChild', this, child);
   if (!this.mapObject)
     throw new Error("Map not initialized");
-  child.$emit('map-ready', this.mapObject);
+  if (hasChildInVueComponent(this, child))
+    child.$emit('map-ready', this.mapObject);
   // Simpler: child.$map = mapObject but not so
   // modular
 }
@@ -189,7 +191,7 @@ export default {
     this.mapObj.zoom = (typeof this.mapObj.zoom === 'undefined')?8:this.mapObj.zoom;
     this.mapObj.options = (typeof this.mapObj.options === 'undefined')?{}:this.mapObj.options;
   },
-  destroy(){
+  destroyed(){
     //console.log('destroy Map', this);
     var self = this;
     _.forEach(eventListeners, function(event, index){
@@ -198,6 +200,8 @@ export default {
     eventHub.$off('register-component', this.registerChild);
   },
   deferredReady() {
+    if (this.destroyed)
+        return;
     return loaded.then(() => {
       // getting the DOM element where to create the map
       const element = this.$el.getElementsByClassName('vue-map')[0];

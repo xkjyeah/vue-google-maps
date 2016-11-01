@@ -90,7 +90,6 @@ export default MapComponent.extend({
     }
   },
   created(){
-    this.destroyed = false;
     this.polylineObj.path = (typeof this.polylineObj.path === 'undefined')?null:this.polylineObj.path;
     this.polylineObj.draggable = (typeof this.polylineObj.draggable === 'undefined')?false:this.polylineObj.draggable;
     this.polylineObj.editable = (typeof this.polylineObj.editable === 'undefined')?false:this.polylineObj.editable;
@@ -103,14 +102,14 @@ export default MapComponent.extend({
   },
 
   destroyed () {
-    this.destroyed = true;
     if (this.$polyLineObject) {
       this.$polyLineObject.setMap(null);
     }
   },
   
   deferredReady() {
-    if (this.destroyed) return;
+    if (this.destroyed)
+      return;
     const options = _.clone(this.polylineObj);
     delete options.options;
     _.assign(options, this.options);
