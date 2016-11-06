@@ -1,7 +1,9 @@
 <body>
 <div id="app" style="width: 100%; height: 500px">
     <google-map
-        :map-obj="{center: {lat: 1.38, lng: 103.8}, zoom:12}"
+        :center = "center"
+        :zoom="zoom"
+        @center_changed = "center = $event"
     >
         <ground-overlay
             source="./overlay.png"
@@ -11,7 +13,7 @@
                 east: 104.0262,
                 west: 103.5998,
             }"
-            :opacity="0.5"
+            :opacity="opacity"
         >
         </ground-overlay>
     </google-map>
@@ -35,7 +37,6 @@
 <script src="../dist/vue-google-maps.js"></script>
 
 <script>
-
     VueGoogleMap.load({
         key: localStorage['apiKey'],
         v: '3.26',
@@ -53,17 +54,24 @@
             this.$overlay.setOpacity(this.opacity);
             this.$overlay.setMap(this.$map);
         },
+        watch:{
+            opacity:function(newValue){
+                this.$overlay.setOpacity(newValue);
+            }
+        },
         destroyed: function () {
             this.$overlay.setMap(null);
         },
     });
-
+    var myVue;
     document.addEventListener('DOMContentLoaded', function () {
-
-        new Vue({
+        myVue = new Vue({
             el: '#app',
             data: {
                 place: '',
+                center: {lat: 1.38, lng: 103.8},
+                zoom: 12,
+                opacity:0.5
             },
             components: {
                 'googleMap': VueGoogleMap.Map,

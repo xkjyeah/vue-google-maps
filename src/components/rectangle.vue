@@ -28,12 +28,19 @@ const rectangleProps = {
     }
 }
 const props = {
-    rectangleObj:{
-        type: Object,
-        required: true,
-        validator: function (value) {
-            return (typeof value.bounds === 'object');
-        }
+    bounds: {
+        type: Object
+    },
+    draggable: {
+        type: Boolean,
+        default: false,
+    },
+    editable: {
+        type: Boolean,
+        default: false,
+    },
+    options: {
+        type: Object
     }
 }
 
@@ -50,73 +57,90 @@ const events = [
     'mouseup',
     'rightclick'
 ]
-
+const getLocalField = function (self, field){
+  return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.rectangleObj[field];
+};
+const setLocalField = function (self, field, value){
+  self.rectangleObj[field] = value;
+  self.$emit(field+'_changed', value);
+  self.$nextTick(function (){
+    self.rectangleObj[field] = getLocalField(self, field);
+  });
+};
 export default MapComponent.extend({
     mixins: [getPropsValuesMixin],
     props: props,
+    data(){
+        return {
+            rectangleObj:{
+                bounds:{},
+                draggable:null,
+                editable:null,
+                options:{},
+            }
+        };
+    },
     computed:{
-        bounds:{
+        local_bounds:{
             get(){
-                return this.rectangleObj.bounds;
+                return getLocalField(this, 'bounds');
             },
             set(value){
-                this.rectangleObj.bounds = value;
+                setLocalField(this, 'bounds', value);
             }
         },
-        draggable:{
+        local_draggable:{
             get(){
-                return this.rectangleObj.draggable;
+                return getLocalField(this, 'draggable');
             },
             set(value){
-                this.rectangleObj.draggable = value;
+                setLocalField(this, 'draggable', value);
             }
         },
-        editable:{
+        local_editable:{
             get(){
-                return this.rectangleObj.editable;
+                return getLocalField(this, 'editable');
             },
             set(value){
-                this.rectangleObj.editable = value;
+                setLocalField(this, 'editable', value);
             }
         },
-        options:{
+        local_options:{
             get(){
-                return this.rectangleObj.options;
+                return getLocalField(this, 'options');
             },
             set(value){
-                this.rectangleObj.options = value;
+                setLocalField(this, 'options', value);
             }
         }
     },
     created(){
-        this.rectangleObj.bounds = (typeof this.rectangleObj.bounds === 'undefined')?null:this.rectangleObj.bounds;
-        this.rectangleObj.draggable = (typeof this.rectangleObj.draggable === 'undefined')?false:this.rectangleObj.draggable;
-        this.rectangleObj.editable = (typeof this.rectangleObj.editable === 'undefined')?false:this.rectangleObj.editable;
-        this.rectangleObj.options = (typeof this.rectangleObj.options === 'undefined')?{}:this.rectangleObj.options;
+        this.rectangleObj.bounds = this.bounds;
+        this.rectangleObj.draggable = this.draggable;
+        this.rectangleObj.editable = this.editable;
+        this.rectangleObj.options = this.options;
     },
     deferredReady() {
-        if (this.destroyed)
-            return;
-        const options = _.clone(this.rectangleObj);
+        const options = _.clone(this.getPropsValues());
         options.map = this.$map;
         this.createRectangle(options, this.$map);
     },
-
     methods: {
+        createRectangleObject(options){
+            return new google.maps.Rectangle(options);
+        },
         createRectangle (options, map) {
-            this.$rectangleObject = new google.maps.Rectangle(options);
+            this.$rectangleObject = this.createRectangleObject(options);
             propsBinder(this, this.$rectangleObject, rectangleProps);
             eventBinder(this, this.$rectangleObject, events);
 
             const updateBounds = () => {
-                this.bounds = this.$rectangleObject.getBounds();
+                this.local_bounds = this.$rectangleObject.getBounds();
             }
 
             this.$watch('bounds_changed', updateBounds, {deep: true});
         },
-
     },
-             
     destroyed () {
         if (this.$rectangleObject) {
           this.$rectangleObject.setMap(null);

@@ -5,6 +5,7 @@ import eventHub from '../utils/eventHub';
 import Q from 'q';
 import {DeferredReadyMixin} from '../deferredReady';
 import {DeferredReady} from '../deferredReady.js';
+import {getParentTest} from '../utils/getParentTest';
 
 Vue.use(DeferredReady);
 
@@ -39,7 +40,8 @@ export default Vue.extend({
       return;
     //console.log('emit register-component', this);
     if (this.$registerComponent) {
-      eventHub.$emit('register-component', this);
+      var parent = this.getParentMap(this);
+      parent.$emit('register-component', this);
     }
   },
   methods: {
@@ -48,5 +50,14 @@ export default Vue.extend({
       //set Map Object
       this.$map = map;
     },
+    getParentMap(child){
+      var parentTest = getParentTest(child, function (component) {
+        return component._isMap;
+      });
+      if (parentTest === null){
+        throw new Error("This component must be a child of a map!");
+      }
+      return parentTest;
+    }
   },
 });

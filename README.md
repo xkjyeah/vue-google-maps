@@ -12,11 +12,9 @@ If you want to write google map this way :
 
 ```html
 <map
-  :map-obj="{
-    center: {lat: 10, lng: 10},
-    mapTypeId: 'terrain',
-    zoom:7
-  }"
+    :center="{lat: 10, lng: 10}"
+    map-type-id='terrain'
+    :zoom="7"
 ></map>
 ```
 
@@ -24,12 +22,16 @@ Or use the power of Vue.js within a google map like this:
 ```html
 <template>
   <map
-    :map-obj="mapObj"
+    :center="mapObj.center"
+    :map-type-id="mapObj.mapTypeId"
+    :zoom="mapObj.zoom"
   >
     <marker 
       v-for="m in markers"
-      :marker-obj="m"
-      @g-click="mapObj.center=m.position"
+      :position="m.position"
+      @position_changed="m.position=$event"
+      :draggable="m.draggable"
+      @g-dblclick="mapObj.center=m.position"
     ></marker>
   </map>
 </template>
@@ -42,19 +44,23 @@ Or use the power of Vue.js within a google map like this:
   export default {
     data () {
       return {
-        mapObj: new VueGoogleMap.VueMapObject({
+        mapObj: {
           center: {lat: 10, lng: 10},
           mapTypeId: "terrain",
           zoom: 7
-        }),
-        markers: [ new VueGoogleMap.VueMarkerObject({
+        },
+        markers: [{
           position: {lat: 10.0, lng: 10.0},
           draggable:true
-        }), new VueGoogleMap.VueMarkerObject({
+        }, {
           position: {lat: 11.0, lng: 11.0},
           draggable:true
-        })]     
+        }]     
       }
+    },
+    components: {
+        Map, 
+        Marker
     }
   }
 </script>
@@ -112,7 +118,8 @@ However you will need to include Vue and Lodash beforehand:
 <body>
 
 <google-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
-    :map-obj="mapObj"
+    :center="center"
+    :zoom="zoom"
 >
 
 </google-map>
@@ -125,10 +132,8 @@ Vue.component('google-map', VueGoogleMap.Map);
 new Vue({
     el: 'body',
     data:{
-         mapObj: {
-             center: {lat: 1.38, lng: 103.8},
-             zoom: 12
-         }
+         center: {lat: 1.38, lng: 103.8},
+         zoom: 12
      }
 </script>
 

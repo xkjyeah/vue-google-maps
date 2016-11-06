@@ -35,13 +35,29 @@ const circleProps = {
         type: Object
     }
 }
+
 const props = {
-    circleObj:{
+    center: {
         type: Object,
-        required: true,
-        validator: function (value) {
-            return (typeof value.center === 'object');
-        }
+        required: true
+    },
+    radius: {
+        type: Number,
+        default: 1000,
+    },
+    bounds: {
+        type: Object
+    },
+    draggable: {
+        type: Boolean,
+        default: false,
+    },
+    editable: {
+        type: Boolean,
+        default: false,
+    },
+    options: {
+        type: Object
     }
 }
 
@@ -59,73 +75,91 @@ const events = [
     'radius_changed',
     'rightclick'
 ]
-
+const getLocalField = function (self, field){
+  return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.circleObj[field];
+};
+const setLocalField = function (self, field, value){
+  self.circleObj[field] = value;
+  self.$emit(field+'_changed', value);
+  self.$nextTick(function (){
+    self.circleObj[field] = getLocalField(self, field);
+  });
+};
 export default MapComponent.extend({
     mixins: [getPropsValuesMixin],
     props: props,
-    version: 2,
+    data(){
+      return {
+        circleObj:{
+          center:{},
+          radius:null,
+          bounds:null,
+          draggable:null,
+          editable:null,
+          options:{}
+        }
+      };
+    },
     computed:{
-        center:{
+        local_center:{
             get(){
-                return this.circleObj.center;
+                return getLocalField(this, 'center');
             },
             set(value){
-                this.circleObj.center = value;
+                setLocalField(this, 'center', value);
             }
         },
-        radius:{
+        local_radius:{
             get(){
-                return this.circleObj.radius;
+                return getLocalField(this, 'radius');
             },
             set(value){
-                this.circleObj.radius = value;
+                setLocalField(this, 'radius', value);
             }
         },
-        bounds:{
+        local_bounds:{
             get(){
-                return this.circleObj.bounds;
+                return getLocalField(this, 'bounds');
             },
             set(value){
-                this.circleObj.bounds = value;
+                setLocalField(this, 'bounds', value);
             }
         },
-        draggable:{
+        local_draggable:{
             get(){
-                return this.circleObj.draggable;
+                return getLocalField(this, 'draggable');
             },
             set(value){
-                this.circleObj.draggable = value;
+                setLocalField(this, 'draggable', value);
             }
         },
-        editable:{
+        local_editable:{
             get(){
-                return this.circleObj.editable;
+                return getLocalField(this, 'editable');
             },
             set(value){
-                this.circleObj.editable = value;
+                setLocalField(this, 'editable', value);
             }
         },
-        options:{
+        local_options:{
             get(){
-                return this.circleObj.options;
+                return getLocalField(this, 'options');
             },
             set(value){
-                this.circleObj.options = value;
+                setLocalField(this, 'options', value);
             }
         }
     },
     created(){
-        this.circleObj.center = (typeof this.circleObj.center === 'undefined')?null:this.circleObj.center;
-        this.circleObj.radius = (typeof this.circleObj.radius === 'undefined')?1000:this.circleObj.radius;
-        this.circleObj.bounds = (typeof this.circleObj.bounds === 'undefined')?null:this.circleObj.bounds;
-        this.circleObj.draggable = (typeof this.circleObj.draggable === 'undefined')?false:this.circleObj.draggable;
-        this.circleObj.editable = (typeof this.circleObj.editable === 'undefined')?false:this.circleObj.editable;
-        this.circleObj.options = (typeof this.circleObj.options === 'undefined')?{}:this.circleObj.options;
+        this.circleObj.center = this.center;
+        this.circleObj.radius = this.radius;
+        this.circleObj.bounds = this.bounds;
+        this.circleObj.draggable = this.draggable;
+        this.circleObj.editable = this.editable;
+        this.circleObj.options = this.options;
     },
     deferredReady() {
-        if (this.destroyed)
-              return;
-        const options = _.clone(this.circleObj);
+        const options = _.clone(this.getPropsValues());
         options.map = this.$map;
         delete options.bounds;
         this.createCircle(options, this.$map);
@@ -133,7 +167,7 @@ export default MapComponent.extend({
 
     methods: {
         createCircle (options, map) {
-            this.$circleObject = new google.maps.Circle(options);
+            this.$circleObject = this.createCircleObject(options);
             // we cant bind bounds because there is no `setBounds` method
             // on the Circle object
             const boundProps = _.clone(circleProps);
@@ -142,13 +176,16 @@ export default MapComponent.extend({
             eventBinder(this, this.$circleObject, events);
 
             const updateBounds = () => {
-                this.bounds = this.$circleObject.getBounds();
+                this.local_bounds = this.$circleObject.getBounds();
             }
 
-            this.$watch('radius', updateBounds);
+            this.$watch('local_radius', updateBounds);
             // because center is an object and we need to be warned even if only the lat or lng change. not the whole reference
-            this.$watch('center', updateBounds, {deep: true});
+            this.$watch('local_center', updateBounds, {deep: true});
             updateBounds();
+        },
+        createCircleObject(options){
+            return new google.maps.Circle(options)
         }
     },
 

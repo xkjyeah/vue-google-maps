@@ -29,12 +29,17 @@ const polylineProps = {
 }
 
 const props = {
-  polylineObj:{
-    type: Object,
-    required: true,
-    validator: function (value) {
-      return (typeof value.path[0] !== 'undefined');
-    }
+  path: {
+    type: Array
+  },
+  draggable: {
+    type: Boolean
+  },
+  editable: {
+    type: Boolean,
+  },
+  options: {
+    type: Object
   }
 }
 
@@ -50,50 +55,69 @@ const events = [
   'mouseover',
   'mouseup',
   'rightclick'
-]
-
+];
+const getLocalField = function (self, field){
+  return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.polylineObj[field];
+};
+const setLocalField = function (self, field, value){
+  self.polylineObj[field] = value;
+  self.$emit(field+'_changed', value);
+  self.$nextTick(function (){
+    self.polylineObj[field] = getLocalField(self, field);
+  });
+};
 export default MapComponent.extend({
   mixins: [getPropsValuesMixin],
   props: props,
+  data(){
+    return {
+      polylineObj:{
+        path:[],
+        draggable:null,
+        editable:null,
+        options:{},
+      }
+    };
+  },
   computed:{
-    path:{
-      get(){
-        return this.polylineObj.path;
-      },
-      set(value){
-        this.polylineObj.path = value;
-      }
+    local_path:{
+        get(){
+            return getLocalField(this, 'path');
+        },
+        set(value){
+            setLocalField(this, 'path', value);
+        }
     },
-    draggable:{
-      get(){
-        return this.polylineObj.draggable;
-      },
-      set(value){
-        this.polylineObj.draggable = value;
-      }
+    local_draggable:{
+        get(){
+            return getLocalField(this, 'draggable');
+        },
+        set(value){
+            setLocalField(this, 'draggable', value);
+        }
     },
-    editable:{
-      get(){
-        return this.polylineObj.editable;
-      },
-      set(value){
-        this.polylineObj.editable = value;
-      }
+    local_editable:{
+        get(){
+            return getLocalField(this, 'editable');
+        },
+        set(value){
+            setLocalField(this, 'editable', value);
+        }
     },
-    options:{
-      get(){
-        return this.polylineObj.options;
-      },
-      set(value){
-        this.polylineObj.options = value;
-      }
+    local_options:{
+        get(){
+            return getLocalField(this, 'options');
+        },
+        set(value){
+            setLocalField(this, 'options', value);
+        }
     }
   },
   created(){
-    this.polylineObj.path = (typeof this.polylineObj.path === 'undefined')?null:this.polylineObj.path;
-    this.polylineObj.draggable = (typeof this.polylineObj.draggable === 'undefined')?false:this.polylineObj.draggable;
-    this.polylineObj.editable = (typeof this.polylineObj.editable === 'undefined')?false:this.polylineObj.editable;
-    this.polylineObj.options = (typeof this.polylineObj.options === 'undefined')?{}:this.polylineObj.options;
+    this.polylineObj.path = this.path;
+    this.polylineObj.draggable = this.draggable;
+    this.polylineObj.editable = this.editable;
+    this.polylineObj.options = this.options;
   },
   mounted () {
     if (this.$map && this.$polyLineObject.getMap() === null) {
@@ -108,12 +132,10 @@ export default MapComponent.extend({
   },
   
   deferredReady() {
-    if (this.destroyed)
-      return;
-    const options = _.clone(this.polylineObj);
+    const options = _.clone(this.getPropsValues());
     delete options.options;
-    _.assign(options, this.options);
-    this.$polyLineObject = new google.maps.Polyline(options);
+    _.assign(options, this.local_options);
+    this.$polyLineObject = this.createPolylineObject(options);
 
     this.$polyLineObject.setMap(this.$map);
 
@@ -128,7 +150,7 @@ export default MapComponent.extend({
 
      
     const editHandler = () => {
-      this.path = _.map(this.$polyLineObject.getPath().getArray(), (v) => {
+      this.local_path = _.map(this.$polyLineObject.getPath().getArray(), (v) => {
         return {
           lat: v.lat(),
           lng: v.lng()
@@ -143,12 +165,12 @@ export default MapComponent.extend({
       eventCancelers.push(mvcoPath.addListener('set_at', editHandler));
     }
 
-    this.$watch('path', () => {
+    this.$watch('local_path', () => {
       _.each(eventCancelers, (id) => {
         google.maps.event.removeListener(id);
       });
       eventCancelers.length = 0;
-      this.$polyLineObject.setPath(this.path);
+      this.$polyLineObject.setPath(this.local_path);
       setupBind();
     }, {
       deep: true
@@ -159,7 +181,11 @@ export default MapComponent.extend({
     // Display the map
     this.$polyLineObject.setMap(this.$map);
   },
-
+  methods:{
+    createPolylineObject(options){
+      return new google.maps.Polyline(options);
+    }
+  }
 });
 </script>
 

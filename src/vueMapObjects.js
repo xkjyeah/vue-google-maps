@@ -28,7 +28,7 @@ export class VueMarkerObject {
     this.shape = (typeof settings.shape === 'undefined') ? null : settings.shape;
     this.title = (typeof settings.title === 'undefined') ? null : settings.title;
     this.zIndex = (typeof settings.zIndex === 'undefined') ? null : settings.zIndex;
-    this.visible = (typeof settings.visible === 'undefined') ? 'auto' : settings.visible;
+    this.visible = (typeof settings.visible === 'undefined') ? true : settings.visible;
   }
 }
 

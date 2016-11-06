@@ -31,17 +31,23 @@ const polygonProps = {
     type: Object
   },
 }
+
 const props = {
-  polygonObj:{
-    type: Object,
-    required: true,
-    validator: function (value) {
-      return (
-        (typeof value.paths[0] !== 'undefined' && typeof value.paths[0][0] !== 'undefined')
-        ||(typeof value.path[0] !== 'undefined')
-      );
-    }
-  }
+  draggable: {
+    type: Boolean
+  },
+  editable: {
+    type: Boolean,
+  },
+  options: {
+    type: Object
+  },
+  path: {
+    type: Array
+  },
+  paths: {
+    type: Array
+  },
 }
 
 const events = [
@@ -57,58 +63,78 @@ const events = [
   'mouseup',
   'rightclick'
 ]
-
+const getLocalField = function (self, field){
+  return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.polygonObj[field];
+};
+const setLocalField = function (self, field, value){
+  self.polygonObj[field] = value;
+  self.$emit(field+'_changed', value);
+  self.$nextTick(function (){
+    self.polygonObj[field] = getLocalField(self, field);
+  });
+};
 export default MapComponent.extend({
   mixins: [getPropsValuesMixin],
   props: props,
+  data(){
+    return {
+      polygonObj:{
+        path:[],
+        paths:[[]],
+        draggable:null,
+        editable:null,
+        options:{},
+      }
+    };
+  },
   computed:{
-    path:{
-      get(){
-        return this.polygonObj.path;
-      },
-      set(value){
-        this.polygonObj.path = value;
-      }
+    local_path:{
+        get(){
+            return getLocalField(this, 'path');
+        },
+        set(value){
+            setLocalField(this, 'path', value);
+        }
     },
-    paths:{
-      get(){
-        return this.polygonObj.paths;
-      },
-      set(value){
-        this.polygonObj.paths = value;
-      }
+    local_paths:{
+        get(){
+            return getLocalField(this, 'paths');
+        },
+        set(value){
+            setLocalField(this, 'paths', value);
+        }
     },
-    draggable:{
-      get(){
-        return this.polygonObj.draggable;
-      },
-      set(value){
-        this.polygonObj.draggable = value;
-      }
+    local_draggable:{
+        get(){
+            return getLocalField(this, 'draggable');
+        },
+        set(value){
+            setLocalField(this, 'draggable', value);
+        }
     },
-    editable:{
-      get(){
-        return this.polygonObj.editable;
-      },
-      set(value){
-        this.polygonObj.editable = value;
-      }
+    local_editable:{
+        get(){
+            return getLocalField(this, 'editable');
+        },
+        set(value){
+            setLocalField(this, 'editable', value);
+        }
     },
-    options:{
-      get(){
-        return this.polygonObj.options;
-      },
-      set(value){
-        this.polygonObj.options = value;
-      }
+    local_options:{
+        get(){
+            return getLocalField(this, 'options');
+        },
+        set(value){
+            setLocalField(this, 'options', value);
+        }
     }
   },
   created(){
-    this.polygonObj.path = (typeof this.polygonObj.path === 'undefined')?null:this.polygonObj.path;
-    this.polygonObj.paths = (typeof this.polygonObj.paths === 'undefined')?null:this.polygonObj.paths;
-    this.polygonObj.draggable = (typeof this.polygonObj.draggable === 'undefined')?false:this.polygonObj.draggable;
-    this.polygonObj.editable = (typeof this.polygonObj.editable === 'undefined')?false:this.polygonObj.editable;
-    this.polygonObj.options = (typeof this.polygonObj.options === 'undefined')?{}:this.polygonObj.options;
+    this.polygonObj.path = this.path;
+    this.polygonObj.paths = this.paths;
+    this.polygonObj.draggable = this.draggable;
+    this.polygonObj.editable = this.editable;
+    this.polygonObj.options = this.options;
   },
   mounted () {
     if (this.$map && this.$polygonObject.getMap() === null) {
@@ -117,18 +143,16 @@ export default MapComponent.extend({
   },
 
   deferredReady() {
-    if (this.destroyed)
-      return;
-    const options = _.clone(this.polygonObj);
+    const options = _.clone(this.getPropsValues());
     delete options.options;
-    _.assign(options, this.options);
+    _.assign(options, this.local_options);
     if (!options.path) {
       delete options.path;
     }
     if (!options.paths) {
       delete options.paths;
     }
-    this.$polygonObject = new google.maps.Polygon(options);
+    this.$polygonObject = this.createPolygonObject(options);
 
     const localProps = _.clone(polygonProps);
     //we don't want the propBinder to handle this one because it is specific
@@ -154,8 +178,8 @@ export default MapComponent.extend({
     const editHandler = () => {
       stable -= 2;
       if (stable < 0) {
-        this.path = convertToLatLng(this.$polygonObject.getPath().getArray());
-        this.paths = _.map(this.$polygonObject.getPaths().getArray(), (pArray) => {
+        this.local_path = convertToLatLng(this.$polygonObject.getPath().getArray());
+        this.local_paths = _.map(this.$polygonObject.getPaths().getArray(), (pArray) => {
           return convertToLatLng(pArray.getArray());
         });
       }
@@ -184,19 +208,19 @@ export default MapComponent.extend({
       setupBind();
     }
 
-    this.$watch('paths', () => {
+    this.$watch('local_paths', () => {
       stable++;
       if (stable > -1) {
-        setPath(this.paths);
+        setPath(this.local_paths);
       }
     }, {
       deep: true
     });
 
-    this.$watch('path', () => {
+    this.$watch('local_path', () => {
       stable++;
       if (stable > -1) {
-        setPath([this.path]);
+        setPath([this.local_path]);
       }
     }, {
       deep: true
@@ -213,6 +237,11 @@ export default MapComponent.extend({
       this.$polygonObject.setMap(null);
     }
   },
+  methods:{
+    createPolygonObject(options){
+        return new google.maps.Polygon(options);
+    }
+  }
 });
 </script>
 

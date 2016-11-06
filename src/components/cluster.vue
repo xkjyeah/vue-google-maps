@@ -34,14 +34,27 @@ const props = {
 export default MapComponent.extend({
   mixins: [getPropsValuesMixin],
   props: props,
+  computed:{
+    local_maxZoom(){
+      return this.maxZoom;
+    },
+    local_calculor(){
+      return this.calculor;
+    },
+    local_gridSize(){
+      return this.gridSize;
+    },
+    local_styles(){
+      return this.styles;
+    },
+  },
   created(){
-    eventHub.$on('register-marker', this.clusterReady);
+    this._acceptMarker = true;
+    this.$on('register-marker', this.clusterReady);
   },
   deferredReady () {
-    if (this.destroyed)
-        return;
     const options = _.clone(this.getPropsValues());
-    this.$clusterObject = new MarkerClusterer(this.$map, [], options);
+    this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options);
 
     propsBinder(this, this.$clusterObject, props, {
       afterModelChanged: (a, v) => {
@@ -53,14 +66,15 @@ export default MapComponent.extend({
   },
   destroyed() {
     this.$clusterObject.clearMarkers();
-    eventHub.$off('register-marker', this.clusterReady);
+    this.$off('register-marker', this.clusterReady);
     this.$emit('cluster-destroyed', this.$clusterObject, this.$map);
   },
   methods: {
+    createMarkerClusterObject(map, opt_markers, opt_options){
+        return new MarkerClusterer(map, opt_markers, opt_options)
+    },
     clusterReady(element) {
       //console.log('emit cluster-ready', this, element);
-      if (this.destroyed)
-        return;
       element.$emit('cluster-ready', this.$clusterObject, this.$map);
     }
   }

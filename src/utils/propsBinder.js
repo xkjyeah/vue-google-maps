@@ -16,7 +16,7 @@ export default (vueElement, googleMapsElement, props, options) => {
 
     if (!twoWay) {
       vueElement.$watch(attribute, () => {
-        const attributeValue = vueElement[attribute];
+        const attributeValue = vueElement['local_'+attribute];
         googleMapsElement[setMethodName](attributeValue);
         if (afterModelChanged) {
           afterModelChanged(attribute, attributeValue);
@@ -30,7 +30,7 @@ export default (vueElement, googleMapsElement, props, options) => {
       var modelWatcher = () => {
         stable++;
         if (stable > 0) {
-          const attributeValue = vueElement[attribute];
+          const attributeValue = vueElement['local_'+attribute];
           googleMapsElement[setMethodName](attributeValue);
           if (afterModelChanged) {
             afterModelChanged(attribute, attributeValue);
@@ -43,12 +43,12 @@ export default (vueElement, googleMapsElement, props, options) => {
         if (stable < 0) {
           const value = googleMapsElement[getMethodName]();
           if (value instanceof google.maps.LatLng) {
-            vueElement[attribute] = {
+            vueElement['local_'+attribute] = {
               lat: value.lat(),
               lng: value.lng()
             };
           } else { //TODO Handle more google types !!
-            vueElement[attribute] = value;
+            vueElement['local_'+attribute] = value;
           }
         }
       };

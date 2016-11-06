@@ -18,7 +18,7 @@ import propsBinder from '../utils/propsBinder.js';
 import Vue from 'vue';
 import {DeferredReady} from '../deferredReady.js';
 import getPropsMixin from '../utils/getPropsValuesMixin.js';
-import {hasChildInVueComponent} from '../utils/hasChildInVueComponent';
+import {getParentTest} from '../utils/getParentTest';
 
 Vue.use(DeferredReady);
 
@@ -50,12 +50,26 @@ const mapsProps = {
 };
 
 const props = {
-  mapObj: {
-    required: true,
+  center: {
     type: Object,
-    validator: function (value) {
-      return (typeof value.center === 'object');
-    }
+    required: true
+  },
+  zoom: {
+    type: Number,
+    default () {return 8;}
+  },
+  heading: {
+    type: Number
+  },
+  mapTypeId: {
+    type: String
+  },
+  bounds: {
+    type: Object,
+  },
+  options: {
+    type: Object,
+    default () {return {}}
   }
 };
 
@@ -91,7 +105,6 @@ const registerChild = function (child, type) {
   //console.log('registerChild', this, child);
   if (!this.mapObject)
     throw new Error("Map not initialized");
-  if (hasChildInVueComponent(this, child))
     child.$emit('map-ready', this.mapObject);
   // Simpler: child.$map = mapObject but not so
   // modular
@@ -101,7 +114,7 @@ const methods = {registerChild:registerChild};
 
 const eventListeners = {
   'g-bounds_changed' () {
-    this.bounds=this.mapObject.getBounds();
+    this.local_bounds=this.mapObject.getBounds();
   },
   'g-fitBounds' (bounds) {
     if (this.mapObject && bounds) {
@@ -124,72 +137,101 @@ _.each(callableMethods, function (methodName) {
   eventListeners['g-' + methodName] = applier;
   methods[methodName] = applier;
 });
-
+const getLocalField = function (self, field){
+  return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.mapObj[field];
+};
+const setLocalField = function (self, field, value){
+  self.mapObj[field] = value;
+  self.$emit(field+'_changed', value);
+  self.$nextTick(function (){
+    self.mapObj[field] = getLocalField(self, field);
+  });
+};
 export default {
   mixins: [getPropsMixin, DeferredReadyMixin],
   props: props,
   //replace:false, // necessary for css styles
+  data(){
+    return {
+      mapObj: {
+        center: {},
+        zoom: null,
+        heading: null,
+        mapTypeId: null,
+        bounds: {},
+        options: {}
+      }
+    };
+  },
   computed:{
-    center:{
-      get() {
-        return this.mapObj.center;
+    local_center:{
+      get(){
+        return getLocalField(this, 'center');
       },
       set(value){
-        this.mapObj.center = value;
+        setLocalField(this, 'center', value);
       }
     },
-    zoom:{
-      get() {
-        return this.mapObj.zoom;
+    local_zoom:{
+      get(){
+        return getLocalField(this, 'zoom');
       },
       set(value){
-        this.mapObj.zoom = value;
+        setLocalField(this, 'zoom', value);
       }
     },
-    heading:{
-      get() {
-        return this.mapObj.heading;
+    local_heading:{
+      get(){
+        return getLocalField(this, 'heading');
       },
       set(value){
-        this.mapObj.heading = value;
+        setLocalField(this, 'heading', value);
       }
     },
-    mapTypeId:{
-      get() {
-        return this.mapObj.mapTypeId;
+    local_mapTypeId:{
+      get(){
+        return getLocalField(this, 'mapTypeId');
       },
       set(value){
-        this.mapObj.mapTypeId = value;
+        setLocalField(this, 'mapTypeId', value);
       }
     },
-    bounds:{
-      get() {
-        return this.mapObj.bounds;
+    local_bounds:{
+      get(){
+        return getLocalField(this, 'bounds');
       },
       set(value){
-        this.mapObj.bounds = value;
+        setLocalField(this, 'bounds', value);
       }
     },
-    options:{
-      get() {
-        return this.mapObj.options;
+    local_options:{
+      get(){
+        return getLocalField(this, 'options');
       },
       set(value){
-        this.mapObj.options = value;
+        setLocalField(this, 'options', value);
       }
     }
   },
+  beforeCreate(){
+    this._isMap = true;
+  },
   created() {
     //console.log('created Map', this);
-    eventHub.$on('register-component', this.registerChild);
+    this.$on('register-component', this.registerChild);
     var self = this;
     _.forEach(eventListeners, function(event, index){
       self.$on(index, event);
     });
     this.mapCreatedDefered = new Q.defer();
     this.mapCreated = this.mapCreatedDefered.promise;
-    this.mapObj.zoom = (typeof this.mapObj.zoom === 'undefined')?8:this.mapObj.zoom;
-    this.mapObj.options = (typeof this.mapObj.options === 'undefined')?{}:this.mapObj.options;
+
+    this.mapObj.center = this.center;
+    this.mapObj.zoom = this.zoom;
+    this.mapObj.heading = this.heading;
+    this.mapObj.mapTypeId = this.mapTypeId;
+    this.mapObj.bounds = this.bounds;
+    this.mapObj.options = this.options;
   },
   destroyed(){
     //console.log('destroy Map', this);
@@ -197,19 +239,17 @@ export default {
     _.forEach(eventListeners, function(event, index){
       self.$off(index, event);
     });
-    eventHub.$off('register-component', this.registerChild);
+    this.$off('register-component', this.registerChild);
   },
   deferredReady() {
-    if (this.destroyed)
-        return;
     return loaded.then(() => {
       // getting the DOM element where to create the map
       const element = this.$el.getElementsByClassName('vue-map')[0];
 
       // creating the map
-      const copiedData = _.clone(this.mapObj);
+      const copiedData = _.clone(this.getPropsValues());
       delete copiedData.options;
-      const options = _.clone(this.mapObj.options);
+      const options = _.clone(this.options);
       _.assign(options, copiedData);
       this.mapObject = new google.maps.Map(element, options);
 

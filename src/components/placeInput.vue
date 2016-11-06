@@ -48,135 +48,192 @@
         type: Boolean
       }
   }
-
   const props = {
-    placeInputObj:{
-      type: Object,
-      required: true
-    }
+      bounds: {
+          type: Object
+      },
+      place: {
+          type: Object,
+          default: function() {
+            return {
+              name: ''
+            };
+          }
+      },
+      componentRestrictions: {
+          type: Object,
+          default: null,
+      },
+      types: {
+          type: Array,
+          default: function() { return []; }
+      },
+      placeholder: {
+        type: String
+      },
+      className: {
+          type: String
+      },
+      label: {
+          type: String,
+          default: null
+      },
+      selectFirstOnEnter: {
+        type: Boolean,
+        default: false
+      },
+      autoFitOnUpdatePlace: {
+        type: Boolean,
+        default: false
+      },
+      mapEmbedded: {
+        type: Boolean,
+        default: false
+      }
   }
   const events = [
     'place_changed'
   ];
-
+  const getLocalField = function (self, field){
+    return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.placeInputObj[field];
+  };
+  const setLocalField = function (self, field, value){
+    self.placeInputObj[field] = value;
+    self.$emit(field.replace(/([a-z](?=[A-Z]))/g, '$1-').toLowerCase()+'_changed', value);
+    self.$nextTick(function (){
+      self.placeInputObj[field] = getLocalField(self, field);
+    });
+  };
   export default MapComponent.extend({
     mixins: [getPropsValuesMixin],
     props: props,
+    data(){
+        return {
+            placeInputObj:{
+                bounds:{},
+                place:{},
+                componentRestrictions:{},
+                types:[],
+                placeholder:null,
+                className:null,
+                label:null,
+                selectFirstOnEnter:null,
+                autoFitOnUpdatePlace:null,
+                mapEmbedded:null
+            }
+        };
+    },
     computed:{
-      bounds:{
+      local_bounds:{
         get(){
-          return this.placeInputObj.bounds;
+            return getLocalField(this, 'bounds');
         },
         set(value){
-          this.placeInputObj.bounds = value;
+            setLocalField(this, 'bounds', value);
         }
       },
-      place:{
+      local_place:{
         get(){
-          return this.placeInputObj.place;
+            return getLocalField(this, 'place');
         },
         set(value){
-          this.placeInputObj.place = value;
+            setLocalField(this, 'place', value);
         }
       },
-      componentRestrictions:{
+      local_componentRestrictions:{
         get(){
-          return this.placeInputObj.componentRestrictions;
+            return getLocalField(this, 'componentRestrictions');
         },
         set(value){
-          this.placeInputObj.componentRestrictions = value;
+            //setLocalField(this, 'componentRestrictions', value);
         }
       },
-      types:{
+      local_types:{
         get(){
-          return this.placeInputObj.types;
+            return getLocalField(this, 'types');
         },
         set(value){
-          this.placeInputObj.types = value;
+            //setLocalField(this, 'types', value);
         }
       },
-      placeholder:{
+      local_placeholder:{
         get(){
-          return this.placeInputObj.placeholder;
+            return getLocalField(this, 'placeholder');
         },
         set(value){
-          this.placeInputObj.placeholder = value;
+            //setLocalField(this, 'placeholder', value);
         }
       },
-      className:{
+      local_className:{
         get(){
-          return this.placeInputObj.className;
+            return getLocalField(this, 'className');
         },
         set(value){
-          this.placeInputObj.className = value;
+            //setLocalField(this, 'className', value);
         }
       },
-      label:{
+      local_label:{
         get(){
-          return this.placeInputObj.label;
+            return getLocalField(this, 'label');
         },
         set(value){
-          this.placeInputObj.label = value;
+            //setLocalField(this, 'label', value);
         }
       },
-      selectFirstOnEnter:{
+      local_selectFirstOnEnter:{
         get(){
-          return this.placeInputObj.selectFirstOnEnter;
+            return getLocalField(this, 'selectFirstOnEnter');
         },
         set(value){
-          this.placeInputObj.selectFirstOnEnter = value;
+            //setLocalField(this, 'selectFirstOnEnter', value);
         }
       },
-      autoFitOnUpdatePlace:{
+      local_autoFitOnUpdatePlace:{
         get(){
-          return this.placeInputObj.autoFitOnUpdatePlace;
+            return getLocalField(this, 'autoFitOnUpdatePlace');
         },
         set(value){
-          this.placeInputObj.autoFitOnUpdatePlace = value;
+            //setLocalField(this, 'autoFitOnUpdatePlace', value);
         }
       },
-      mapEmbedded:{
+      local_mapEmbedded:{
         get(){
-          return this.placeInputObj.mapEmbedded;
+            return getLocalField(this, 'mapEmbedded');
         },
         set(value){
-          this.placeInputObj.mapEmbedded = value;
+            //setLocalField(this, 'mapEmbedded', value);
         }
       }
     },
     created(){
         this.$on('g-place_changed',this.placeChanged);
-        this.placeInputObj.bounds = (typeof this.placeInputObj.bounds === 'undefined')?null:this.placeInputObj.bounds;
-        this.placeInputObj.place = {
-            name: ''
-        };
-        this.placeInputObj.place = (typeof this.placeInputObj.place === 'undefined')?this.placeInputObj.place:this.placeInputObj.place;
-        this.placeInputObj.componentRestrictions = (typeof this.placeInputObj.componentRestrictions === 'undefined')?null:this.placeInputObj.componentRestrictions;
-        this.placeInputObj.types = (typeof this.placeInputObj.types === 'undefined')?[]:this.placeInputObj.types;
-        this.placeInputObj.placeholder = (typeof this.placeInputObj.placeholder === 'undefined')?null:this.placeInputObj.placeholder;
-        this.placeInputObj.className = (typeof this.placeInputObj.className === 'undefined')?null:this.placeInputObj.className;
-        this.placeInputObj.label = (typeof this.placeInputObj.label === 'undefined')?null:this.placeInputObj.label;
-        this.placeInputObj.selectFirstOnEnter = (typeof this.placeInputObj.selectFirstOnEnter === 'undefined')?false:this.placeInputObj.selectFirstOnEnter;
-        this.placeInputObj.autoFitOnUpdatePlace = (typeof this.placeInputObj.autoFitOnUpdatePlace === 'undefined')?false:this.placeInputObj.autoFitOnUpdatePlace;
-        this.placeInputObj.mapEmbedded = (typeof this.placeInputObj.mapEmbedded === 'undefined')?false:this.placeInputObj.mapEmbedded;
-        this.$registerComponent = this.placeInputObj.mapEmbedded;
+        this.autoCompleter = null;
+        this.placeInputObj.bounds = this.bounds;
+        this.placeInputObj.place = this.place;
+        this.placeInputObj.componentRestrictions = this.componentRestrictions;
+        this.placeInputObj.types = this.types;
+        this.placeInputObj.placeholder = this.placeholder;
+        this.placeInputObj.className = this.className;
+        this.placeInputObj.label = this.label;
+        this.placeInputObj.selectFirstOnEnter = this.selectFirstOnEnter;
+        this.placeInputObj.autoFitOnUpdatePlace = this.autoFitOnUpdatePlace;
+        this.placeInputObj.mapEmbedded = this.mapEmbedded;
+        this.$registerComponent = this.local_mapEmbedded;
     },
     mounted () {
     },
     deferredReady() {
-      if (this.destroyed)
-        return;
       const input = this.$refs.input;
-      input.value = this.place.name;
-      if (this.placeInputObj.mapEmbedded){
+      input.value = this.local_place.name;
+      if (this.local_mapEmbedded){
         if (this.$map) {
           this.$map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
         }
       }
       loaded.then(() => {
         window.i = input;
-        const options = _.clone(this.placeInputObj);
-        if (this.selectFirstOnEnter) {
+        const options = _.clone(this.getPropsValues());
+        if (this.local_selectFirstOnEnter) {
           downArrowSimulator(this.$refs.input);
         }
         this.autoCompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
@@ -204,9 +261,9 @@
         this.$map.fitBounds(place.geometry.viewport);
       },
       placeChanged() {
-        this.place = this.autoCompleter.getPlace();
-        if (this.autoFitOnUpdatePlace)
-            this.autoFitPlace(this.place);
+        this.local_place = this.autoCompleter.getPlace();
+        if (this.local_autoFitOnUpdatePlace)
+            this.autoFitPlace(this.local_place);
       }
     }
   });

@@ -1,7 +1,5 @@
 import Q from "q";
-import _ from 'lodash';
-import eventHub from "./utils/eventHub";
-import {hasChildInVueComponent} from './utils/hasChildInVueComponent';
+import {getParentTest} from './utils/getParentTest';
 
 /**
  * 1. Create a DeferredReady plugin.
@@ -66,17 +64,20 @@ export var DeferredReady = {
 export var DeferredReadyMixin = {
   created() {
     //console.log('created', this);
-    eventHub.$on('register-deferredReadyChild', this.registerDeferredReadyChild);
+    this.$on('register-deferredReadyChild', this.registerDeferredReadyChild);
     this.$hasDeferredReadyAncestors = false;
+    this._hasDeferredReady = true;
     this.$deferredReadyDeferred = Q.defer();
   },
   destroy(){
     //console.log('destroy', this);
-    eventHub.$off('register-deferredReadyChild', this.registerDeferredReadyChild);
+    this.$off('register-deferredReadyChild', this.registerDeferredReadyChild);
   },
   mounted() {
     // console.log('Mounted', this);
-    eventHub.$emit('register-deferredReadyChild', this);
+    var parent = this.getParentDeferredReady(this);
+    if (parent)
+      parent.$emit('register-deferredReadyChild', this);
 
     if (!this.$hasDeferredReadyAncestors) {
       // call deferredReady() hook only after ready() has completed
@@ -105,8 +106,6 @@ export var DeferredReadyMixin = {
         });
     },
     registerDeferredReadyChild(child) {
-      if (!hasChildInVueComponent(this, child))
-        return true;
       // console.log('registerDeferredReadyChild', this, child);
       if (this == child)        return true;
 
@@ -117,6 +116,11 @@ export var DeferredReadyMixin = {
       // children should run their deferredReady()
       this.$deferredReadyDeferred.promise
         .then(() => this.runHooks(child));
+    },
+    getParentDeferredReady(child){
+      return getParentTest(child, function (component) {
+        return component._hasDeferredReady == true;
+      });
     }
   }
 };
