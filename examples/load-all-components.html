@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .search-box-input{
+            margin-top: 9px;
+            max-width: 300px;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+<div id="marker-app" style="width: 100%; height: 500px">
+    <gmap-place-input
+        :select-first-on-enter="placeInputObj2.selectFirstOnEnter"
+        @place_changed="placeInputObj2.place = $event"
+        @g-place_changed="paceChanged(placeInputObj2)"
+    ></gmap-place-input>
+    <label for="clusterize_inout"><input id="clusterize_inout" type="checkbox" v-model="clustering">clustering</label>
+    <gmap-map
+        :center = "mapObj.center"
+        :zoom="mapObj.zoom"
+        :map-type-id="mapObj.mapTypeId"
+        :options="mapObj.options"
+        @center_changed = "centerChanged"
+        @zoom_changed = "zoomChanged"
+    >
+        <gmap-place-input
+            :select-first-on-enter="placeInputObj.selectFirstOnEnter"
+            :auto-fit-on-update-place="placeInputObj.autoFitOnUpdatePlace"
+            :map-embedded="placeInputObj.mapEmbedded"
+            :class-name="placeInputObj.className"
+            @place_changed="placeInputObj.place = $event"
+            @g-place_changed="paceChanged(placeInputObj)"
+        ></gmap-place-input>
+        <div v-if="clustering">
+            <gmap-cluster
+                :max-zoom="maxZoom"
+                :grid-size="gridSize"
+            >
+                <gmap-marker style="color: red"
+                    v-for="m in markers"
+                    :position="m.position"
+                    :draggable="m.draggable"
+                >
+                    <gmap-info-window
+                    >{{m.position.lat}}</br>{{m.position.lng}}</gmap-info-window>
+                </gmap-marker>
+            </gmap-cluster>
+        </div>
+        <div v-else>
+            <gmap-marker style="color: red"
+                 v-for="m in markers"
+                 :position="m.position"
+                 :draggable="m.draggable"
+                 @position_changed="markerPositionChange(m,$event)"
+            >
+                <gmap-info-window
+                    :opened= "m.infoWindowObj.opened"
+                    :content= "m.infoWindowObj.content"
+                    @opened_changed="infoOpenedChange(m,$event)"
+                    @content_changed="infoContentChange(m,$event)"
+                >{{m.position.lat}}</br>{{m.position.lng}}</gmap-info-window>
+            </gmap-marker>
+        </div>
+        <gmap-info-window
+            :content= "infoWindowObj2.content"
+            :position= "infoWindowObj2.position"
+        ></gmap-info-window>
+        <gmap-circle
+            :center="circleObj.center"
+            :radius="circleObj.radius"
+            :editable="circleObj.editable"
+            @center_changed="circleObj.center = $event"
+            @radius_changed="circleObj.radius = $event"
+        >
+        </gmap-circle>
+        <gmap-rectangle
+            :bounds="rectangleObj.bounds"
+            :editable="rectangleObj.editable"
+            @bounds_changed="rectangleObj.bounds = $event"
+        ></gmap-rectangle>
+        <gmap-polygon
+            :paths="polygonObj.paths"
+            :editable="polygonObj.editable"
+            @paths_changed="polygonObj.paths = $event"
+        ></gmap-polygon>
+        <gmap-polyline
+            :path="polylineObj.path"
+            :editable="polylineObj.editable"
+            :options="polylineObj.options"
+            @path_changed="polylineObj.path = $event"
+        ></gmap-polyline>
+    </gmap-map>
+</div>
+
+<button onclick="localStorage.apiKey = prompt('ApiKey'); window.location.reload()">
+    Reset API Key
+</button>
+
+<script>
+
+    console.log(localStorage.apiKey);
+    if (!localStorage.apiKey) {
+        var apiKey = prompt("Paste API Key here")
+        localStorage.apiKey = apiKey;
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.js"></script>
+<script src="../dist/vue-google-maps.js"></script>
+
+<script>
+    var myVue = {};
+    Vue.config.devtools = true;
+    VueGoogleMap.load({
+        key: localStorage['apiKey'],
+        v: '3.26',
+        libraries: ['places']
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        myVue = new Vue({
+            el: '#marker-app',
+            data: {
+                mapObj: {
+                    center: {lat: 10, lng: 10},
+                    mapTypeId: "terrain",
+                    zoom: 7,
+                    options:{
+                        fullscreenControl: true
+                    }
+                },
+                markers: [{
+                    position: {lat: 10.0, lng: 10.0},
+                    draggable: true,
+                    label:'Label Test',
+                    title:'Title Test',
+                    infoWindowObj: {
+                        opened: true,
+                        content: "Info Window 1 Text"
+                    }
+                }, {
+                    position: {lat: 11.0, lng: 11.0},
+                    draggable: true,
+                    infoWindowObj: {
+                        opened: false,
+                    }
+                }],
+                infoWindowObj2: {
+                    content: 'Test InfoWindow!',
+                    position: {lat: 10, lng: 11}
+                },
+                clustering: true,
+                maxZoom: 14,
+                gridSize: 50,
+                circleObj: {
+                    center: {lat: 10, lng: 11},
+                    radius: 100000,
+                    editable: true
+                },
+                rectangleObj: {
+                    bounds: {
+                        north: 11,
+                        south: 9,
+                        east: 12,
+                        west: 9
+                    },
+                    editable: true
+                },
+                polygonObj: {
+                    paths: [[
+                        {lat: 10.002442868502236, lng: 10.001330300598056},
+                        {lat: 10.002083628371114, lng: 9.998004300598268},
+                        {lat: 9.99889352035596, lng: 9.997446300598085},
+                        {lat: 9.99739336304884, lng: 10.000386300598166},
+                        {lat: 9.999548738081206, lng: 10.002704300597998}
+                    ], [
+                        {lat: 10.000922429696521, lng: 9.999270300598141},
+                        {lat: 10.001153909612425, lng: 10.000601300598078},
+                        {lat: 9.999949712794216, lng: 10.001159300598033},
+                        {lat: 9.998935261922712, lng: 10.000214300598145},
+                        {lat: 9.999527234741972, lng: 9.999013300598222}
+                    ]],
+                    editable: true
+                },
+                polylineObj: {
+                    path: [
+                        {lat: 9, lng: 9},
+                        {lat: 9.5, lng: 10},
+                        {lat: 10.5, lng: 10.5},
+                        {lat: 10.9, lng: 11.5},
+                    ],
+                    editable: true,
+                    options:{geodesic:true, strokeColor:'#FF0000'}
+                },
+                placeInputObj: {
+                    selectFirstOnEnter: true,
+                    autoFitOnUpdatePlace:true,
+                    mapEmbedded: true,
+                    className: 'search-box-input',
+                    place:{}
+
+                },
+                placeInputObj2: {
+                    selectFirstOnEnter: true,
+                    place:{}
+                }
+            },
+            watch:{
+                'placeInputObj2.place.geometry': function (newValue) {
+                    if (typeof newValue === 'undefined') {
+                        return;
+                    }
+                    this.mapObj.center = newValue.location;
+                }
+            },
+            methods:{
+                paceChanged: function(placeInputObj){
+                    console.log(placeInputObj);
+                },
+                centerChanged: function (value) {
+                    this.mapObj.center = value;
+                },
+                zoomChanged: function (value) {
+                    this.mapObj.zoom = value;
+                },
+                markerPositionChange: function (marker, position) {
+                    marker.position = position;
+                },
+                infoOpenedChange: function (marker, opened) {
+                    marker.infoWindowObj.opened = opened;
+                },
+                infoContentChange: function (marker, content) {
+                    marker.infoWindowObj.content = content;
+                }
+            },
+            components: {
+                'gmapMap': VueGoogleMap.Map,
+                'gmapInfoWindow': VueGoogleMap.InfoWindow,
+                'gmapMarker': VueGoogleMap.Marker,
+                'gmapCluster': VueGoogleMap.Cluster,
+                'gmapCircle': VueGoogleMap.Circle,
+                'gmapRectangle': VueGoogleMap.Rectangle,
+                'gmapPolygon': VueGoogleMap.Polygon,
+                'gmapPolyline': VueGoogleMap.Polyline,
+                'gmapPlaceInput': VueGoogleMap.PlaceInput,
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

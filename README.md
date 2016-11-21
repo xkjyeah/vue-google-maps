@@ -34,7 +34,7 @@ If you want to write google map this way :
 ```html
 <gmap-map
   :center="{lat:10, lng:10}"
-  :map-type-id="terrain"
+  map-type-id="terrain"
   :zoom="7"
 ></gmap-map>
 ```
@@ -45,13 +45,14 @@ Or use the power of Vue.js within a google map like this:
   <gmap-map
     :center="center"
     :zoom="7"
+    @center_changed="center=$event"
   >
     <gmap-marker
       v-for="m in markers"
-      :position.sync="m.position"
-      :clickable="true"
-      :draggable="true"
-      @g-click="center=m.position"
+      :position="m.position"
+      @position_changed="m.position=$event"
+      :draggable="m.draggable"
+      @g-dblclick="mapObj.center=m.position"
     ></gmap-marker>
   </gmap-map>
 </template>

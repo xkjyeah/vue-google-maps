@@ -25,4 +25,4 @@ export default (input) => {
 
   input.addEventListener = addEventListenerWrapper;
   input.attachEvent = addEventListenerWrapper;
-}
+};

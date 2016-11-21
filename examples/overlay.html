@@ -20,12 +20,11 @@
     </div>
   </div>
 <script>
-
-// console.log(localStorage.apiKey);
-// if (!localStorage.apiKey) {
-//     var apiKey = prompt("Paste API Key here")
-//     localStorage.apiKey = apiKey;
-// }
+    console.log(localStorage.apiKey);
+    if (!localStorage.apiKey) {
+        var apiKey = prompt("Paste API Key here")
+        localStorage.apiKey = apiKey;
+    }
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
@@ -35,23 +34,20 @@
 <script>
 
 VueGoogleMap.load({
-    key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
-    v: '3.24',
+    key: localStorage['apiKey'],
+    v: '3.25',
 });
 
 document.addEventListener('DOMContentLoaded', function() {
     Vue.component('google-map', VueGoogleMap.Map);
-    Vue.component('ground-overlay', Vue.extend({
+    Vue.component('ground-overlay', VueGoogleMap.MapComponent.extend({
         render() { return ''},
-        mixins: [VueGoogleMap.MapElementMixin],
         props: ['source', 'bounds', 'opacity'],
-        created() {
-        },
         deferredReady: function() {
             this.$overlay = new google.maps.GroundOverlay(
                 this.source,
                 this.bounds
-                );
+            );
             this.$overlay.setOpacity(this.opacity);
             this.$overlay.setMap(this.$map);
         },

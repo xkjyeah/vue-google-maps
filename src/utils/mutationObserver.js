@@ -27,4 +27,4 @@ export default (element, callback) => {
     }, 500);
     return () => {}
   }
-}
+};

@@ -1,15 +1,22 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
+<template>
+</template>
+
 <script>
 
 import _ from 'lodash';
 
-import eventBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import MapElementMixin from './mapElementMixin';
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import eventBinder from '../utils/eventsBinder.js';
+import propsBinder from '../utils/propsBinder.js';
+import MapComponent from './mapComponent';
+import getPropsValuesMixin from '../utils/getPropsValuesMixin.js';
 
-const props = {
+const polylineProps = {
+  path: {
+    type: Array,
+    twoWay: true
+  },
   draggable: {
     type: Boolean
   },
@@ -17,16 +24,22 @@ const props = {
     type: Boolean,
   },
   options: {
-    twoWay: false,
     type: Object
-  },
+  }
+}
+
+const props = {
   path: {
-    type: Array,
-    twoWay: true
+    type: Array
   },
-  deepWatch: {
+  draggable: {
+    type: Boolean
+  },
+  editable: {
     type: Boolean,
-    default: false,
+  },
+  options: {
+    type: Object
   }
 }
 
@@ -42,61 +55,137 @@ const events = [
   'mouseover',
   'mouseup',
   'rightclick'
-]
-
-export default {
-  mixins: [MapElementMixin, getPropsValuesMixin],
+];
+const getLocalField = function (self, field){
+  return (typeof self.$options.propsData[field] !== 'undefined')?self[field]:self.polylineObj[field];
+};
+const setLocalField = function (self, field, value){
+  self.polylineObj[field] = value;
+  self.$emit(field+'_changed', value);
+  self.$nextTick(function (){
+    self.polylineObj[field] = getLocalField(self, field);
+  });
+};
+export default MapComponent.extend({
+  mixins: [getPropsValuesMixin],
   props: props,
-
-  render() { return '' },
-
-  destroyed () {
-    if (this.$polylineObject) {
-      this.$polylineObject.setMap(null);
+  data(){
+    return {
+      polylineObj:{
+        path:[],
+        draggable:null,
+        editable:null,
+        options:{},
+      }
+    };
+  },
+  computed:{
+    local_path:{
+        get(){
+            return getLocalField(this, 'path');
+        },
+        set(value){
+            setLocalField(this, 'path', value);
+        }
+    },
+    local_draggable:{
+        get(){
+            return getLocalField(this, 'draggable');
+        },
+        set(value){
+            setLocalField(this, 'draggable', value);
+        }
+    },
+    local_editable:{
+        get(){
+            return getLocalField(this, 'editable');
+        },
+        set(value){
+            setLocalField(this, 'editable', value);
+        }
+    },
+    local_options:{
+        get(){
+            return getLocalField(this, 'options');
+        },
+        set(value){
+            setLocalField(this, 'options', value);
+        }
+    }
+  },
+  created(){
+    this.polylineObj.path = this.path;
+    this.polylineObj.draggable = this.draggable;
+    this.polylineObj.editable = this.editable;
+    this.polylineObj.options = this.options;
+  },
+  mounted () {
+    if (this.$map && this.$polyLineObject.getMap() === null) {
+      this.$polyLineObject.setMap(this.$map);
     }
   },
 
+  destroyed () {
+    if (this.$polyLineObject) {
+      this.$polyLineObject.setMap(null);
+    }
+  },
+  
   deferredReady() {
     const options = _.clone(this.getPropsValues());
     delete options.options;
-    _.assign(options, this.options);
-    this.$polylineObject = new google.maps.Polyline(options);
-    this.$polylineObject.setMap(this.$map);
+    _.assign(options, this.local_options);
+    this.$polyLineObject = this.createPolylineObject(options);
 
-    propsBinder(this, this.$polylineObject, _.omit(props, ['deepWatch', 'path']));
-    eventBinder(this, this.$polylineObject, events);
+    this.$polyLineObject.setMap(this.$map);
 
-    var clearEvents = () => {}
+    const localProps = _.clone(polylineProps);
+    //we don't want the propBinder to handle this one because it is specific
+    delete localProps.path;
 
-    this.$watch('path', (path) => {
-      if (path) {
-        clearEvents();
+    propsBinder(this, this.$polyLineObject, localProps);
+    eventBinder(this, this.$polyLineObject, events);
 
-        this.$polylineObject.setPath(path);
+    const eventCancelers = [];
 
-        const mvcPath = this.$polylineObject.getPath();
-        const eventListeners = [];
-
-        const updatePaths = () => {
-          this.$emit('path_changed', this.$polylineObject.getPath())
+     
+    const editHandler = () => {
+      this.local_path = _.map(this.$polyLineObject.getPath().getArray(), (v) => {
+        return {
+          lat: v.lat(),
+          lng: v.lng()
         }
+      });
+    }
 
-        eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
-        eventListeners.push([mvcPath, mvcPath.addListener('remove_at', updatePaths)])
-        eventListeners.push([mvcPath, mvcPath.addListener('set_at', updatePaths)])
+    const setupBind = () => {
+      const mvcoPath = this.$polyLineObject.getPath();
+      eventCancelers.push(mvcoPath.addListener('insert_at', editHandler));
+      eventCancelers.push(mvcoPath.addListener('remove_at', editHandler));
+      eventCancelers.push(mvcoPath.addListener('set_at', editHandler));
+    }
 
-        clearEvents = () => {
-          eventListeners.map(([obj, listenerHandle]) =>
-            google.maps.event.removeListener(listenerHandle))
-        }
-      }
+    this.$watch('local_path', () => {
+      _.each(eventCancelers, (id) => {
+        google.maps.event.removeListener(id);
+      });
+      eventCancelers.length = 0;
+      this.$polyLineObject.setPath(this.local_path);
+      setupBind();
     }, {
-      deep: this.deepWatch
+      deep: true
     });
 
-    // Display the map
-    this.$polylineObject.setMap(this.$map);
-  },
-}
+    setupBind();
 
+    // Display the map
+    this.$polyLineObject.setMap(this.$map);
+  },
+  methods:{
+    createPolylineObject(options){
+      return new google.maps.Polyline(options);
+    }
+  }
+});
 </script>
+
