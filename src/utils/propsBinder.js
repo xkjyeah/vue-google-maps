@@ -15,7 +15,7 @@ export default (vueElement, googleMapsElement, props, options) => {
     const eventName = attribute.toLowerCase() + '_changed';
 
     if (!twoWay) {
-      vueElement.$watch(attribute, () => {
+      vueElement.$watch('local_'+attribute, () => {
         const attributeValue = vueElement['local_'+attribute];
         googleMapsElement[setMethodName](attributeValue);
         if (afterModelChanged) {

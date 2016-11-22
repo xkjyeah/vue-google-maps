@@ -10,7 +10,6 @@
 <script>
 import Q from 'q';
 import _ from 'lodash';
-import eventHub from '../utils/eventHub';
 import {loaded} from '../manager.js';
 import {DeferredReadyMixin} from '../deferredReady.js';
 import eventsBinder from '../utils/eventsBinder.js';

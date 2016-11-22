@@ -1,3 +1,2 @@
-
 // STUB
-module.exports = require('vue');
+module.exports = require('vue/dist/vue.js');

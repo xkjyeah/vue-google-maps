@@ -1,8 +1,6 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 import Vue from 'vue';
-import eventHub from '../utils/eventHub';
-import Q from 'q';
 import {DeferredReadyMixin} from '../deferredReady';
 import {DeferredReady} from '../deferredReady.js';
 import {getParentTest} from '../utils/getParentTest';

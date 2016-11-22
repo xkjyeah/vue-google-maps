@@ -6,7 +6,6 @@
 <script>
 
 import _ from 'lodash';
-
 import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapComponent from './mapComponent';

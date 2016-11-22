@@ -13,13 +13,13 @@
 </head>
 <body>
 <div id="marker-app" style="width: 100%; height: 500px">
-    <place-input
+    <gmap-place-input
         :select-first-on-enter="placeInputObj2.selectFirstOnEnter"
         @place_changed="placeInputObj2.place = $event"
         @g-place_changed="paceChanged(placeInputObj2)"
-    ></place-input>
+    ></gmap-place-input>
     <label for="clusterize_inout"><input id="clusterize_inout" type="checkbox" v-model="clustering">clustering</label>
-    <gmap
+    <gmap-map
         :center = "mapObj.center"
         :zoom="mapObj.zoom"
         :map-type-id="mapObj.mapTypeId"
@@ -27,71 +27,73 @@
         @center_changed = "centerChanged"
         @zoom_changed = "zoomChanged"
     >
-        <place-input
+        <gmap-place-input
             :select-first-on-enter="placeInputObj.selectFirstOnEnter"
             :auto-fit-on-update-place="placeInputObj.autoFitOnUpdatePlace"
             :map-embedded="placeInputObj.mapEmbedded"
             :class-name="placeInputObj.className"
             @place_changed="placeInputObj.place = $event"
             @g-place_changed="paceChanged(placeInputObj)"
-        ></place-input>
-        <gcluster v-if="clustering"
-            :max-zoom="maxZoom"
-            :grid-size="gridSize"
-        >
-            <gmarker style="color: red"
-                v-for="m in markers"
-                :position="m.position"
-                :draggable="m.draggable"
+        ></gmap-place-input>
+        <div v-if="clustering">
+            <gmap-cluster
+                :max-zoom="maxZoom"
+                :grid-size="gridSize"
             >
-                <ginfo-window
-                >{{m.position.lat}}</br>{{m.position.lng}}</ginfo-window>
-            </gmarker>
-        </gcluster>
+                <gmap-marker style="color: red"
+                    v-for="m in markers"
+                    :position="m.position"
+                    :draggable="m.draggable"
+                >
+                    <gmap-info-window
+                    >{{m.position.lat}}</br>{{m.position.lng}}</gmap-info-window>
+                </gmap-marker>
+            </gmap-cluster>
+        </div>
         <div v-else>
-            <gmarker style="color: red"
+            <gmap-marker style="color: red"
                  v-for="m in markers"
                  :position="m.position"
                  :draggable="m.draggable"
                  @position_changed="markerPositionChange(m,$event)"
             >
-                <ginfo-window
+                <gmap-info-window
                     :opened= "m.infoWindowObj.opened"
                     :content= "m.infoWindowObj.content"
                     @opened_changed="infoOpenedChange(m,$event)"
                     @content_changed="infoContentChange(m,$event)"
-                >{{m.position.lat}}</br>{{m.position.lng}}</ginfo-window>
-            </gmarker>
+                >{{m.position.lat}}</br>{{m.position.lng}}</gmap-info-window>
+            </gmap-marker>
         </div>
-        <ginfo-window
+        <gmap-info-window
             :content= "infoWindowObj2.content"
             :position= "infoWindowObj2.position"
-        ></ginfo-window>
-        <gcircle
+        ></gmap-info-window>
+        <gmap-circle
             :center="circleObj.center"
             :radius="circleObj.radius"
             :editable="circleObj.editable"
             @center_changed="circleObj.center = $event"
             @radius_changed="circleObj.radius = $event"
         >
-        </gcircle>
-        <grectangle
+        </gmap-circle>
+        <gmap-rectangle
             :bounds="rectangleObj.bounds"
             :editable="rectangleObj.editable"
             @bounds_changed="rectangleObj.bounds = $event"
-        ></grectangle>
-        <gpolygon
+        ></gmap-rectangle>
+        <gmap-polygon
             :paths="polygonObj.paths"
             :editable="polygonObj.editable"
             @paths_changed="polygonObj.paths = $event"
-        ></gpolygon>
-        <gpolyline
+        ></gmap-polygon>
+        <gmap-polyline
             :path="polylineObj.path"
             :editable="polylineObj.editable"
             :options="polylineObj.options"
             @path_changed="polylineObj.path = $event"
-        ></gpolyline>
-    </gmap>
+        ></gmap-polyline>
+    </gmap-map>
 </div>
 
 <button onclick="localStorage.apiKey = prompt('ApiKey'); window.location.reload()">
@@ -230,22 +232,22 @@
                     marker.position = position;
                 },
                 infoOpenedChange: function (marker, opened) {
-                    marker.infoWindowObj.opened = true;
+                    marker.infoWindowObj.opened = opened;
                 },
                 infoContentChange: function (marker, content) {
                     marker.infoWindowObj.content = content;
                 }
             },
             components: {
-                'gmap': VueGoogleMap.Map,
-                'ginfoWindow': VueGoogleMap.InfoWindow,
-                'gmarker': VueGoogleMap.Marker,
-                'gcluster': VueGoogleMap.Cluster,
-                'gcircle': VueGoogleMap.Circle,
-                'grectangle': VueGoogleMap.Rectangle,
-                'gpolygon': VueGoogleMap.Polygon,
-                'gpolyline': VueGoogleMap.Polyline,
-                'placeInput': VueGoogleMap.PlaceInput,
+                'gmapMap': VueGoogleMap.Map,
+                'gmapInfoWindow': VueGoogleMap.InfoWindow,
+                'gmapMarker': VueGoogleMap.Marker,
+                'gmapCluster': VueGoogleMap.Cluster,
+                'gmapCircle': VueGoogleMap.Circle,
+                'gmapRectangle': VueGoogleMap.Rectangle,
+                'gmapPolygon': VueGoogleMap.Polygon,
+                'gmapPolyline': VueGoogleMap.Polyline,
+                'gmapPlaceInput': VueGoogleMap.PlaceInput,
             }
         });
     });

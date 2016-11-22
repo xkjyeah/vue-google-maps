@@ -11,7 +11,6 @@
 <script>
 
 import _ from 'lodash';
-import eventHub from '../utils/eventHub';
 import propsBinder from '../utils/propsBinder.js';
 import eventsBinder from '../utils/eventsBinder.js';
 import mutationObserver from '../utils/mutationObserver.js';
@@ -32,7 +31,7 @@ const infoWindowProps = {
   },
   position: {
     type: Object,
-    twoWay: false
+    twoWay: true
   },
   zIndex: {
     type: Number,
@@ -81,10 +80,10 @@ export default MapComponent.extend({
     return {
       infoWindowObj: {
         options:{},
-        content:null,
-        opened:null,
+        content:'',
+        opened:true,
         position:{},
-        zIndex:null
+        zIndex:0
       }
     };
   },
@@ -147,7 +146,7 @@ export default MapComponent.extend({
     this.infoWindowObj.zIndex = this.zIndex;
   },
   mounted () {
-    // if the user set the content of the info window by adding children to the 
+    // if the user set the content of the info window by adding children to the
     // InfoWindow element
     this.$el.style.display='none';
     if (this.$el.getElementsByClassName('you-will-never-find-this').length === 0) {
@@ -241,4 +240,3 @@ export default MapComponent.extend({
   }
 });
 </script>
-

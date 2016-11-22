@@ -1,141 +1,132 @@
 # vue-google-maps
 
-## Demo:
+## Vue-2 port of vue-google-maps
 
-[Demo in production](http://en.papayapods.com/?utm_source=GtHub&utm_medium=LnK&utm_campaign=V.JS%20Map%20Cmpnt.#!/search/map?city=Lausanne)
+This is the Vue 2.x port of vue-google-maps!
 
-[Showcase with a lot of features](http://guillaumeleclerc.github.io/vue-google-maps-example/)
-
-## Presentation
-
-If you want to write google map this way : 
-
-```html
-<map
-    :center="{lat: 10, lng: 10}"
-    map-type-id='terrain'
-    :zoom="7"
-></map>
-```
-
-Or use the power of Vue.js within a google map like this:
-```html
-<template>
-  <map
-    :center="mapObj.center"
-    :map-type-id="mapObj.mapTypeId"
-    :zoom="mapObj.zoom"
-  >
-    <marker 
-      v-for="m in markers"
-      :position="m.position"
-      @position_changed="m.position=$event"
-      :draggable="m.draggable"
-      @g-dblclick="mapObj.center=m.position"
-    ></marker>
-  </map>
-</template>
-
-<script>
-  import {load, Map, Marker} from 'vue-google-maps'
-  
-  load('YOUR_API_TOKEN','OPTIONAL VERSION NUMBER')
-  
-  export default {
-    data () {
-      return {
-        mapObj: {
-          center: {lat: 10, lng: 10},
-          mapTypeId: "terrain",
-          zoom: 7
-        },
-        markers: [{
-          position: {lat: 10.0, lng: 10.0},
-          draggable:true
-        }, {
-          position: {lat: 11.0, lng: 11.0},
-          draggable:true
-        }]     
-      }
-    },
-    components: {
-        Map, 
-        Marker
-    }
-  }
-</script>
-```
-
-## Example Project 
-
-You can see an project example [here](https://github.com/GuillaumeLeclerc/vue-google-maps-example).
-
-It uses webpack and vue-loader and was "forked" from the vue-loader-example project
+If you have used vue-google-maps with Vue 1.x before, refer to [Upgrading](UPGRADING.md).
 
 ## Installation
 
 ### With npm (Recommended)
 
 ```
-npm install vue-google-maps
+npm install vue2-google-maps
 ```
-
-You can append `--save` or `--save-dev` to add it to your depency (if yor project also uses npm)
 
 ### Manually
 
-Just download the `index.js` file on the root directory of this repository
+Just download `dist/vue-google-maps.js` file and include it from your HTML.
+[Example](http://xkjyeah.github.io/vue-google-maps/overlay.html).
 
-### Basic usage
+### Basic usage / Documentation
 
-#### Reference `vue-google-maps` into your project
+See [API](API.md).
 
-If you are using a cool bundler (recommended) you can just do : 
+## Demo:
 
-```javascript
-import {load, Map, Marker} from 'vue-google-maps'
+[Showcase with a lot of features](http://xkjyeah.github.io/vue-google-maps/)
+
+## Presentation
+
+If you want to write google map this way :
+
+```html
+<gmap-map
+  :center="{lat:10, lng:10}"
+  map-type-id="terrain"
+  :zoom="7"
+></gmap-map>
 ```
 
-Or if you prefer the older ES5 syntax:
+Or use the power of Vue.js within a google map like this:
+```html
+<template>
+  <gmap-map
+    :center="center"
+    :zoom="7"
+    @center_changed="center=$event"
+  >
+    <gmap-marker
+      v-for="m in markers"
+      :position="m.position"
+      @position_changed="m.position=$event"
+      :draggable="m.draggable"
+      @g-dblclick="mapObj.center=m.position"
+    ></gmap-marker>
+  </gmap-map>
+</template>
 
-```javascript
-const VueGoogleMap = require('vue-google-maps')
+<script>
+  import {load, Map, Marker} from 'vue-google-maps'
+
+  load('YOUR_API_TOKEN','OPTIONAL VERSION NUMBER')
+
+  export default {
+    components: {
+      gmapMap: Map,
+      gmapMarker: Marker
+    }
+    data () {
+      return {
+        center: {lat: 10.0, lng: 10.0},
+        markers: [{
+          position: {lat: 10.0, lng: 10.0}
+        }, {
+          position: {lat: 11.0, lng: 11.0}
+        }]
+      }
+    }
+  }
+</script>
 ```
+
+## Testing
+
+There is a non-comprehensive test for the DeferredReady mixin. More tests
+should be written to help contributors.
+
+Improvements to the tests are welcome :)
+
+## Example Project
+
+Refer to the [examples](examples).
+
 
 #### Standalone / CDN
 
-If you are not using any bundler (and you should feel bad). You can just reference the file in a script tag.
+If you are not using any bundler, include `vue-google-maps/dist/vue-google-maps.js`
+instead.
 The library will be available in a global object called `VueGoogleMap`.
 However you will need to include Vue and Lodash beforehand:
 
 ```html
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
 <script src="dist/vue-google-maps.js"></script>
-
 </head>
 <body>
 
-<google-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
-    :center="center"
-    :zoom="zoom"
->
+  <div id="root">
+    <google-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
+        :center="{lat: 1.38, lng: 103.8}"
+        :zoom="12"
+    >
 
-</google-map>
+    </google-map>
+  </div>
 
-<script>
-VueGoogleMap.load({
-    'key': 'YOUR_API_KEY',
-})
-Vue.component('google-map', VueGoogleMap.Map);
-new Vue({
-    el: 'body',
-    data:{
-         center: {lat: 1.38, lng: 103.8},
-         zoom: 12
-     }
-</script>
+  <script>
+  VueGoogleMap.load({
+      'key': 'YOUR_API_KEY',
+  })
+  Vue.component('google-map', VueGoogleMap.Map);
+  new Vue({
+      el: '#root',
+  });
+
+  </script>
 
 </body>
 ```
@@ -157,15 +148,3 @@ VueGoogleMap.load({ ... })
 The parameters are passed in the query string to the Google Maps API, e.g. to set the [version](https://developers.google.com/maps/documentation/javascript/versions#version-rollover-and-version-types),
 [libraries](https://developers.google.com/maps/documentation/javascript/libraries),
 or for [localisation](https://developers.google.com/maps/documentation/javascript/basics).
-
-## Full documentation
-
-### Note on events
-
-__All events are prefixed with `g-`. Example : `g-click` so it does not interfere with DOM events.__
-
-__Documentation is up to date__: take a look at the wiki
-
-## Sponsor
-
-This component is sponsored by [PapayaPods](http://en.papayapods.com). Feel free to check out `vue-google-maps` in production !!

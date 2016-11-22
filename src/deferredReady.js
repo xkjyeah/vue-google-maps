@@ -41,9 +41,9 @@ import {getParentTest} from './utils/getParentTest';
  *     'register-deferredReadyChild' (obj) {
  *         if (this == obj)
  *             return true;
- *             
+ *
  *         this.hasDeferredReadyAncestors = true;
- *         
+ *
  *         this.deferredReadyDeferred.promise.then(() => {
  *             Promise.all(obj.$options.deferredReady.map(x => x()))
  *             .then(() => obj.deferredReadyDeferred.resolve())

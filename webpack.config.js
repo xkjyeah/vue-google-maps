@@ -4,7 +4,9 @@ var path = require('path')
 var _ = require('lodash')
 
 var baseConfig = {
-  entry: './src/main.js',
+  entry: [
+    path.resolve('./src/main.js')
+  ],
   module: {
     loaders: [
       {
@@ -56,11 +58,10 @@ npmConfig.resolve = {
     alias: {
       'vue': path.resolve('./src/stubs-dist/vue'),
       'lodash': path.resolve('./src/stubs-dist/lodash'),
-      'q': path.resolve('./src/stubs-dist/q'),
     },
 };
 npmConfig.module.noParse = [
-    /src\/stubs-dist/
+    /src[\\\/]stubs-dist/
 ];
 npmConfig.output = {
 	path: './',
@@ -93,5 +94,7 @@ if (process.env.NODE_ENV === 'production') {
       ]
   }
 } else {
-  module.exports.devtool = '#source-map'
+  for (var i=0; i<module.exports.length; i++) {
+    module.exports[i].devtool = 'source-map'
+  }
 }
