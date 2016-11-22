@@ -9,4 +9,4 @@ new Vue({
   components: {
     myApp: App
   }
-})
+});

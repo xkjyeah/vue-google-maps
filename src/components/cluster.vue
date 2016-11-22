@@ -10,7 +10,6 @@
 
 import Q from 'q';
 import _ from 'lodash';
-import eventHub from '../utils/eventHub';
 import propsBinder from '../utils/propsBinder.js';
 import MapComponent from './mapComponent';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js';

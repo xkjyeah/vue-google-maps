@@ -121,10 +121,9 @@
     :zoom="zoom"
     :map-type-id="mapType"
     :options="{styles: mapStyles, scrollwheel: scrollwheel}"
-    @rightclick="mapRclicked"
-    @drag="drag++"
-    @click="mapClickedCount++"
-
+    @g-rightclick="mapRclicked"
+    @g-drag="drag++"
+    @g-click="mapClickedCount++"
     @zoom_changed="update('zoom', $event)"
     @center_changed="update('reportedCenter', $event)"
     @maptypeid_changed="update('mapType', $event)"
@@ -139,18 +138,19 @@
         :position="m.position"
         :opacity="m.opacity"
         :draggable="m.draggable"
-        @click="m.clicked++"
-        @rightclick="m.rightClicked++"
-        @dragend="m.dragended++"
+        @g-click="m.clicked++"
+        @g-rightclick="m.rightClicked++"
+        @g-dragend="m.dragended++"
 
         @position_changed="updateChild(m, 'position', $event)"
 
         v-for="m in activeMarkers"
       >
-      <gmap-info-window
-      :opened.sync="m.ifw"
-      :content="m.ifw2text"
-      ></gmap-info-window>
+        <gmap-info-window
+        :opened="m.ifw"
+        @opened_changed="m.ifw=$event"
+        :content="m.ifw2text"
+        ></gmap-info-window>
       </gmap-marker>
     </gmap-cluster>
     <div v-if="!clustering">
@@ -159,14 +159,15 @@
       :position="m.position"
       :opacity="m.opacity"
       :draggable="m.draggable"
-      @click="m.clicked++"
-      @rightclick="m.rightClicked++"
-      @dragend="m.dragended++"
+      @g-click="m.clicked++"
+      @g-rightclick="m.rightClicked++"
+      @g-dragend="m.dragended++"
       @position_changed="updateChild(m, 'position', $event)"
       v-for="m in activeMarkers"
       >
         <gmap-info-window
-        :opened.sync="m.ifw"
+        :opened="m.ifw"
+        @opened_changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -174,7 +175,8 @@
 
     <gmap-info-window
     :position="reportedCenter"
-    :opened.sync="ifw"
+    :opened="ifw"
+    @opened_changed="ifw=$event"
     >
     To show you the bindings are working I will stay on the center of the screen whatever you do :)
     <br/>
@@ -184,16 +186,17 @@
 
     <gmap-info-window
     :position="reportedCenter"
-    :opened.sync="ifw2"
+    :opened="ifw2"
+    @opened_changed="ifw2=$event"
     :content="ifw2text"
     ></gmap-info-window>
 
     <gmap-polyline v-if="plvisible" :path="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}"
-      @path_changed="updatePolylinePath($event)">
+      @g-path_changed="updatePolylinePath($event)">
     </gmap-polyline>
     <gmap-polygon v-if="pgvisible" :paths="pgPath" :editable="true"
       :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}"
-      @paths_changed="updatePolygonPaths($event)">
+      @g-paths_changed="updatePolygonPaths($event)">
     </gmap-polygon>
     <gmap-circle v-if="displayCircle" :bounds="circleBounds"
       :center="reportedCenter" :radius="100000"
@@ -431,8 +434,8 @@ export default {
 
         console.log('CENTER REPORTED', event);
         this.reportedCenter = {
-          lat: event.lat(),
-          lng: event.lng(),
+          lat: event.lat,
+          lng: event.lng,
         }
 
         // If you wish to test the problem out for yourself, uncomment the following
@@ -448,8 +451,8 @@ export default {
     updateChild(object, field, event) {
       if (field === 'position') {
         object.position = {
-          lat: event.lat(),
-          lng: event.lng(),
+          lat: event.lat,
+          lng: event.lng,
         }
       }
     },

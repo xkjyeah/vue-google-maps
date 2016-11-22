@@ -11,7 +11,6 @@
 <script>
 
 import _ from 'lodash';
-import eventHub from '../utils/eventHub';
 import propsBinder from '../utils/propsBinder.js';
 import eventsBinder from '../utils/eventsBinder.js';
 import mutationObserver from '../utils/mutationObserver.js';
