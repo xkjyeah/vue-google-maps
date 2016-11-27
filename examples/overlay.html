@@ -1,49 +1,47 @@
-<head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
-  <script src="../dist/vue-google-maps.js"></script>
-</head>
 <body>
   <div id="root">
     <div style="width: 100%; height: 500px">
-    <google-map
-            :center="{lat: 1.38, lng: 103.8}"
-            :zoom="12"
-    >
-      <ground-overlay
-        source="./overlay.png"
-        :bounds="{
-            north: 1.502,
-            south: 1.185,
-            east: 104.0262,
-            west: 103.5998,
-        }"
-        :opacity="0.5"
-      >
-      </ground-overlay>
-    </google-map>
+      <google-map
+              :center="{lat: 1.38, lng: 103.8}"
+              :zoom="12">
+        <ground-overlay
+          source="./overlay.png"
+          :bounds="{
+              north: 1.502,
+              south: 1.185,
+              east: 104.0262,
+              west: 103.5998,
+          }"
+          :opacity="0.5"
+        >
+        </ground-overlay>
+      </google-map>
     </div>
   </div>
-<script>
-    console.log(localStorage.apiKey);
-    if (!localStorage.apiKey) {
-        var apiKey = prompt("Paste API Key here")
-        localStorage.apiKey = apiKey;
-    }
-</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+<script src="vue-google-maps.js"></script>
 
 <script>
 
-VueGoogleMap.load({
-    key: localStorage['apiKey'],
-    v: '3.25',
+Vue.use(VueGoogleMap, {
+  load: {
+    key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
+    v: '3.26',
+  },
+  // Demonstrating how we can customize the name of the components
+  installComponents: false,
 });
 
 document.addEventListener('DOMContentLoaded', function() {
     Vue.component('google-map', VueGoogleMap.Map);
-    Vue.component('ground-overlay', VueGoogleMap.MapComponent.extend({
+    Vue.component('ground-overlay', Vue.extend({
         render() { return ''},
+        mixins: [VueGoogleMap.MapElementMixin],
         props: ['source', 'bounds', 'opacity'],
+        created() {
+        },
         deferredReady: function() {
             this.$overlay = new google.maps.GroundOverlay(
                 this.source,

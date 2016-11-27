@@ -109,8 +109,9 @@
     }
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.3/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js"></script>
 <script src="../dist/vue-google-maps.js"></script>
 
 <script>
@@ -223,7 +224,8 @@
                     console.log(placeInputObj);
                 },
                 centerChanged: function (value) {
-                    this.mapObj.center = value;
+//                    this.mapObj.center = value;
+                    this.mapObj.center = {lat: 10, lng: 10}
                 },
                 zoomChanged: function (value) {
                     this.mapObj.zoom = value;

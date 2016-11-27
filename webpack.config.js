@@ -37,11 +37,10 @@ var baseConfig = {
  * Web config uses a global Vue and Lodash object.
  * */
 var webConfig = _.clone(baseConfig);
-webConfig.resolve = {
-    alias: {
-      'vue': path.resolve('./src/stubs/vue'),
-      'lodash': path.resolve('./src/stubs/lodash'),
-    },
+webConfig.externals = {
+  vue: 'Vue',
+  lodash: '_',
+  'marker-clusterer-plus': 'MarkerClusterer'
 };
 webConfig.output = {
 	path: './dist',
@@ -49,32 +48,10 @@ webConfig.output = {
     library: ["VueGoogleMap"],
     libraryTarget: "umd"
 };
-/**
- *  npm config allows vue-google-maps to be distributed
- *  as an npm package without double-requiring vue
- * */
-var npmConfig = _.clone(baseConfig);
-npmConfig.resolve = {
-    alias: {
-      'vue': path.resolve('./src/stubs-dist/vue'),
-      'lodash': path.resolve('./src/stubs-dist/lodash'),
-    },
-};
-npmConfig.module.noParse = [
-    /src[\\\/]stubs-dist/
-];
-npmConfig.output = {
-	path: './',
-    filename: "index.js",
-    library: ["VueGoogleMap"],
-    libraryTarget: "umd"
-};
 
 module.exports = [
     webConfig,
-    npmConfig,
 ];
-
 
 if (process.env.NODE_ENV === 'production') {
   console.log('THIS IS PROD');

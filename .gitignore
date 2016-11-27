@@ -1,5 +1,4 @@
 .DS_Store
 node_modules
-dist
-index.js.map
 examples/dist
+examples/vue-google-maps.js

@@ -44,23 +44,33 @@ Or use the power of Vue.js within a google map like this:
 <template>
   <gmap-map
     :center="center"
-    :zoom="7"
     @center_changed="center=$event"
+    :zoom="7"
   >
     <gmap-marker
       v-for="m in markers"
       :position="m.position"
       @position_changed="m.position=$event"
-      :draggable="m.draggable"
-      @g-dblclick="mapObj.center=m.position"
+      :clickable="true"
+      :draggable="true"
+      @g-click="center=m.position"
     ></gmap-marker>
   </gmap-map>
 </template>
 
 <script>
-  import {load, Map, Marker} from 'vue-google-maps'
+  /////////////////////////////////////////
+  // New in 0.4.0
+  import * as VueGoogleMaps from 'vue2-google-maps';
+  import Vue from 'vue';
 
-  load('YOUR_API_TOKEN','OPTIONAL VERSION NUMBER')
+  Vue.use(VueGoogleMaps, {
+    load: {
+      key: 'YOUR_API_TOKEN',
+      v: 'OPTIONAL VERSION NUMBER',
+      // libraries: 'places', //// If you need to use place input
+    }
+  });
 
   export default {
     components: {
@@ -92,7 +102,6 @@ Improvements to the tests are welcome :)
 
 Refer to the [examples](examples).
 
-
 #### Standalone / CDN
 
 If you are not using any bundler, include `vue-google-maps/dist/vue-google-maps.js`
@@ -102,29 +111,33 @@ However you will need to include Vue and Lodash beforehand:
 
 ```html
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
-<script src="dist/vue-google-maps.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+  <script src="dist/vue-google-maps.js"></script>
 </head>
 <body>
 
   <div id="root">
-    <google-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
+    <gmap-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
         :center="{lat: 1.38, lng: 103.8}"
         :zoom="12"
     >
 
-    </google-map>
+    </gmap-map>
   </div>
 
   <script>
-  VueGoogleMap.load({
-      'key': 'YOUR_API_KEY',
-  })
-  Vue.component('google-map', VueGoogleMap.Map);
-  new Vue({
-      el: '#root',
-  });
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'YOUR_API_TOKEN',
+        v: 'OPTIONAL VERSION NUMBER',
+        // libraries: 'places', //// If you need to use place input
+      }
+    })
+
+    new Vue({
+        el: '#root',
+    });
 
   </script>
 
@@ -136,13 +149,13 @@ However you will need to include Vue and Lodash beforehand:
 To enable any `vue-google-maps` components you need to set your api token:
 
 ```javascript
-load({
-  key: 'YOUR_API_TOKEN',
-  v: '3.26',                // Google Maps API version
-  // libraries: 'places',   // If you want to use places input
+Vue.use(VueGoogleMap, {
+  load: {
+    key: 'YOUR_API_TOKEN',
+    v: '3.26',                // Google Maps API version
+    // libraries: 'places',   // If you want to use places input
+  }
 })
-// OR (depending on how you refereced it)
-VueGoogleMap.load({ ... })
 ```
 
 The parameters are passed in the query string to the Google Maps API, e.g. to set the [version](https://developers.google.com/maps/documentation/javascript/versions#version-rollover-and-version-types),

@@ -1,5 +1,10 @@
-/* vim: set softtabstop=2 shiftwidth=2 expandtab : */
-import {DeferredReadyMixin} from "../utils/deferredReady";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _deferredReady = require("../utils/deferredReady");
 
 /**
  * @class MapElementMixin @mixins DeferredReadyMixin
@@ -10,30 +15,32 @@ import {DeferredReadyMixin} from "../utils/deferredReady";
  *
  *
  * */
-export default {
+exports.default = {
 
-  mixins: [DeferredReadyMixin],
+  mixins: [_deferredReady.DeferredReadyMixin],
 
-  beforeCreate(){
+  beforeCreate: function beforeCreate() {
     //components what can be user inside and outside of a map
     this.$hybridComponent = false;
   },
-  beforeMount() {
+  beforeMount: function beforeMount() {
+    var _this = this;
+
     if (this.$hybridComponent) {
       return;
     }
     /* Search for the Map component in the parent */
-    let search = this.$findAncestor(
-      ans => ans.$mapCreated
-    );
+    var search = this.$findAncestor(function (ans) {
+      return ans.$mapCreated;
+    });
 
     if (!search) {
-      throw new Error(`${this.constructor.name} component must be used within a <Map>`)
+      throw new Error(this.constructor.name + " component must be used within a <Map>");
     }
 
-    this.$mapPromise = search.$mapCreated.then((map) => {
-      this.$map = map
-    })
+    this.$mapPromise = search.$mapCreated.then(function (map) {
+      _this.$map = map;
+    });
     // FIXME: This is a hack to ensure correct loading
     // when the map has already be instantiated.
     if (search.$mapObject) {
@@ -42,14 +49,14 @@ export default {
     this.$MapElementMixin = search;
     this.$map = null;
   },
-
-  beforeDeferredReady () {
+  beforeDeferredReady: function beforeDeferredReady() {
     return this.$mapPromise;
   },
 
+
   methods: {
-    $findAncestor(condition) {
-      let search = this.$parent;
+    $findAncestor: function $findAncestor(condition) {
+      var search = this.$parent;
 
       while (search) {
         if (condition(search)) {
@@ -61,4 +68,4 @@ export default {
     }
   }
 
-};
+}; /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
