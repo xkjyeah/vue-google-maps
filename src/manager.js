@@ -1,15 +1,10 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
-const Q = require("q");
-
 var setUp = false;
-const loadingDefered = Q.defer();
 
-export const loaded = loadingDefered.promise;
-
-window['vueGoogleMapsInit'] = () => {
-  loadingDefered.resolve();
-};
+export const loaded = new Promise((resolve, reject) => {
+  window['vueGoogleMapsInit'] = resolve;
+})
 
 /**
  * @param apiKey    API Key, or object with the URL parameters. For example
@@ -47,7 +42,7 @@ export const load = (apiKey, version, libraries, loadCn) => {
     // This is to support more esoteric means of loading Google Maps,
     // such as Google for business
     // https://developers.google.com/maps/documentation/javascript/get-api-key#premium-auth
-    var options = {};
+    let options = {};
     if (typeof apiKey == 'string') {
       options.key = apiKey;
     }
@@ -93,4 +88,4 @@ export const load = (apiKey, version, libraries, loadCn) => {
   } else {
     throw new Error('You already started the loading of google maps');
   }
-};
+}

@@ -61,11 +61,11 @@
   {{rectangleBounds | json}}
   <br>
   <h1>PlaceInput</h1>
-  <place-input
+  <gmap-place-input
     label="Add a marker at this place"
     :select-first-on-enter="true"
     @place_changed="updatePlace($event)"
-  ></place-input>
+  ></gmap-place-input>
   <br>
   <h1> Standalone infoWindow </h1>
   modal 1 : <input type="checkbox" number v-model="ifw"><br>
@@ -241,10 +241,6 @@ gmap-map {
 </style>
 
 <script>
-
-import {load, Marker, Map, Cluster, InfoWindow, Polyline, Rectangle, Circle, Polygon, PlaceInput} from '../../index.js'
-
-load('AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw', '3.26', ['places']);
 
 export default {
   data: function data() {
@@ -488,16 +484,5 @@ export default {
     }
 
   },
-  components: {
-    GmapMap: Map,
-    GmapMarker: Marker,
-    GmapCluster: Cluster,
-    GmapInfoWindow: InfoWindow,
-    GmapPolygon: Polygon,
-    GmapPolyline: Polyline,
-    GmapRectangle: Rectangle,
-    GmapCircle: Circle,
-    PlaceInput
-  }
 };
 </script>

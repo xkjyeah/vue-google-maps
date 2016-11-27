@@ -1,24 +1,30 @@
 {
   "name": "vue2-google-maps",
-  "version": "0.4.0",
+  "version": "0.4.3",
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --quiet --port 9999",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build-copy": "node ./build-copy.js",
+    "build-babel": "babel src --out-dir dist",
+    "build-webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build": "npm run build-babel && npm run build-copy && npm run build-webpack",
     "test": "lab -T node_modules/lab-babel -t 100 -S test",
-    "build-example": "npm run build && shx cp dist/vue-google-maps.js examples && cd examples && webpack",
-    "deploy": "npm run build-example && gh-pages -d ."
+    "build-examples-webpack": "cd examples && webpack",
+    "build-examples-before": "npm run build && shx cp dist/vue-google-maps.js examples",
+    "build-examples": "npm run build-examples-before && npm run build-examples-webpack",
+    "deploy": "npm run build-examples && gh-pages -d examples"
   },
   "dependencies": {
-    "marker-clusterer-plus": "^2.1.4"
+    "vue-loader": "^10.0.0"
   },
   "peerDependencies": {
-    "vue": "^2.0.3",
-    "lodash": "^4.15.0",
-    "q": "^1.4.1"
+    "vue": "^2.1.0",
+    "lodash": "^4.16.0",
+    "marker-clusterer-plus": "^2.1.4"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
     "babel-core": "^6.18.0",
     "babel-loader": "^6.1.0",
     "babel-plugin-transform-runtime": "^6.15.0",
@@ -46,6 +52,6 @@
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0"
   },
-  "author": "Guillaume Leclerc",
+  "author": "Daniel Sim, Guillaume Leclerc",
   "license": "MIT"
 }
