@@ -94,7 +94,7 @@ exports.default = {
         return this.path;
       },
       set: function set(value) {
-        this.$emit('path_changed', value);
+        this.$emit('path-changed', value);
       }
     },
     local_paths: {
@@ -102,7 +102,7 @@ exports.default = {
         return this.paths;
       },
       set: function set(value) {
-        this.$emit('paths_changed', value);
+        this.$emit('paths-changed', value);
       }
     },
     local_draggable: function local_draggable() {

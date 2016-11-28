@@ -91,7 +91,7 @@ exports.default = {
       },
       set: function set(value) {
         this.infoWindowObj.opened = value;
-        this.$emit('opened_changed', value);
+        this.$emit('opened-changed', value);
         this.$nextTick(function () {
           if (this.infoWindowObj.opened == this.local_opened) return;
           this.infoWindowObj.opened = this.local_opened;
@@ -105,7 +105,7 @@ exports.default = {
       },
       set: function set(value) {
         this.infoWindowObj.position = value;
-        this.$emit('position_changed', value);
+        this.$emit('position-changed', value);
       }
     },
     local_zIndex: {
@@ -113,7 +113,7 @@ exports.default = {
         return this.zIndex;
       },
       set: function set(value) {
-        this.$emit('z-index_changed', value);
+        this.$emit('z-index-changed', value);
       }
     }
   },
@@ -178,7 +178,7 @@ exports.default = {
       (0, _eventsBinder2.default)(this, this.$infoWindow, events);
 
       // watching
-      this.$on('g-closeclick', function (ev) {
+      this.$on('closeclick', function (ev) {
         this.local_opened = false;
       });
 

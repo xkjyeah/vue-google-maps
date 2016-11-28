@@ -128,7 +128,7 @@ export default {
         return this.center;
       },
       set(value){
-        this.$emit('center_changed', value);
+        this.$emit('center-changed', value);
       }
     },
     local_zoom: {
@@ -136,7 +136,7 @@ export default {
         return this.zoom;
       },
       set(value){
-        this.$emit('zoom_changed', value);
+        this.$emit('zoom-changed', value);
       }
     },
     local_heading: {
@@ -144,7 +144,7 @@ export default {
         return this.heading;
       },
       set(value){
-        this.$emit('heading_changed', value);
+        this.$emit('heading-changed', value);
       }
     },
     local_mapTypeId: {
@@ -152,7 +152,7 @@ export default {
         return this.mapTypeId;
       },
       set(value){
-        this.$emit('mapTypeId_changed', value);
+        this.$emit('mapTypeId-changed', value);
       }
     },
     local_bounds: {
@@ -160,7 +160,7 @@ export default {
         return this.bounds;
       },
       set(value){
-        this.$emit('bounds_changed', value);
+        this.$emit('bounds-changed', value);
       }
     },
     local_projection: {
@@ -168,7 +168,7 @@ export default {
         return this.projection;
       },
       set(value){
-        this.$emit('projection_changed', value);
+        this.$emit('projection-changed', value);
       }
     },
     local_tilt: {
@@ -176,7 +176,7 @@ export default {
         return this.tilt;
       },
       set(value){
-        this.$emit('tilt_changed', value);
+        this.$emit('tilt-changed', value);
       }
     },
     local_options(){

@@ -131,7 +131,7 @@ exports.default = {
         return this.center;
       },
       set: function set(value) {
-        this.$emit('center_changed', value);
+        this.$emit('center-changed', value);
       }
     },
     local_zoom: {
@@ -139,7 +139,7 @@ exports.default = {
         return this.zoom;
       },
       set: function set(value) {
-        this.$emit('zoom_changed', value);
+        this.$emit('zoom-changed', value);
       }
     },
     local_heading: {
@@ -147,7 +147,7 @@ exports.default = {
         return this.heading;
       },
       set: function set(value) {
-        this.$emit('heading_changed', value);
+        this.$emit('heading-changed', value);
       }
     },
     local_mapTypeId: {
@@ -155,7 +155,7 @@ exports.default = {
         return this.mapTypeId;
       },
       set: function set(value) {
-        this.$emit('mapTypeId_changed', value);
+        this.$emit('mapTypeId-changed', value);
       }
     },
     local_bounds: {
@@ -163,7 +163,7 @@ exports.default = {
         return this.bounds;
       },
       set: function set(value) {
-        this.$emit('bounds_changed', value);
+        this.$emit('bounds-changed', value);
       }
     },
     local_projection: {
@@ -171,7 +171,7 @@ exports.default = {
         return this.projection;
       },
       set: function set(value) {
-        this.$emit('projection_changed', value);
+        this.$emit('projection-changed', value);
       }
     },
     local_tilt: {
@@ -179,7 +179,7 @@ exports.default = {
         return this.tilt;
       },
       set: function set(value) {
-        this.$emit('tilt_changed', value);
+        this.$emit('tilt-changed', value);
       }
     },
     local_options: function local_options() {

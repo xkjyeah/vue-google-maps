@@ -146,7 +146,7 @@ export default {
         return this.animation;
       },
       set(value){
-        this.$emit('animation_changed', value);
+        this.$emit('animation-changed', value);
       }
     },
     local_attribution(){
@@ -157,7 +157,7 @@ export default {
         return this.clickable;
       },
       set(value){
-        this.$emit('clickable_changed', value);
+        this.$emit('clickable-changed', value);
       }
     },
     local_cursor: {
@@ -165,7 +165,7 @@ export default {
         return this.cursor;
       },
       set(value){
-        this.$emit('cursor_changed', value);
+        this.$emit('cursor-changed', value);
       }
     },
     local_draggable: {
@@ -173,7 +173,7 @@ export default {
         return this.draggable;
       },
       set(value){
-        this.$emit('draggable_changed', value);
+        this.$emit('draggable-changed', value);
       }
     },
     local_icon: {
@@ -181,7 +181,7 @@ export default {
         return this.icon;
       },
       set(value){
-        this.$emit('icon_changed', value);
+        this.$emit('icon-changed', value);
       }
     },
     local_label(){
@@ -198,7 +198,7 @@ export default {
         return this.position;
       },
       set(value){
-        this.$emit('position_changed', value);
+        this.$emit('position-changed', value);
       }
     },
     local_shape: {
@@ -206,7 +206,7 @@ export default {
         return this.shape;
       },
       set(value){
-        this.$emit('shape_changed', value);
+        this.$emit('shape-changed', value);
       }
     },
     local_title: {
@@ -214,7 +214,7 @@ export default {
         return this.title;
       },
       set(value){
-        this.$emit('title_changed', value);
+        this.$emit('title-changed', value);
       }
     },
     local_zIndex: {
@@ -222,7 +222,7 @@ export default {
         return this.zIndex;
       },
       set(value){
-        this.$emit('z-index_changed', value);
+        this.$emit('z-index-changed', value);
       }
     },
     local_visible: {
@@ -230,7 +230,7 @@ export default {
         return this.visible;
       },
       set(value){
-        this.$emit('visible_changed', value);
+        this.$emit('visible-changed', value);
       }
     },
   },
@@ -276,11 +276,11 @@ export default {
       this.infoWindowClickEvent = () => {
         infoWindow.local_opened = !infoWindow.local_opened;
       };
-      this.$on('g-click', this.infoWindowClickEvent);
+      this.$on('click', this.infoWindowClickEvent);
     },
     unregisterInfoWindow(infoWindow) {
       if (this.infoWindowClickEvent) {
-        this.$off('g-click', this.infoWindowClickEvent);
+        this.$off('click', this.infoWindowClickEvent);
       }
       this.infoWindowClickEvent = null;
     },

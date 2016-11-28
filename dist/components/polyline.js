@@ -83,7 +83,7 @@ exports.default = {
         return this.path;
       },
       set: function set(value) {
-        this.$emit('path_changed', value);
+        this.$emit('path-changed', value);
       }
     },
     local_draggable: function local_draggable() {
