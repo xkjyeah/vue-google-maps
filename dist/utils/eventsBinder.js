@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = function (vueElement, googleMapObject, events) {
   _lodash2.default.forEach(events, function (eventName) {
-    var exposedName = 'g-' + eventName;
+    var exposedName = eventName;
     googleMapObject.addListener(eventName, function (ev) {
       vueElement.$emit(exposedName, ev);
     });

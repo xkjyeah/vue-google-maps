@@ -87,7 +87,7 @@ exports.default = {
         return this.center;
       },
       set: function set(value) {
-        this.$emit('center_changed', value);
+        this.$emit('center-changed', value);
       }
     },
     local_radius: {
@@ -95,7 +95,7 @@ exports.default = {
         return this.radius;
       },
       set: function set(value) {
-        this.$emit('radius_changed', value);
+        this.$emit('radius-changed', value);
       }
     },
     local_bounds: {
@@ -103,7 +103,7 @@ exports.default = {
         return this.bounds;
       },
       set: function set(value) {
-        this.$emit('bounds_changed', value);
+        this.$emit('bounds-changed', value);
       }
     },
     local_draggable: function local_draggable() {
@@ -154,14 +154,14 @@ exports.default = {
       this.infoWindowClickEvent = function () {
         infoWindow.local_opened = !infoWindow.local_opened;
       };
-      this.$on('g-click', this.infoWindowClickEvent);
+      this.$on('click', this.infoWindowClickEvent);
       this.infoWindowCenterChangeWatch = this.$watch('local_center', function (newValue) {
         infoWindow.local_position = newValue;
       }, { deep: true });
     },
     unregisterInfoWindow: function unregisterInfoWindow(infoWindow) {
       if (this.infoWindowClickEvent) {
-        this.$off('g-click', this.infoWindowClickEvent);
+        this.$off('click', this.infoWindowClickEvent);
       }
       this.infoWindowClickEvent = null;
       if (this.infoWindowCenterChangeWatch) {

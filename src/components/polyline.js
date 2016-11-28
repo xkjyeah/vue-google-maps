@@ -66,7 +66,7 @@ export default {
         return this.path;
       },
       set(value){
-        this.$emit('path_changed', value);
+        this.$emit('path-changed', value);
       }
     },
     local_draggable(){

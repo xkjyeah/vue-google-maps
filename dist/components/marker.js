@@ -156,7 +156,7 @@ exports.default = {
         return this.animation;
       },
       set: function set(value) {
-        this.$emit('animation_changed', value);
+        this.$emit('animation-changed', value);
       }
     },
     local_attribution: function local_attribution() {
@@ -168,7 +168,7 @@ exports.default = {
         return this.clickable;
       },
       set: function set(value) {
-        this.$emit('clickable_changed', value);
+        this.$emit('clickable-changed', value);
       }
     },
     local_cursor: {
@@ -176,7 +176,7 @@ exports.default = {
         return this.cursor;
       },
       set: function set(value) {
-        this.$emit('cursor_changed', value);
+        this.$emit('cursor-changed', value);
       }
     },
     local_draggable: {
@@ -184,7 +184,7 @@ exports.default = {
         return this.draggable;
       },
       set: function set(value) {
-        this.$emit('draggable_changed', value);
+        this.$emit('draggable-changed', value);
       }
     },
     local_icon: {
@@ -192,7 +192,7 @@ exports.default = {
         return this.icon;
       },
       set: function set(value) {
-        this.$emit('icon_changed', value);
+        this.$emit('icon-changed', value);
       }
     },
     local_label: function local_label() {
@@ -210,7 +210,7 @@ exports.default = {
         return this.position;
       },
       set: function set(value) {
-        this.$emit('position_changed', value);
+        this.$emit('position-changed', value);
       }
     },
     local_shape: {
@@ -218,7 +218,7 @@ exports.default = {
         return this.shape;
       },
       set: function set(value) {
-        this.$emit('shape_changed', value);
+        this.$emit('shape-changed', value);
       }
     },
     local_title: {
@@ -226,7 +226,7 @@ exports.default = {
         return this.title;
       },
       set: function set(value) {
-        this.$emit('title_changed', value);
+        this.$emit('title-changed', value);
       }
     },
     local_zIndex: {
@@ -234,7 +234,7 @@ exports.default = {
         return this.zIndex;
       },
       set: function set(value) {
-        this.$emit('z-index_changed', value);
+        this.$emit('z-index-changed', value);
       }
     },
     local_visible: {
@@ -242,7 +242,7 @@ exports.default = {
         return this.visible;
       },
       set: function set(value) {
-        this.$emit('visible_changed', value);
+        this.$emit('visible-changed', value);
       }
     }
   },
@@ -288,11 +288,11 @@ exports.default = {
       this.infoWindowClickEvent = function () {
         infoWindow.local_opened = !infoWindow.local_opened;
       };
-      this.$on('g-click', this.infoWindowClickEvent);
+      this.$on('click', this.infoWindowClickEvent);
     },
     unregisterInfoWindow: function unregisterInfoWindow(infoWindow) {
       if (this.infoWindowClickEvent) {
-        this.$off('g-click', this.infoWindowClickEvent);
+        this.$off('click', this.infoWindowClickEvent);
       }
       this.infoWindowClickEvent = null;
     },

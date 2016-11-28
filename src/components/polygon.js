@@ -73,7 +73,7 @@ export default {
         return this.path;
       },
       set(value){
-        this.$emit('path_changed', value);
+        this.$emit('path-changed', value);
       }
     },
     local_paths:{
@@ -81,7 +81,7 @@ export default {
         return this.paths;
       },
       set(value){
-        this.$emit('paths_changed', value);
+        this.$emit('paths-changed', value);
       }
     },
     local_draggable(){

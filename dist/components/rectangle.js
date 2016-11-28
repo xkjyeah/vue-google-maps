@@ -74,7 +74,7 @@ exports.default = {
         return this.bounds;
       },
       set: function set(value) {
-        this.$emit('bounds_changed', value);
+        this.$emit('bounds-changed', value);
       }
     },
     local_draggable: function local_draggable() {

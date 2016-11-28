@@ -124,7 +124,7 @@ exports.default = {
         return this.bounds;
       },
       set: function set(value) {
-        this.$emit('bounds_changed', value);
+        this.$emit('bounds-changed', value);
       }
     },
     local_place: {
@@ -133,7 +133,7 @@ exports.default = {
       },
       set: function set(value) {
         this.placeInputObj.place = value;
-        this.$emit('place_changed', value);
+        this.$emit('place-changed', value);
       }
     },
     local_defaultPlace: function local_defaultPlace() {
@@ -166,7 +166,7 @@ exports.default = {
   },
   created: function created() {
     this.$hybridComponent = !this.local_mapEmbedded;
-    this.$on('g-place_changed', this.placeChanged);
+    this.$on('place_changed', this.placeChanged);
     this.autoCompleter = null;
   },
   mounted: function mounted() {
