@@ -121,13 +121,13 @@
     :zoom="zoom"
     :map-type-id="mapType"
     :options="{styles: mapStyles, scrollwheel: scrollwheel}"
-    @g-rightclick="mapRclicked"
-    @g-drag="drag++"
-    @g-click="mapClickedCount++"
-    @zoom_changed="update('zoom', $event)"
-    @center_changed="update('reportedCenter', $event)"
-    @maptypeid_changed="update('mapType', $event)"
-    @bounds_changed="update('bounds', $event)"
+    @rightclick="mapRclicked"
+    @drag="drag++"
+    @click="mapClickedCount++"
+    @zoom-changed="update('zoom', $event)"
+    @center-changed="update('reportedCenter', $event)"
+    @map-type-id-changed="update('mapType', $event)"
+    @bounds-changed="update('bounds', $event)"
     >
     <gmap-cluster
     :grid-size="gridSize"
@@ -138,17 +138,17 @@
         :position="m.position"
         :opacity="m.opacity"
         :draggable="m.draggable"
-        @g-click="m.clicked++"
-        @g-rightclick="m.rightClicked++"
-        @g-dragend="m.dragended++"
+        @click="m.clicked++"
+        @rightclick="m.rightClicked++"
+        @dragend="m.dragended++"
 
-        @position_changed="updateChild(m, 'position', $event)"
+        @position-changed="updateChild(m, 'position', $event)"
 
         v-for="m in activeMarkers"
       >
         <gmap-info-window
         :opened="m.ifw"
-        @opened_changed="m.ifw=$event"
+        @opened-changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -159,15 +159,15 @@
       :position="m.position"
       :opacity="m.opacity"
       :draggable="m.draggable"
-      @g-click="m.clicked++"
-      @g-rightclick="m.rightClicked++"
-      @g-dragend="m.dragended++"
-      @position_changed="updateChild(m, 'position', $event)"
+      @click="m.clicked++"
+      @rightclick="m.rightClicked++"
+      @dragend="m.dragended++"
+      @position-changed="updateChild(m, 'position', $event)"
       v-for="m in activeMarkers"
       >
         <gmap-info-window
         :opened="m.ifw"
-        @opened_changed="m.ifw=$event"
+        @opened-changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -176,7 +176,7 @@
     <gmap-info-window
     :position="reportedCenter"
     :opened="ifw"
-    @opened_changed="ifw=$event"
+    @opened-changed="ifw=$event"
     >
     To show you the bindings are working I will stay on the center of the screen whatever you do :)
     <br/>
@@ -187,28 +187,28 @@
     <gmap-info-window
     :position="reportedCenter"
     :opened="ifw2"
-    @opened_changed="ifw2=$event"
+    @opened-changed="ifw2=$event"
     :content="ifw2text"
     ></gmap-info-window>
 
     <gmap-polyline v-if="plvisible" :path="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}"
-      @g-path_changed="updatePolylinePath($event)">
+      @path_changed="updatePolylinePath($event)">
     </gmap-polyline>
     <gmap-polygon v-if="pgvisible" :paths="pgPath" :editable="true"
       :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}"
-      @g-paths_changed="updatePolygonPaths($event)">
+      @paths_changed="updatePolygonPaths($event)">
     </gmap-polygon>
     <gmap-circle v-if="displayCircle" :bounds="circleBounds"
       :center="reportedCenter" :radius="100000"
       :options="{editable: true}"
 
-      @radius_changed="updateCircle('radius', $event)"
-      @bounds_changed="updateCircle('bounds', $event)"
+      @radius-changed="updateCircle('radius', $event)"
+      @bounds-changed="updateCircle('bounds', $event)"
 
       ></gmap-circle>
     <gmap-rectangle v-if="displayRectangle" :bounds="rectangleBounds"
     :options="{editable: true}"
-    @bounds_changed="updateRectangle('bounds', $event)"></gmap-rectangle>
+    @bounds-changed="updateRectangle('bounds', $event)"></gmap-rectangle>
   </gmap-map>
 </div>
 </div>
