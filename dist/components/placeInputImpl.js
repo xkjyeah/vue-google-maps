@@ -103,7 +103,6 @@ var props = {
     default: false
   }
 };
-var events = ['place_changed'];
 
 exports.default = {
   mixins: [_mapElementMixin2.default, _getPropsValuesMixin2.default],
@@ -166,15 +165,20 @@ exports.default = {
   },
   created: function created() {
     this.$hybridComponent = !this.local_mapEmbedded;
-    this.$on('place_changed', this.placeChanged);
+    this.placeInputObj.place.name = this.local_defaultPlace;
     this.autoCompleter = null;
   },
   mounted: function mounted() {
     var _this = this;
 
     var input = this.$refs.input;
+
+    // Allow default place to be set
     input.value = this.local_defaultPlace;
     this.local_place.name = this.local_defaultPlace;
+    this.$watch('local_defaultPlace', function () {
+      input.value = _this.local_defaultPlace;
+    });
     _manager.loaded.then(function () {
       window.i = input;
       var options = _lodash2.default.clone(_this.getPropsValues());
@@ -185,8 +189,8 @@ exports.default = {
       (0, _assert2.default)(typeof google.maps.places.Autocomplete === 'function', "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?");
 
       _this.autoCompleter = new google.maps.places.Autocomplete(_this.$refs.input, options);
-      (0, _eventsBinder2.default)(_this, _this.autoCompleter, events);
       (0, _propsBinder2.default)(_this, _this.autoCompleter, placeInputProps);
+      _this.autoCompleter.addListener('place_changed', _this.placeChanged);
     });
   },
   deferredReady: function deferredReady() {

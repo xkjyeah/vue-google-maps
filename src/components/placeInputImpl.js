@@ -31,7 +31,7 @@ const props = {
   },
   place: {
     type: Object,
-    default: function () {
+    default() {
       return {
         name: ''
       };
@@ -74,9 +74,6 @@ const props = {
     default: false
   }
 }
-const events = [
-  'place_changed'
-];
 
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
@@ -138,7 +135,7 @@ export default {
   },
   created(){
     this.$hybridComponent = !this.local_mapEmbedded;
-    this.$on('place_changed', this.placeChanged);
+    this.placeInputObj.place.name = this.local_defaultPlace;
     this.autoCompleter = null;
   },
   mounted () {
@@ -162,7 +159,7 @@ export default {
 
       this.autoCompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
       propsBinder(this, this.autoCompleter, placeInputProps);
-      eventBinder(this, this.autoCompleter, events);
+      this.autoCompleter.addListener('place_changed', this.placeChanged);
     })
   },
   deferredReady() {

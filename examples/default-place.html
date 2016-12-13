@@ -3,13 +3,13 @@
     <h1>Test</h1>
     "Singapore" should appear in the text box on page load. No errors in console.
     <gmap-place-input default-place="Singapore"
-      @place_changed="updatePlace">
+      @place-changed="updatePlace">
     </gmap-place-input>
     {{place && place.lat}},
     {{place && place.lng}},
   </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
 <script src="vue-google-maps.js"></script>
 
@@ -32,11 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       methods: {
         updatePlace(what) {
-          console.log(what)
-          this.place = {
-            lat: what.geometry.location.lat(),
-            lng: what.geometry.location.lng()
-          };
+          console.log(what);
+          if (what.geometry) {
+            this.place = {
+              lat: what.geometry.location.lat(),
+              lng: what.geometry.location.lng()
+            };
+          }
         }
       }
   });
