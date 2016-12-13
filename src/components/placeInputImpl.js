@@ -143,8 +143,13 @@ export default {
   },
   mounted () {
     const input = this.$refs.input;
+
+    // Allow default place to be set
     input.value = this.local_defaultPlace ;
     this.local_place.name = this.local_defaultPlace;
+    this.$watch('local_defaultPlace', () => {
+      input.value = this.local_defaultPlace;
+    })
     loaded.then(() => {
       window.i = input;
       const options = _.clone(this.getPropsValues());
@@ -156,8 +161,8 @@ export default {
         "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?")
 
       this.autoCompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
-      eventBinder(this, this.autoCompleter, events);
       propsBinder(this, this.autoCompleter, placeInputProps);
+      eventBinder(this, this.autoCompleter, events);
     })
   },
   deferredReady() {

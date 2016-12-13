@@ -32,6 +32,10 @@ var _rectangle = require('./components/rectangle');
 
 var _rectangle2 = _interopRequireDefault(_rectangle);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _infoWindow = require('./components/infoWindow.vue');
 
 var _infoWindow2 = _interopRequireDefault(_infoWindow);
@@ -69,7 +73,7 @@ exports.MapElementMixin = _mapElementMixin2.default;
 // Vue component imports
 
 function install(Vue, options) {
-  options = _.defaults(options, {
+  options = _lodash2.default.defaults(options, {
     installComponents: true
   });
 
