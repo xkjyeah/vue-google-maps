@@ -5,6 +5,7 @@ import Polyline from './components/polyline'
 import Polygon from './components/polygon'
 import Circle from './components/circle'
 import Rectangle from './components/rectangle'
+import _ from 'lodash'
 
 // Vue component imports
 import InfoWindow from './components/infoWindow.vue'

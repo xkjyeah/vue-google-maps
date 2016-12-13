@@ -1,6 +1,6 @@
 {
   "name": "vue2-google-maps",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
   "main": "dist/main.js",
   "scripts": {
@@ -51,6 +51,12 @@
     "vue-loader": "^7.2.0",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0"
+  },
+  "browserify": {
+    "transform": [
+      "babelify",
+      "vueify"
+    ]
   },
   "author": "Daniel Sim, Guillaume Leclerc",
   "license": "MIT"

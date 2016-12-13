@@ -31,7 +31,7 @@ const props = {
   },
   place: {
     type: Object,
-    default: function () {
+    default() {
       return {
         name: ''
       };
@@ -74,9 +74,6 @@ const props = {
     default: false
   }
 }
-const events = [
-  'place_changed'
-];
 
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
@@ -138,13 +135,18 @@ export default {
   },
   created(){
     this.$hybridComponent = !this.local_mapEmbedded;
-    this.$on('place_changed', this.placeChanged);
+    this.placeInputObj.place.name = this.local_defaultPlace;
     this.autoCompleter = null;
   },
   mounted () {
     const input = this.$refs.input;
+
+    // Allow default place to be set
     input.value = this.local_defaultPlace ;
     this.local_place.name = this.local_defaultPlace;
+    this.$watch('local_defaultPlace', () => {
+      input.value = this.local_defaultPlace;
+    })
     loaded.then(() => {
       window.i = input;
       const options = _.clone(this.getPropsValues());
@@ -156,8 +158,8 @@ export default {
         "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?")
 
       this.autoCompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
-      eventBinder(this, this.autoCompleter, events);
       propsBinder(this, this.autoCompleter, placeInputProps);
+      this.autoCompleter.addListener('place_changed', this.placeChanged);
     })
   },
   deferredReady() {

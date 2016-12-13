@@ -1,0 +1,49 @@
+<body>
+  <div id="root">
+    <h1>Test</h1>
+    "Singapore" should appear in the text box on page load. No errors in console.
+    <gmap-place-input default-place="Singapore"
+      @place-changed="updatePlace">
+    </gmap-place-input>
+    {{place && place.lat}},
+    {{place && place.lng}},
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+<script src="vue-google-maps.js"></script>
+
+<script>
+
+Vue.use(VueGoogleMap, {
+  load: {
+    key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
+    libraries: 'places'
+  },
+  // Demonstrating how we can customize the name of the components
+  installComponents: true,
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  new Vue({
+      el: '#root',
+      data: {
+        place: null
+      },
+      methods: {
+        updatePlace(what) {
+          console.log(what);
+          if (what.geometry) {
+            this.place = {
+              lat: what.geometry.location.lat(),
+              lng: what.geometry.location.lng()
+            };
+          }
+        }
+      }
+  });
+});
+
+</script>
+
+</body>
