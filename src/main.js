@@ -11,13 +11,14 @@ import _ from 'lodash'
 import InfoWindow from './components/infoWindow.vue'
 import Map from './components/map.vue';
 import PlaceInput from './components/placeInput.vue'
+import Autocomplete from './components/autocomplete.vue'
 
 import MapElementMixin from './components/mapElementMixin'
 import {DeferredReady} from './utils/deferredReady'
 
 // export everything
 export {load, loaded, Marker, Cluster, Polyline, Polygon, Circle, Rectangle,
-  InfoWindow, Map, PlaceInput, MapElementMixin};
+  InfoWindow, Map, PlaceInput, MapElementMixin, Autocomplete};
 
 export function install(Vue, options) {
   options = _.defaults(options, {
@@ -39,6 +40,7 @@ export function install(Vue, options) {
     Vue.component('GmapPolygon', Polygon);
     Vue.component('GmapCircle', Circle);
     Vue.component('GmapRectangle', Rectangle);
+    Vue.component('GmapAutocomplete', Autocomplete);
     Vue.component('GmapPlaceInput', PlaceInput);
   }
 }

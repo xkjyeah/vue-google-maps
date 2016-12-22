@@ -1,6 +1,6 @@
 {
   "name": "vue2-google-maps",
-  "version": "0.4.4",
+  "version": "0.4.9",
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
   "main": "dist/main.js",
   "scripts": {
@@ -41,6 +41,7 @@
     "lab-babel": "^1.1.1",
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
+    "marker-clusterer-plus": "^2.1.4",
     "shx": "^0.2.0",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.0",
@@ -49,6 +50,7 @@
     "vue-hot-reload-api": "^1.2.0",
     "vue-html-loader": "^1.0.0",
     "vue-loader": "^7.2.0",
+    "vue-template-compiler": "^2.1.6",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0"
   },

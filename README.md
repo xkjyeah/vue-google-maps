@@ -17,6 +17,8 @@ npm install vue2-google-maps
 ### Manually
 
 Just download `dist/vue-google-maps.js` file and include it from your HTML.
+***If you use this method, Vue 2.1.x is required***.
+
 [Example](http://xkjyeah.github.io/vue-google-maps/overlay.html).
 
 ### Basic usage / Documentation
@@ -111,7 +113,7 @@ However you will need to include Vue and Lodash beforehand:
 
 ```html
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
   <script src="dist/vue-google-maps.js"></script>
 </head>

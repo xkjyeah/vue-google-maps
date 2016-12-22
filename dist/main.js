@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MapElementMixin = exports.PlaceInput = exports.Map = exports.InfoWindow = exports.Rectangle = exports.Circle = exports.Polygon = exports.Polyline = exports.Cluster = exports.Marker = exports.loaded = exports.load = undefined;
+exports.Autocomplete = exports.MapElementMixin = exports.PlaceInput = exports.Map = exports.InfoWindow = exports.Rectangle = exports.Circle = exports.Polygon = exports.Polyline = exports.Cluster = exports.Marker = exports.loaded = exports.load = undefined;
 exports.install = install;
 
 var _manager = require('./manager.js');
@@ -48,6 +48,10 @@ var _placeInput = require('./components/placeInput.vue');
 
 var _placeInput2 = _interopRequireDefault(_placeInput);
 
+var _autocomplete = require('./components/autocomplete.vue');
+
+var _autocomplete2 = _interopRequireDefault(_autocomplete);
+
 var _mapElementMixin = require('./components/mapElementMixin');
 
 var _mapElementMixin2 = _interopRequireDefault(_mapElementMixin);
@@ -57,6 +61,9 @@ var _deferredReady = require('./utils/deferredReady');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // export everything
+
+
+// Vue component imports
 exports.load = _manager.load;
 exports.loaded = _manager.loaded;
 exports.Marker = _marker2.default;
@@ -69,9 +76,7 @@ exports.InfoWindow = _infoWindow2.default;
 exports.Map = _map2.default;
 exports.PlaceInput = _placeInput2.default;
 exports.MapElementMixin = _mapElementMixin2.default;
-
-// Vue component imports
-
+exports.Autocomplete = _autocomplete2.default;
 function install(Vue, options) {
   options = _lodash2.default.defaults(options, {
     installComponents: true
@@ -92,6 +97,7 @@ function install(Vue, options) {
     Vue.component('GmapPolygon', _polygon2.default);
     Vue.component('GmapCircle', _circle2.default);
     Vue.component('GmapRectangle', _rectangle2.default);
+    Vue.component('GmapAutocomplete', _autocomplete2.default);
     Vue.component('GmapPlaceInput', _placeInput2.default);
   }
 }

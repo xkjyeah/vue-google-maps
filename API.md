@@ -16,12 +16,12 @@ Table of Contents
 
    * [vue2-google-maps](#vue2-google-maps)
       * [Note on events](#note-on-events)
-      * [Table of Contents](#table-of-contents)
+   * [Table of Contents](#table-of-contents)
       * [<a name="user-content-getting-started-cdn"></a> Getting Started (with CDN)](#-getting-started-with-cdn)
       * [<a name="user-content-getting-started-npm"></a> Getting Started (with NPM)](#-getting-started-with-npm)
       * [Classes](#classes)
          * [install(Vue: Vue, options: InstallOptions) : void](#installvue-vue-options-installoptions--void)
-            * [installComponents : InstallOptions](#installcomponents--installoptions)
+            * [installComponents : boolean](#installcomponents--boolean)
             * [load : LoadOptions](#load--loadoptions)
          * [loaded() : Promise](#loaded--promise)
          * [Map class (mixes in <code>DeferredReadyMixin</code>)](#map-class-mixes-in-deferredreadymixin)
@@ -190,26 +190,38 @@ Table of Contents
                * [mouseover](#mouseover-5)
                * [mouseup](#mouseup-4)
                * [rightclick](#rightclick-5)
-         * [PlaceInput class (mixes in <code>MapElementMixin</code>)](#placeinput-class-mixes-in-mapelementmixin)
+         * [Autocomplete class (mixes in <code>MapElementMixin</code>)](#autocomplete-class-mixes-in-mapelementmixin)
             * [Fields](#fields-5)
-               * [autoCompleter : google.maps.Autocomplete](#autocompleter--googlemapsautocomplete)
+               * [$autocomplete : google.maps.Autocomplete](#autocomplete--googlemapsautocomplete)
             * [Properties](#properties-9)
                * [bounds : object](#bounds--object)
                * [defaultPlace : string](#defaultplace--string)
                * [componentRestrictions : object](#componentrestrictions--object)
                * [placeholder : string](#placeholder--string)
                * [types : string[]](#types--string)
-               * [className : string](#classname--string)
-               * [label : string](#label--string-1)
                * [selectFirstOnEnter : boolean](#selectfirstonenter--boolean)
             * [Events](#events-7)
                * [place_changed](#place_changed)
+         * [PlaceInput class (mixes in <code>MapElementMixin</code>) (deprecated)](#placeinput-class-mixes-in-mapelementmixin-deprecated)
+            * [Fields](#fields-6)
+               * [autoCompleter : google.maps.Autocomplete](#autocompleter--googlemapsautocomplete)
+            * [Properties](#properties-10)
+               * [bounds : object](#bounds--object-1)
+               * [defaultPlace : string](#defaultplace--string-1)
+               * [componentRestrictions : object](#componentrestrictions--object-1)
+               * [placeholder : string](#placeholder--string-1)
+               * [types : string[]](#types--string-1)
+               * [className : string](#classname--string)
+               * [label : string](#label--string-1)
+               * [selectFirstOnEnter : boolean](#selectfirstonenter--boolean-1)
+            * [Events](#events-8)
+               * [place_changed](#place_changed-1)
          * [DeferredReadyMixin](#deferredreadymixin)
             * [Hooks](#hooks)
                * [beforeDeferredReady() : () =&gt; Promise](#beforedeferredready----promise)
                * [deferredReady() : () =&gt; Promise](#deferredready----promise)
          * [MapElementMixin (mixes in <code>DeferredReadyMixin</code>)](#mapelementmixin-mixes-in-deferredreadymixin)
-            * [Fields](#fields-6)
+            * [Fields](#fields-7)
                * [$map : Map](#map--map)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
@@ -303,7 +315,7 @@ interface LoadOptions {
 
 Installs VueGoogleMaps on an instance of Vue.
 
-#### `installComponents : InstallOptions`
+#### `installComponents : boolean`
 Automatically installs the available components
 as `Gmap*`. If you would like to give the components your
 own names, set this to false, then install the components manually,
@@ -587,8 +599,28 @@ Set to `false` to improve performance.
 ##### `mouseup`
 ##### `rightclick`
 
+### `Autocomplete` class (mixes in `MapElementMixin`)
 
-### `PlaceInput` class (mixes in `MapElementMixin`)
+The root element of this class is an `INPUT` element.
+Therefore it is possible to set the `class`, `value`, `v-model` etc. and other
+attributes on the element.
+
+#### Fields
+##### `$autocomplete : google.maps.Autocomplete`
+
+#### Properties
+##### `bounds : object`
+##### `defaultPlace : string`
+##### `componentRestrictions : object`
+##### `placeholder : string`
+##### `types : string[]`
+##### `selectFirstOnEnter : boolean`
+Simulates a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected, and then triggers the original listener.
+
+#### Events
+##### `place_changed`
+
+### `PlaceInput` class (mixes in `MapElementMixin`) (deprecated)
 #### Fields
 ##### `autoCompleter : google.maps.Autocomplete`
 
