@@ -1,5 +1,5 @@
 <template>
-  <input type="text" :placeholder="placeholder" ref="input"/>
+  <input v-model="placeName" type="text" :placeholder="placeholder" ref="input"/>
 </template>
 
 <script src="./autocompleteImpl.js">

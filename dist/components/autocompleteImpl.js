@@ -1,36 +1,32 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _lodash = require('lodash');
+var _lodash = require("lodash");
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _eventsBinder = require('../utils/eventsBinder.js');
-
-var _eventsBinder2 = _interopRequireDefault(_eventsBinder);
-
-var _propsBinder = require('../utils/propsBinder.js');
+var _propsBinder = require("../utils/propsBinder.js");
 
 var _propsBinder2 = _interopRequireDefault(_propsBinder);
 
-var _simulateArrowDown = require('../utils/simulateArrowDown.js');
+var _simulateArrowDown = require("../utils/simulateArrowDown.js");
 
 var _simulateArrowDown2 = _interopRequireDefault(_simulateArrowDown);
 
-var _mapElementMixin = require('./mapElementMixin');
+var _mapElementMixin = require("./mapElementMixin");
 
 var _mapElementMixin2 = _interopRequireDefault(_mapElementMixin);
 
-var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
+var _getPropsValuesMixin = require("../utils/getPropsValuesMixin.js");
 
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
-var _manager = require('../manager.js');
+var _manager = require("../manager.js");
 
-var _assert = require('assert');
+var _assert = require("assert");
 
 var _assert2 = _interopRequireDefault(_assert);
 
@@ -55,6 +51,9 @@ var props = {
   componentRestrictions: {
     type: Object,
     default: null
+  },
+  value: {
+    type: String
   },
   types: {
     type: Array,
@@ -82,15 +81,15 @@ var props = {
 exports.default = {
   mixins: [_mapElementMixin2.default, _getPropsValuesMixin2.default],
   props: props,
-  data: function data() {
-    return {
-      placeInputObj: {
-        place: undefined
-      }
-    };
-  },
-
   computed: {
+    placeName: {
+      get: function get() {
+        return this.value;
+      },
+      set: function set(value) {
+        this.$emit("input", value);
+      }
+    },
     local_bounds: {
       get: function get() {
         return this.bounds;

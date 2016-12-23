@@ -1,11 +1,10 @@
-import _ from 'lodash'
-import eventBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import downArrowSimulator from '../utils/simulateArrowDown.js'
-import MapElementMixin from './mapElementMixin';
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
-import {loaded} from '../manager.js'
-import assert from 'assert';
+import _ from "lodash"
+import propsBinder from "../utils/propsBinder.js"
+import downArrowSimulator from "../utils/simulateArrowDown.js"
+import MapElementMixin from "./mapElementMixin"
+import getPropsValuesMixin from "../utils/getPropsValuesMixin.js"
+import {loaded} from "../manager.js"
+import assert from "assert"
 
 const placeInputProps = {
   bounds: {
@@ -26,6 +25,9 @@ const props = {
   componentRestrictions: {
     type: Object,
     default: null,
+  },
+  value: {
+    type: String
   },
   types: {
     type: Array,
@@ -53,14 +55,15 @@ const props = {
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
-  data(){
-    return {
-      placeInputObj:{
-        place: undefined
-      }
-    }
-  },
   computed: {
+    placeName: {
+      get(){
+        return this.value;
+      },
+      set(value){
+        this.$emit("input", value);
+      }
+    },
     local_bounds: {
       get(){
         return this.bounds;
