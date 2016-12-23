@@ -94,7 +94,7 @@ const linkedMethods = _([
       if (this.$mapObject)
         this.$mapObject[methodName].apply(this.$mapObject, arguments);
     }])
-    .toPairs()
+    .fromPairs()
     .value()
   ;
 

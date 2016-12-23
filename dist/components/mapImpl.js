@@ -100,7 +100,7 @@ var linkedMethods = (0, _lodash2.default)(['panBy', 'panTo', 'panToBounds', 'fit
   return [methodName, function () {
     if (this.$mapObject) this.$mapObject[methodName].apply(this.$mapObject, arguments);
   }];
-}).toPairs().value();
+}).fromPairs().value();
 
 // Other convenience methods exposed by Vue Google Maps
 var customMethods = {
