@@ -86,6 +86,13 @@ Or use the power of Vue.js within a google map like this:
     }
   }
 </script>
+
+<style>
+  .vue-map-container{
+    width: 500px;
+    height: 500px;
+  }
+</style>
 ```
 
 ## Use with `vue-router` / components that change their visibility
