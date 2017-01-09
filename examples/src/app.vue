@@ -115,8 +115,7 @@
     </tr>
   </table>
 </div>
-<div class="map-panel">
-  <gmap-map
+<gmap-map
     :center="center"
     :zoom="zoom"
     :map-type-id="mapType"
@@ -124,10 +123,12 @@
     @rightclick="mapRclicked"
     @drag="drag++"
     @click="mapClickedCount++"
-    @zoom-changed="update('zoom', $event)"
-    @center-changed="update('reportedCenter', $event)"
-    @map-type-id-changed="update('mapType', $event)"
-    @bounds-changed="update('bounds', $event)"
+    class="map-panel"
+
+    @zoom_changed="update('zoom', $event)"
+    @center_changed="update('reportedCenter', $event)"
+    @maptypeid_changed="update('mapType', $event)"
+    @bounds_changed="update('bounds', $event)"
     >
     <gmap-cluster
     :grid-size="gridSize"
@@ -142,13 +143,13 @@
         @rightclick="m.rightClicked++"
         @dragend="m.dragended++"
 
-        @position-changed="updateChild(m, 'position', $event)"
+        @position_changed="updateChild(m, 'position', $event)"
 
         v-for="m in activeMarkers"
       >
         <gmap-info-window
         :opened="m.ifw"
-        @opened-changed="m.ifw=$event"
+        @opened_changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -162,12 +163,12 @@
       @click="m.clicked++"
       @rightclick="m.rightClicked++"
       @dragend="m.dragended++"
-      @position-changed="updateChild(m, 'position', $event)"
+      @position_changed="updateChild(m, 'position', $event)"
       v-for="m in activeMarkers"
       >
         <gmap-info-window
         :opened="m.ifw"
-        @opened-changed="m.ifw=$event"
+        @opened_changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -176,7 +177,7 @@
     <gmap-info-window
     :position="reportedCenter"
     :opened="ifw"
-    @opened-changed="ifw=$event"
+    @opened_changed="ifw=$event"
     >
     To show you the bindings are working I will stay on the center of the screen whatever you do :)
     <br/>
@@ -187,7 +188,7 @@
     <gmap-info-window
     :position="reportedCenter"
     :opened="ifw2"
-    @opened-changed="ifw2=$event"
+    @opened_changed="ifw2=$event"
     :content="ifw2text"
     ></gmap-info-window>
 
@@ -202,15 +203,14 @@
       :center="reportedCenter" :radius="100000"
       :options="{editable: true}"
 
-      @radius-changed="updateCircle('radius', $event)"
-      @bounds-changed="updateCircle('bounds', $event)"
+      @radius_changed="updateCircle('radius', $event)"
+      @bounds_changed="updateCircle('bounds', $event)"
 
       ></gmap-circle>
     <gmap-rectangle v-if="displayRectangle" :bounds="rectangleBounds"
     :options="{editable: true}"
-    @bounds-changed="updateRectangle('bounds', $event)"></gmap-rectangle>
-  </gmap-map>
-</div>
+    @bounds_changed="updateRectangle('bounds', $event)"></gmap-rectangle>
+</gmap-map>
 </div>
 </template>
 
@@ -430,8 +430,8 @@ export default {
 
         console.log('CENTER REPORTED', event);
         this.reportedCenter = {
-          lat: event.lat,
-          lng: event.lng,
+          lat: event.lat(),
+          lng: event.lng(),
         }
 
         // If you wish to test the problem out for yourself, uncomment the following
@@ -447,8 +447,8 @@ export default {
     updateChild(object, field, event) {
       if (field === 'position') {
         object.position = {
-          lat: event.lat,
-          lng: event.lng,
+          lat: event.lat(),
+          lng: event.lng(),
         }
       }
     },

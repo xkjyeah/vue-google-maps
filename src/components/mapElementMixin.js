@@ -13,6 +13,12 @@ import {DeferredReadyMixin} from "../utils/deferredReady";
 export default {
 
   mixins: [DeferredReadyMixin],
+  
+  data() {
+    return {
+      _changeIndicators: {} // For propsBinder trackProperties
+    }
+  },
 
   beforeCreate(){
     //components what can be user inside and outside of a map

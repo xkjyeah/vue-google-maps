@@ -12,21 +12,20 @@
       Fit Bounds
     </button>
 
-    <div style="width: 100%; height: 500px">
-      <gmap-map
-        :center="center"
-        :zoom="7"
-        ref="mmm"
-      >
-        <gmap-marker
-          v-for="m in markers"
-          :position="m.position"
-          :clickable="true"
-          :draggable="true"
-          @click="center=m.position"
-        ></gmap-marker>
-      </gmap-map>
-    </div>
+    <gmap-map
+      :center="center"
+      :zoom="7"
+      ref="mmm"
+      style="width: 100%; height: 500px"
+    >
+      <gmap-marker
+        v-for="m in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="center=m.position"
+      ></gmap-marker>
+    </gmap-map>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>

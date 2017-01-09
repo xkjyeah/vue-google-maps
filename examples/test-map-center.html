@@ -15,10 +15,9 @@
   <div id="test1">
     <h2>Test 1</h2>
     Passes if: You can pan around this map without it being snapped back to the center
-    <div class="map-container">
-      <google-map :center="{lat: 1.38, lng: 103.8}" :zoom="12">
-      </google-map>
-    </div>
+    <google-map :center="{lat: 1.38, lng: 103.8}" :zoom="12"
+      class="map-container">
+    </google-map>
   </div>
   <script>
     tests.push(() => {
@@ -33,10 +32,8 @@
     Passes if: Clicking the button changes the center
     <button @click="changeCenter">Change Center</button>
     <button @click="changeZoom">Change Zoom</button>
-    <div class="map-container">
-      <google-map :center="changingCenter" :zoom="changingZoom">
-      </google-map>
-    </div>
+    <google-map :center="changingCenter" :zoom="changingZoom" class="map-container">
+    </google-map>
   </div>
 
   <script>
@@ -68,15 +65,13 @@
     <button @click="changeSize">Change Size</button>
     <br/>
     (1):
-    <div :style="changingSize">
-      <google-map :center="{lat:1.38, lng:103.8}" :zoom="12" ref="resizeMap1">
-      </google-map>
-    </div>
+    <google-map :center="{lat:1.38, lng:103.8}" :zoom="12" ref="resizeMap1"
+     :style="changingSize">
+    </google-map>
     (2):
-    <div :style="changingSize">
-      <google-map :center="{lat:1.38, lng:103.8}" :zoom="12" ref="resizeMap2">
-      </google-map>
-    </div>
+    <google-map :center="{lat:1.38, lng:103.8}" :zoom="12" ref="resizeMap2"
+     :style="changingSize">
+    </google-map>
   </div>
   <script>
     tests.push(() => new Vue({

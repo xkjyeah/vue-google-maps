@@ -1,22 +1,21 @@
 <body>
   <div id="root">
-    <div style="width: 100%; height: 500px">
-      <google-map
-              :center="{lat: 1.38, lng: 103.8}"
-              :zoom="12">
-        <ground-overlay
-          source="./overlay.png"
-          :bounds="{
-              north: 1.502,
-              south: 1.185,
-              east: 104.0262,
-              west: 103.5998,
-          }"
-          :opacity="0.5"
-        >
-        </ground-overlay>
-      </google-map>
-    </div>
+    <google-map
+            :center="{lat: 1.38, lng: 103.8}"
+            :zoom="12"
+             style="width: 100%; height: 500px">
+      <ground-overlay
+        source="./overlay.png"
+        :bounds="{
+            north: 1.502,
+            south: 1.185,
+            east: 104.0262,
+            west: 103.5998,
+        }"
+        :opacity="0.5"
+      >
+      </ground-overlay>
+    </google-map>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>

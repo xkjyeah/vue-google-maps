@@ -1,19 +1,18 @@
 <body>
   <div id="root">
-    <div style="width: 100%; height: 500px">
-      <google-map
-        :center="center"
-        :zoom="7"
-      >
-        <google-marker
-          v-for="m in markers"
-          :position="m.position"
-          :clickable="true"
-          :draggable="true"
-          @click="center=m.position"
-        ></google-marker>
-      </google-map>
-    </div>
+    <google-map
+      :center="center"
+      :zoom="7"
+      style="width: 100%; height: 500px"
+    >
+      <google-marker
+        v-for="m in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="center=m.position"
+      ></google-marker>
+    </google-map>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>

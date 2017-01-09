@@ -3,6 +3,7 @@ import {loaded} from "../manager.js";
 import eventsBinder from "../utils/eventsBinder.js";
 import propsBinder from "../utils/propsBinder.js";
 import {DeferredReadyMixin} from "../utils/deferredReady.js";
+import mountableMixin from '../utils/mountableMixin.js'
 import getPropsMixin from "../utils/getPropsValuesMixin.js";
 
 const mapsProps = {
@@ -112,6 +113,13 @@ const customMethods = {
     const oldCenter = this.$mapObject.getCenter();
     google.maps.event.trigger(this.$mapObject, 'resize');
     this.$mapObject.setCenter(oldCenter);
+  },
+
+  /// Override mountableMixin::_resizeCallback
+  /// because resizePreserveCenter is usually the
+  /// expected behaviour
+  _resizeCallback() {
+    this.resizePreserveCenter();
   }
 };
 
@@ -119,7 +127,7 @@ const customMethods = {
 const methods = _.assign({}, customMethods, linkedMethods);
 
 export default {
-  mixins: [getPropsMixin, DeferredReadyMixin],
+  mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
   props: props,
   //replace: false, // necessary for css styles
   computed: {

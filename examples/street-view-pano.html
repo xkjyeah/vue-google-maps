@@ -1,0 +1,64 @@
+<head>
+  <style>
+    .pano {
+      width: 500px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <h1>Panorama at Pembroke College, Cambridge, facing North, looking slightly upwards (10 degrees)</h1>
+    Point-of-view updates when you pan around
+
+    <gmap-street-view-panorama
+      class="pano"
+      :position="{lat: 52.201272, lng: 0.118720}"
+      :pov="{heading: 0, pitch: 10}"
+      :zoom="1"
+      @pano_changed="updatePano"
+      @pov_changed="updatePov">
+    </gmap-street-view-panorama>
+    <ul>
+      <li>Heading: {{pov && pov.heading}}</li>
+      <li>Pitch: {{pov && pov.pitch}}</li>
+      <li>Pano ID: {{pano}}</li>
+    </ul>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+<script src="vue-google-maps.js"></script>
+
+<script>
+
+Vue.use(VueGoogleMap, {
+  load: {
+    key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
+    libraries: 'places'
+  },
+  // Demonstrating how we can customize the name of the components
+  installComponents: true,
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  new Vue({
+      el: '#root',
+      data: {
+        pov: null,
+        pano: null,
+      },
+      methods: {
+        updatePov(pov) {
+          this.pov = pov;
+        },
+        updatePano(pano) {
+          this.pano = pano;
+        }
+      }
+  });
+});
+
+</script>
+
+</body>

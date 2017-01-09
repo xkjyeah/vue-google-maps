@@ -53,12 +53,32 @@ Table of Contents
                * [resize](#resize-1)
                * [rightclick](#rightclick)
                * [tilesloaded](#tilesloaded)
-         * [Marker class (mixes in <code>MapElementMixin</code>)](#marker-class-mixes-in-mapelementmixin)
+            * [Slots](#slots)
+               * [(default slot)](#default-slot)
+               * [visible slot](#visible-slot)
+         * [StreetViewPanorama class (mixes in <code>DeferredReadyMixin</code>)](#streetviewpanorama-class-mixes-in-deferredreadymixin)
             * [Fields](#fields-1)
+               * [$panoObject : google.maps.StreetViewPanorama](#panoobject--googlemapsstreetviewpanorama)
+               * [$panoCreated : Promise&lt;google.maps.StreetViewPanorama&gt;](#panocreated--promisegooglemapsstreetviewpanorama)
+            * [Methods](#methods-1)
+               * [resize()](#resize-2)
+            * [Properties](#properties-1)
+               * [position : {lat: number, lng: number} | google.maps.LatLng†](#position--lat-number-lng-number--googlemapslatlng)
+               * [zoom : number†](#zoom--number-1)
+               * [pov : {pitch: number, heading: number}†](#pov--pitch-number-heading-number)
+               * [pano : string†](#pano--string)
+               * [motionTracking : boolean](#motiontracking--boolean)
+               * [visible : boolean†](#visible--boolean)
+               * [options : Object](#options--object)
+            * [Events](#events-1)
+               * [closeclick](#closeclick)
+               * [status_changed](#status_changed)
+         * [Marker class (mixes in <code>MapElementMixin</code>)](#marker-class-mixes-in-mapelementmixin)
+            * [Fields](#fields-2)
                * [$clusterAncestor : void | Vue](#clusterancestor--void--vue)
                * [$clusterObject : void | MarkerClusterer](#clusterobject--void--markerclusterer)
                * [$clusterObjectPromise : Promise&lt;void | MarkerClusterer&gt;](#clusterobjectpromise--promisevoid--markerclusterer)
-            * [Properties](#properties-1)
+            * [Properties](#properties-2)
                * [animation : number](#animation--number)
                * [attribution : object](#attribution--object)
                * [clickable : boolean](#clickable--boolean)
@@ -68,11 +88,11 @@ Table of Contents
                * [label : string](#label--string)
                * [opacity : number](#opacity--number)
                * [place : object](#place--object)
-               * [position : {lat: number, lng: number} | google.maps.LatLng](#position--lat-number-lng-number--googlemapslatlng)
+               * [position : {lat: number, lng: number} | google.maps.LatLng](#position--lat-number-lng-number--googlemapslatlng-1)
                * [shape : object](#shape--object)
                * [title : string](#title--string)
                * [zIndex : number](#zindex--number)
-            * [Events](#events-1)
+            * [Events](#events-2)
                * [click](#click-1)
                * [rightclick](#rightclick-1)
                * [dblclick](#dblclick-1)
@@ -84,37 +104,37 @@ Table of Contents
                * [mouseover](#mouseover-1)
                * [mouseout](#mouseout-1)
          * [Cluster class (mixes in <code>MapElementMixin</code>)](#cluster-class-mixes-in-mapelementmixin)
-            * [Properties](#properties-2)
+            * [Properties](#properties-3)
                * [maxZoom : number](#maxzoom--number)
                * [calculator : function](#calculator--function)
                * [gridSize : number](#gridsize--number)
                * [styles : object[]](#styles--object)
          * [Cluster class (mixes in <code>MapElementMixin</code>)](#cluster-class-mixes-in-mapelementmixin-1)
-            * [Properties](#properties-3)
+            * [Properties](#properties-4)
                * [maxZoom : number](#maxzoom--number-1)
                * [calculator : function](#calculator--function-1)
                * [gridSize : number](#gridsize--number-1)
                * [styles : object[]](#styles--object-1)
          * [InfoWindow class (mixes in <code>MapElementMixin</code>)](#infowindow-class-mixes-in-mapelementmixin)
-            * [Properties](#properties-4)
-               * [options : object](#options--object)
+            * [Properties](#properties-5)
+               * [options : object](#options--object-1)
                * [opened : object](#opened--object)
                * [content : string](#content--string)
-               * [position : {lat: number, lng: number} | google.maps.LatLng](#position--lat-number-lng-number--googlemapslatlng-1)
+               * [position : {lat: number, lng: number} | google.maps.LatLng](#position--lat-number-lng-number--googlemapslatlng-2)
                * [zIndex : number](#zindex--number-1)
-            * [Events](#events-2)
+            * [Events](#events-3)
                * [domready](#domready)
-               * [closeclick](#closeclick)
+               * [closeclick](#closeclick-1)
                * [content_changed](#content_changed)
          * [Polyline class (mixes in <code>MapElementMixin</code>)](#polyline-class-mixes-in-mapelementmixin)
                * [$polylineObject : google.maps.Polyline](#polylineobject--googlemapspolyline)
-            * [Properties](#properties-5)
+            * [Properties](#properties-6)
                * [draggable : boolean](#draggable--boolean-1)
                * [editable : boolean](#editable--boolean)
-               * [options : object](#options--object-1)
+               * [options : object](#options--object-2)
                * [path : ({lat: number, lng: number} | google.maps.LatLng)[]†](#path--lat-number-lng-number--googlemapslatlng)
                * [deepWatch : boolean = false](#deepwatch--boolean--false)
-            * [Events](#events-3)
+            * [Events](#events-4)
                * [click](#click-2)
                * [dblclick](#dblclick-2)
                * [drag](#drag-2)
@@ -127,16 +147,16 @@ Table of Contents
                * [mouseup](#mouseup-1)
                * [rightclick](#rightclick-2)
          * [Polygon class (mixes in <code>MapElementMixin</code>)](#polygon-class-mixes-in-mapelementmixin)
-            * [Fields](#fields-2)
+            * [Fields](#fields-3)
                * [$polygonObject : google.maps.Polygon](#polygonobject--googlemapspolygon)
-            * [Properties](#properties-6)
+            * [Properties](#properties-7)
                * [draggable : boolean](#draggable--boolean-2)
                * [editable : boolean](#editable--boolean-1)
-               * [options : object](#options--object-2)
+               * [options : object](#options--object-3)
                * [path : ({lat: number, lng: number} | google.maps.LatLng)[]†](#path--lat-number-lng-number--googlemapslatlng-1)
                * [paths : ({lat: number, lng: number} | google.maps.LatLng)[][]†](#paths--lat-number-lng-number--googlemapslatlng)
                * [deepWatch : boolean = false](#deepwatch--boolean--false-1)
-            * [Events](#events-4)
+            * [Events](#events-5)
                * [click](#click-3)
                * [dblclick](#dblclick-3)
                * [drag](#drag-3)
@@ -149,15 +169,15 @@ Table of Contents
                * [mouseup](#mouseup-2)
                * [rightclick](#rightclick-3)
          * [Circle class (mixes in <code>MapElementMixin</code>)](#circle-class-mixes-in-mapelementmixin)
-            * [Fields](#fields-3)
+            * [Fields](#fields-4)
                * [$circleObject : google.maps.Circle](#circleobject--googlemapscircle)
-            * [Properties](#properties-7)
+            * [Properties](#properties-8)
                * [center : {lat: number, lng: number} | google.maps.LatLng†](#center--lat-number-lng-number--googlemapslatlng-1)
                * [radius : number†](#radius--number)
                * [draggable : boolean](#draggable--boolean-3)
                * [editable : boolean](#editable--boolean-2)
-               * [options : object](#options--object-3)
-            * [Events](#events-5)
+               * [options : object](#options--object-4)
+            * [Events](#events-6)
                * [bounds_changed](#bounds_changed)
                * [click](#click-4)
                * [dblclick](#dblclick-4)
@@ -171,14 +191,14 @@ Table of Contents
                * [mouseup](#mouseup-3)
                * [rightclick](#rightclick-4)
          * [Rectangle class (mixes in <code>MapElementMixin</code>)](#rectangle-class-mixes-in-mapelementmixin)
-            * [Fields](#fields-4)
+            * [Fields](#fields-5)
                * [$rectangleObject : google.maps.Rectangle](#rectangleobject--googlemapsrectangle)
-            * [Properties](#properties-8)
+            * [Properties](#properties-9)
                * [bounds : {north: number, east: number, south: number, west: number} | google.maps.LatLngBounds†](#bounds--north-number-east-number-south-number-west-number--googlemapslatlngbounds)
                * [draggable : boolean](#draggable--boolean-4)
                * [editable : boolean](#editable--boolean-3)
-               * [options : object](#options--object-4)
-            * [Events](#events-6)
+               * [options : object](#options--object-5)
+            * [Events](#events-7)
                * [click](#click-5)
                * [dblclick](#dblclick-5)
                * [drag](#drag-5)
@@ -191,21 +211,21 @@ Table of Contents
                * [mouseup](#mouseup-4)
                * [rightclick](#rightclick-5)
          * [Autocomplete class (mixes in <code>MapElementMixin</code>)](#autocomplete-class-mixes-in-mapelementmixin)
-            * [Fields](#fields-5)
+            * [Fields](#fields-6)
                * [$autocomplete : google.maps.Autocomplete](#autocomplete--googlemapsautocomplete)
-            * [Properties](#properties-9)
+            * [Properties](#properties-10)
                * [bounds : object](#bounds--object)
                * [defaultPlace : string](#defaultplace--string)
                * [componentRestrictions : object](#componentrestrictions--object)
                * [placeholder : string](#placeholder--string)
                * [types : string[]](#types--string)
                * [selectFirstOnEnter : boolean](#selectfirstonenter--boolean)
-            * [Events](#events-7)
+            * [Events](#events-8)
                * [place_changed](#place_changed)
          * [PlaceInput class (mixes in <code>MapElementMixin</code>) (deprecated)](#placeinput-class-mixes-in-mapelementmixin-deprecated)
-            * [Fields](#fields-6)
+            * [Fields](#fields-7)
                * [autoCompleter : google.maps.Autocomplete](#autocompleter--googlemapsautocomplete)
-            * [Properties](#properties-10)
+            * [Properties](#properties-11)
                * [bounds : object](#bounds--object-1)
                * [defaultPlace : string](#defaultplace--string-1)
                * [componentRestrictions : object](#componentrestrictions--object-1)
@@ -214,15 +234,16 @@ Table of Contents
                * [className : string](#classname--string)
                * [label : string](#label--string-1)
                * [selectFirstOnEnter : boolean](#selectfirstonenter--boolean-1)
-            * [Events](#events-8)
+            * [Events](#events-9)
                * [place_changed](#place_changed-1)
          * [DeferredReadyMixin](#deferredreadymixin)
             * [Hooks](#hooks)
                * [beforeDeferredReady() : () =&gt; Promise](#beforedeferredready----promise)
                * [deferredReady() : () =&gt; Promise](#deferredready----promise)
          * [MapElementMixin (mixes in <code>DeferredReadyMixin</code>)](#mapelementmixin-mixes-in-deferredreadymixin)
-            * [Fields](#fields-7)
+            * [Fields](#fields-8)
                * [$map : Map](#map--map)
+         * [MountableMixin](#mountablemixin)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
@@ -413,6 +434,54 @@ the responsibility of breaking the infinite loop now lies with you, the user.
 ##### `resize`
 ##### `rightclick`
 ##### `tilesloaded`
+
+#### Slots
+
+##### (default slot)
+
+HTML elements in the default slot are invisible.
+This is because some elements require auxiliary HTML elements,
+and keeping the default slot invisible **should** (I haven't tested it) improve rendering speeds.
+
+##### `visible` slot
+
+The map container has CSS position `relative` by default.
+This allows you to overlay regular HTML elements over
+the map by placing them
+in the `visible` slot.
+
+For example, you can place position-selection crosshairs
+in the centre of the map
+(used in mobile apps like Uber) by specifying
+`{left: 50%, top: 50%, position: absolute}`; you can
+add a status bar to show information when hovering over
+markers such as in the [Info Bar example](https://xkjyeah.github.io/vue-google-maps/examples/info-bar.html).
+
+### `StreetViewPanorama` class (mixes in `DeferredReadyMixin`)
+
+This class is experimental. (Note from author: I don't have a use case for
+it yet, so I can't dogfood this implementation.)
+
+#### Fields
+##### `$panoObject : google.maps.StreetViewPanorama`
+##### `$panoCreated : Promise<google.maps.StreetViewPanorama>`
+Promise resolved when the map has been created
+
+#### Methods
+##### `resize()`
+
+#### Properties
+##### `position : {lat: number, lng: number} | google.maps.LatLng`&dagger;
+##### `zoom : number`&dagger;
+##### `pov : {pitch: number, heading: number}`&dagger;
+##### `pano : string`&dagger;
+##### `motionTracking : boolean`
+##### `visible : boolean`&dagger;
+##### `options : Object`
+
+#### Events
+##### `closeclick`
+##### `status_changed`
 
 ### `Marker` class (mixes in `MapElementMixin`)
 #### Fields
@@ -663,3 +732,34 @@ This mixin adds a `beforeDeferredReady()` hook which initializes `this.$map`.
 A reference to the ancestor Map component. This is available only after
 `deferredReady()` has been called. You can access the map by:
 `this.$map.$mapObject`.
+
+### `MountableMixin`
+
+***Props***: `resizeBus : Vue` (Default: `Vue.$gmapDefaultResizeBus`)
+
+***Methods***: `_resizeCallback()`
+
+Use this mixin to implement top-level components which mounts
+over an existing element (e.g. maps, street view panoramas).
+
+This mixin is intended to help manage the `resize()` calls.
+Google Maps components need to know the size of the
+element they are mounted on. If you have reactive styles and
+classes (for example when you use `vue-router`) you need to
+call `resize()` on every component used by the Maps API
+whenever there are changes to the visibility / size of the
+mounted element.
+
+By using this mixin, components will listen on the bus
+(an object with `$on`, `$off` and `$emit` such as `Vue`)
+for the `resize` event, whereupon it will trigger a resize.
+If a `resizeBus` is not specified, it will listen on the
+default global bus, `Vue.$gmapDefaultResizeBus`.
+
+If you are creating new components, override `_resizeCallback`
+to define the desired behaviour when the resize is triggered.
+For example, in a `GmapMap`, `_resizeCallback` calls `vm.resizePreserveCenter()`.
+
+By default it will delay the resize by one tick.
+If you need longer ticks in order for styles to be fully
+applied, try delaying emitting the trigger.
