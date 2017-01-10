@@ -2,25 +2,10 @@ import _ from "lodash";
 import propsBinder from "../utils/propsBinder.js";
 import eventsBinder from "../utils/eventsBinder.js";
 import MapElementMixin from "./mapElementMixin";
+import generatePropsToBind from "../utils/generatePropsToBind"
 
-const infoWindowProps = {
-  options: {
-    type: Object,
-    twoWay: false,
-  },
-  content: {
-    twoWay: false
-  },
-  position: {
-    type: Object,
-    twoWay: true
-  },
-  zIndex: {
-    type: Number,
-    twoWay: true
-  }
-}
-
+const twoWayProps = ["position","zIndex"];
+const excludedProps = ["opened"];
 const props = {
   options: {
     type: Object,
@@ -62,19 +47,13 @@ export default {
     }
   },
   computed: {
-    local_options(){
-      return this.options;
-    },
-    local_content(){
-      return this.content;
-    },
     local_opened: {
       get(){
         return (typeof this.$options.propsData['opened'] !== 'undefined') ? this.opened : this.infoWindowObj.opened;
       },
       set(value){
         this.infoWindowObj.opened = value;
-        this.$emit('opened-changed', value);
+        this.$emit('opened_changed', value);
         this.$nextTick(function () {
           if (this.infoWindowObj.opened == this.local_opened)
             return;
@@ -90,14 +69,6 @@ export default {
       set(value){
         this.infoWindowObj.position = value;
         this.$emit('position-changed', value);
-      }
-    },
-    local_zIndex: {
-      get(){
-        return this.zIndex;
-      },
-      set(value){
-        this.$emit('z-index-changed', value);
       }
     },
   },
@@ -148,7 +119,7 @@ export default {
     },
     createInfoWindow(map) {
       // setting options
-      const options = _.clone(this.local_options);
+      const options = _.clone(this.options);
       options.content = this.$refs.flyaway;
 
       // only set the position if the info window is not bound to a marker
@@ -159,7 +130,7 @@ export default {
       this.$infoWindow = this.createInfoWindowObject(options);
 
       // Binding
-      propsBinder(this, this.$infoWindow, infoWindowProps);
+      propsBinder(this, this.$infoWindow, generatePropsToBind(props,twoWayProps,excludedProps));
       eventsBinder(this, this.$infoWindow, events);
 
       // watching
