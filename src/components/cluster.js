@@ -38,20 +38,6 @@ export default {
       this.$slots.default
     )
   },
-  computed:{
-    local_maxZoom(){
-      return this.maxZoom;
-    },
-    local_calculor(){
-      return this.calculor;
-    },
-    local_gridSize(){
-      return this.gridSize;
-    },
-    local_styles(){
-      return this.styles;
-    },
-  },
   created(){
     this.$acceptMarker = true;
     this.$on('register-marker', this.addMarker);
