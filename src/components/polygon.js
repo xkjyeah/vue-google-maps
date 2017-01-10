@@ -7,7 +7,7 @@ import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
 import generatePropsToBind from "../utils/generatePropsToBind";
 
 const twoWayProps = ["path","paths"];
-const excludedProps = ["path","paths"];
+const excludedProps = ["path","paths","deepWatch"];
 const props = {
   draggable: {
     type: Boolean

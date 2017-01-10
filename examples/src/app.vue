@@ -459,8 +459,8 @@ export default {
       });
     },
 
-    updatePolylinePath(paths) {
-      // TODO:
+    updatePolylinePath(path) {
+      this.plPath = path.getArray();
     },
 
     updateCircle(prop, value) {
