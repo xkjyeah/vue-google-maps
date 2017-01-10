@@ -5,19 +5,10 @@ import MapElementMixin from "./mapElementMixin"
 import getPropsValuesMixin from "../utils/getPropsValuesMixin.js"
 import {loaded} from "../manager.js"
 import assert from "assert"
+import generatePropsToBind from "../utils/generatePropsToBind"
 
-const placeInputProps = {
-  bounds: {
-    type: Object,
-    twoWay: true
-  },
-  componentRestrictions: {
-    type: Object
-  },
-  types: {
-    type: Array
-  }
-}
+const twoWayProps = ["bounds"];
+const excludedProps = ["value","placeholder","selectFirstOnEnter","autoFitOnUpdatePlace","mapEmbedded"];
 const props = {
   bounds: {
     type: Object
@@ -64,35 +55,9 @@ export default {
         this.$emit("input", value);
       }
     },
-    local_bounds: {
-      get(){
-        return this.bounds;
-      },
-      set(value){
-        this.$emit('bounds-changed', value);
-      }
-    },
-    local_componentRestrictions(){
-      return this.componentRestrictions;
-    },
-    local_types(){
-      return this.types;
-    },
-    local_placeholder(){
-      return this.placeholder;
-    },
-    local_selectFirstOnEnter(){
-      return this.selectFirstOnEnter;
-    },
-    local_autoFitOnUpdatePlace(){
-      return this.autoFitOnUpdatePlace;
-    },
-    local_mapEmbedded(){
-      return this.mapEmbedded;
-    }
   },
   created(){
-    this.$hybridComponent = !this.local_mapEmbedded;
+    this.$hybridComponent = !this.mapEmbedded;
     this.autocompleter = null;
   },
   mounted () {
@@ -100,7 +65,7 @@ export default {
     loaded.then(() => {
       window.i = input;
       const options = _.clone(this.getPropsValues());
-      if (this.local_selectFirstOnEnter) {
+      if (this.selectFirstOnEnter) {
         downArrowSimulator(this.$refs.input);
       }
 
@@ -108,12 +73,12 @@ export default {
         "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?")
 
       this.autocompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
-      propsBinder(this, this.autocompleter, placeInputProps);
+      propsBinder(this, this.autocompleter, generatePropsToBind(props,twoWayProps,excludedProps));
       this.autocompleter.addListener('place_changed', this.placeChanged);
     })
   },
   deferredReady() {
-    if (this.local_mapEmbedded) {
+    if (this.mapEmbedded) {
       if (this.$map) {
         this.$map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.$refs.input);
       }
@@ -127,7 +92,7 @@ export default {
     },
     placeChanged() {
       this.$emit('place_changed', this.autocompleter.getPlace());
-      if (this.local_autoFitOnUpdatePlace)
+      if (this.autoFitOnUpdatePlace)
         this.autoFitPlace(this.autocompleter.getPlace());
     }
   }
