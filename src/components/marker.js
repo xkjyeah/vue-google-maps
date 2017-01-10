@@ -3,61 +3,11 @@ import eventsBinder from "../utils/eventsBinder.js";
 import propsBinder from "../utils/propsBinder.js";
 import getPropsValuesMixin from "../utils/getPropsValuesMixin.js";
 import MapElementMixin from "./mapElementMixin";
+import generatePropsToBind from "../utils/generatePropsToBind"
 
-const markerProps = {
-  animation: {
-    type: Number,
-    twoWay: true
-  },
-  attribution: {
-    type: Object,
-  },
-  clickable: {
-    type: Boolean,
-    twoWay: true,
-  },
-  cursor: {
-    type: String,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean,
-    twoWay: true
-  },
-  icon: {
-    type: Object,
-    twoWay: true
-  },
-  label: {
-    type: String
-  },
-  opacity: {
-    type: Number
-  },
-  place: {
-    type: Object
-  },
-  position: {
-    type: Object,
-    twoWay: true,
-  },
-  shape: {
-    type: Object,
-    twoWay: true
-  },
-  title: {
-    type: String,
-    twoWay: true
-  },
-  zIndex: {
-    type: Number,
-    twoWay: true
-  },
-  visible: {
-    twoWay: true
-  }
-};
-
+const twoWayProps = [
+  "animation", "clickable", "cursor", "draggable", "icon", "position", "shape", "title", "zIndex", "visible"
+];
 const props = {
   animation: {
     type: Number
@@ -140,100 +90,6 @@ export default {
       this.$slots.default
     )
   },
-  computed: {
-    local_animation: {
-      get(){
-        return this.animation;
-      },
-      set(value){
-        this.$emit('animation-changed', value);
-      }
-    },
-    local_attribution(){
-      return this.attribution;
-    },
-    local_clickable: {
-      get(){
-        return this.clickable;
-      },
-      set(value){
-        this.$emit('clickable-changed', value);
-      }
-    },
-    local_cursor: {
-      get(){
-        return this.cursor;
-      },
-      set(value){
-        this.$emit('cursor-changed', value);
-      }
-    },
-    local_draggable: {
-      get(){
-        return this.draggable;
-      },
-      set(value){
-        this.$emit('draggable-changed', value);
-      }
-    },
-    local_icon: {
-      get(){
-        return this.icon;
-      },
-      set(value){
-        this.$emit('icon-changed', value);
-      }
-    },
-    local_label(){
-      return this.label;
-    },
-    local_opacity(){
-      return this.opacity;
-    },
-    local_place(){
-      return this.place;
-    },
-    local_position: {
-      get(){
-        return this.position;
-      },
-      set(value){
-        this.$emit('position-changed', value);
-      }
-    },
-    local_shape: {
-      get(){
-        return this.shape;
-      },
-      set(value){
-        this.$emit('shape-changed', value);
-      }
-    },
-    local_title: {
-      get(){
-        return this.title;
-      },
-      set(value){
-        this.$emit('title-changed', value);
-      }
-    },
-    local_zIndex: {
-      get(){
-        return this.zIndex;
-      },
-      set(value){
-        this.$emit('z-index-changed', value);
-      }
-    },
-    local_visible: {
-      get(){
-        return this.visible;
-      },
-      set(value){
-        this.$emit('visible-changed', value);
-      }
-    },
-  },
   created() {
     this.$parentAcceptMarker = null;
     this.$acceptInfoWindow = true;
@@ -260,7 +116,7 @@ export default {
   methods: {
     createMarker (options, map) {
       this.$markerObject = this.createMarkerObject(options);
-      propsBinder(this, this.$markerObject, markerProps);
+      propsBinder(this, this.$markerObject, generatePropsToBind(props,twoWayProps));
       eventsBinder(this, this.$markerObject, events);
 
       /* Send an event to any <cluster ou similar> parent */
@@ -284,10 +140,5 @@ export default {
       }
       this.infoWindowClickEvent = null;
     },
-    getParentAcceptMarker(child){
-      return getParentTest(child, function (component) {
-        return component._acceptMarker == true;
-      });
-    }
   }
 }
