@@ -28,44 +28,37 @@ var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
 
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
-var _mountableMixin = require('../utils/mountableMixin.js');
-
-var _mountableMixin2 = _interopRequireDefault(_mountableMixin);
-
-var _latlngChangedHandler = require('../utils/latlngChangedHandler.js');
-
-var _latlngChangedHandler2 = _interopRequireDefault(_latlngChangedHandler);
-
-var _generatePropsToBind = require('../utils/generatePropsToBind.js');
-
-var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var twoWayProps = ["center", "zoom", "heading", "mapTypeId", "projection", "tilt"];
-var excludedProps = ['center', 'zoom', 'bounds'];
 var props = {
   center: {
-    type: Object,
-    required: true
+    required: true,
+    twoWay: true,
+    type: Object
   },
   zoom: {
-    type: Number,
-    default: 8
-  },
-  heading: {
+    required: false,
+    twoWay: true,
     type: Number
   },
+  heading: {
+    type: Number,
+    twoWay: true
+  },
   mapTypeId: {
+    twoWay: true,
     type: String
   },
   bounds: {
+    twoWay: true,
     type: Object
   },
   projection: {
+    twoWay: true,
     type: Object
   },
   tilt: {
+    twoWay: true,
     type: Number
   },
   options: {
@@ -98,14 +91,6 @@ var customMethods = {
     var oldCenter = this.$mapObject.getCenter();
     google.maps.event.trigger(this.$mapObject, 'resize');
     this.$mapObject.setCenter(oldCenter);
-  },
-
-
-  /// Override mountableMixin::_resizeCallback
-  /// because resizePreserveCenter is usually the
-  /// expected behaviour
-  _resizeCallback: function _resizeCallback() {
-    this.resizePreserveCenter();
   }
 };
 
@@ -113,7 +98,7 @@ var customMethods = {
 var methods = _lodash2.default.assign({}, customMethods, linkedMethods);
 
 exports.default = {
-  mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
+  mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin],
   props: props,
   replace: false, // necessary for css styles
 
@@ -129,11 +114,23 @@ exports.default = {
   watch: {
     center: {
       deep: true,
-      handler: (0, _latlngChangedHandler2.default)(function (val, oldVal) {
-        if (this.$mapObject) {
-          this.$mapObject.setCenter(val);
+      handler: function handler(val, oldVal) {
+        // Observed bug with Vue 2.1.6 under certain circumstances:
+        // If you pass an object constant into :center, the deep watch
+        // is still triggered
+        function isChanged(prop) {
+          var oldProp = typeof oldVal[prop] === 'number' ? oldVal[prop] : typeof oldVal[prop] === 'function' ? oldVal[prop].apply(oldVal) : oldVal[prop]; // don't know how to handle
+          var newProp = typeof val[prop] === 'number' ? val[prop] : typeof val[prop] === 'function' ? val[prop].apply(val) : val[prop]; // don't know how to handle
+          return oldProp !== newProp;
         }
-      })
+
+        if (this.$mapObject) {
+          // Check if the value has really changed
+          if (isChanged('lat') || isChanged('lng')) {
+            this.$mapObject.setCenter(val);
+          }
+        }
+      }
     },
     zoom: function zoom(_zoom) {
       if (this.$mapObject) {
@@ -157,7 +154,7 @@ exports.default = {
       _this2.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)
-      (0, _propsBinder2.default)(_this2, _this2.$mapObject, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
+      (0, _propsBinder2.default)(_this2, _this2.$mapObject, _lodash2.default.omit(props, ['center', 'zoom', 'bounds']));
 
       // manually trigger center and zoom
       _this2.$mapObject.addListener('center_changed', function () {

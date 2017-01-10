@@ -9,30 +9,14 @@
       <gmap-autocomplete :value="description"
         @place_changed="setPlace">
       </gmap-autocomplete>
-    </label>
+    </labe>
     <br/>
     {{latLng.lat}},
     {{latLng.lng}}
-
-    <div>
-      <h2>Options work</h2>
-      You cannot find the state of Texas in this
-      <label>
-        Only locations in Singapore:
-        <gmap-autocomplete
-          :value="description"
-          @place_changed="setPlace"
-          :options="{
-            bounds: {north: 1.4, south: 1.2, east: 104, west: 102},
-            strictBounds: true
-          }">
-        </gmap-autocomplete>
-      </label>
-    </div>
   </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
 <script src="vue-google-maps.js"></script>
 
 <script>
