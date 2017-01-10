@@ -21,7 +21,8 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
 
   _lodash2.default.forEach(props, function (_ref, attribute) {
     var twoWay = _ref.twoWay,
-        type = _ref.type;
+        type = _ref.type,
+        trackProperties = _ref.trackProperties;
 
     var setMethodName = 'set' + capitalizeFirstLetter(attribute);
     var getMethodName = 'get' + capitalizeFirstLetter(attribute);
@@ -32,38 +33,52 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
     // although this may really be the user's responsibility
     var timesSet = 0;
 
-    vueElement.$watch('local_' + attribute, function () {
-      var attributeValue = vueElement['local_' + attribute];
-      timesSet++;
-      googleMapsElement[setMethodName](attributeValue);
-      if (afterModelChanged) {
-        afterModelChanged('local_' + attribute, attributeValue);
-      }
-    }, {
-      deep: type === Object
-    });
+    if (type !== Object || !trackProperties) {
+      // Track the object deeply
+      vueElement.$watch(attribute, function () {
+        var attributeValue = vueElement[attribute];
+
+        timesSet++;
+        googleMapsElement[setMethodName](attributeValue);
+        if (afterModelChanged) {
+          afterModelChanged(attribute, attributeValue);
+        }
+      }, {
+        deep: type === Object
+      });
+    } else if (type === Object && trackProperties) {
+      (function () {
+        // The indicator variable that is updated whenever any of the properties have changed
+        // This ensures that the event handler will only be fired once
+        var attributeTrackerName = '_' + attribute + '_changeTracker';
+        var attributeTrackerRoot = '$data._changeIndicators';
+
+        vueElement.$set(vueElement.$data._changeIndicators, attributeTrackerName, 0);
+
+        vueElement.$watch(attributeTrackerRoot + '.' + attributeTrackerName, function () {
+          googleMapsElement[setMethodName](vueElement[attribute]);
+          if (afterModelChanged) {
+            afterModelChanged(attribute, attributeValue);
+          }
+        });
+
+        trackProperties.forEach(function (propName) {
+          vueElement.$watch(attribute + '.' + propName, function () {
+            vueElement.$set(attributeTrackerRoot, attributeTrackerName, vueElement.$get(attributeTrackerRoot, attributeTrackerName) + 1);
+          });
+        });
+      })();
+    }
+
     if (twoWay) {
-      var gmapWatcher = function gmapWatcher() {
+      googleMapsElement.addListener(eventName, function (ev) {
         if (timesSet > 0) {
           timesSet--;
           return;
-        }
-        var value = googleMapsElement[getMethodName]();
-        if (value instanceof google.maps.LatLng) {
-          vueElement['local_' + attribute] = {
-            lat: value.lat(),
-            lng: value.lng()
-          };
         } else {
-          //TODO Handle more google types !!
-          vueElement['local_' + attribute] = value;
+          vueElement.$emit(eventName, googleMapsElement[getMethodName]());
         }
-      };
-
-      googleMapsElement.addListener(eventName, _lodash2.default.throttle(gmapWatcher, 100, {
-        leading: true,
-        trailing: true
-      }));
+      });
     }
   });
 };

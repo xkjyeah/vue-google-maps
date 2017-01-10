@@ -8,17 +8,13 @@ import assert from "assert"
 import generatePropsToBind from "../utils/generatePropsToBind"
 
 const twoWayProps = ["bounds"];
-const excludedProps = ["value","placeholder","selectFirstOnEnter","autoFitOnUpdatePlace","mapEmbedded"];
+const excludedProps = ["value","placeholder","selectFirstOnEnter","componentRestrictions","autoFitOnUpdatePlace","mapEmbedded"];
 const props = {
   bounds: {
     type: Object
   },
   componentRestrictions: {
     type: Object,
-    default: null,
-  },
-  value: {
-    type: String
   },
   types: {
     type: Array,
@@ -32,6 +28,13 @@ const props = {
   selectFirstOnEnter: {
     type: Boolean,
     default: false
+  },
+  value: {
+    type: String,
+    default: ''
+  },
+  options: {
+    type: Object,
   },
   autoFitOnUpdatePlace: {
     type: Boolean,
@@ -63,7 +66,6 @@ export default {
   mounted () {
     const input = this.$refs.input;
     loaded.then(() => {
-      window.i = input;
       const options = _.clone(this.getPropsValues());
       if (this.selectFirstOnEnter) {
         downArrowSimulator(this.$refs.input);
@@ -72,7 +74,20 @@ export default {
       assert(typeof(google.maps.places.Autocomplete) === 'function',
         "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?")
 
-      this.autocompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
+      const finalOptions = _.defaults(
+        {},
+        options.options,
+        _.omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder',"autoFitOnUpdatePlace","mapEmbedded"])
+      ).omitBy(_.isUndefined);
+
+      // Component restrictions is rather particular. Undefined not allowed
+      this.$watch('componentRestrictions', v => {
+        if (v !== undefined) {
+          this.$autocomplete.setComponentRestrictions(v);
+        }
+      })
+
+      this.$autocomplete = new google.maps.places.Autocomplete(this.$refs.input, finalOptions);
       propsBinder(this, this.autocompleter, generatePropsToBind(props,twoWayProps,excludedProps));
       this.autocompleter.addListener('place_changed', this.placeChanged);
     })

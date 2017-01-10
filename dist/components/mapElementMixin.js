@@ -1,10 +1,18 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _deferredReady = require("../utils/deferredReady");
+var _deferredReady = require('../utils/deferredReady');
+
+var _deferredReady2 = require('../utils/deferredReady.js');
+
+var _map = require('./map.vue');
+
+var _map2 = _interopRequireDefault(_map);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @class MapElementMixin @mixins DeferredReadyMixin
@@ -19,23 +27,21 @@ exports.default = {
 
   mixins: [_deferredReady.DeferredReadyMixin],
 
-  beforeCreate: function beforeCreate() {
-    //components what can be user inside and outside of a map
-    this.$hybridComponent = false;
+  data: function data() {
+    return {
+      _changeIndicators: {} // For propsBinder trackProperties
+    };
   },
-  beforeMount: function beforeMount() {
+  created: function created() {
     var _this = this;
 
-    if (this.$hybridComponent) {
-      return;
-    }
     /* Search for the Map component in the parent */
     var search = this.$findAncestor(function (ans) {
       return ans.$mapCreated;
     });
 
     if (!search) {
-      throw new Error(this.constructor.name + " component must be used within a <Map>");
+      throw new Error(this.constructor.name + ' component must be used within a <Map>');
     }
 
     this.$mapPromise = search.$mapCreated.then(function (map) {

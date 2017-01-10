@@ -23,7 +23,7 @@ export default (vueElement, googleMapsElement, props, options) => {
       // Track the object deeply
       vueElement.$watch(attribute, () => {
         const attributeValue = vueElement[attribute];
-
+        
         timesSet++;
         googleMapsElement[setMethodName](attributeValue);
         if (afterModelChanged) {

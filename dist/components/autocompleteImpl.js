@@ -37,8 +37,7 @@ var props = {
     type: Object
   },
   componentRestrictions: {
-    type: Object,
-    default: null
+    type: Object
   },
   types: {
     type: Array,
@@ -58,6 +57,9 @@ var props = {
   value: {
     type: String,
     default: ''
+  },
+  options: {
+    type: Object
   }
 };
 
@@ -77,8 +79,19 @@ exports.default = {
 
       (0, _assert2.default)(typeof google.maps.places.Autocomplete === 'function', "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?");
 
-      _this.$autocomplete = new google.maps.places.Autocomplete(_this.$refs.input, options);
-      (0, _propsBinder2.default)(_this, _this.autoCompleter, _lodash2.default.omit(props, ['placeholder', 'place', 'selectFirstOnEnter', 'value']));
+      var finalOptions = _lodash2.default.pickBy(_lodash2.default.defaults({}, options.options, _lodash2.default.omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder'])), function (v, k) {
+        return v !== undefined;
+      });
+
+      // Component restrictions is rather particular. Undefined not allowed
+      _this.$watch('componentRestrictions', function (v) {
+        if (v !== undefined) {
+          _this.$autocomplete.setComponentRestrictions(v);
+        }
+      });
+
+      _this.$autocomplete = new google.maps.places.Autocomplete(_this.$refs.input, finalOptions);
+      (0, _propsBinder2.default)(_this, _this.$autocomplete, _lodash2.default.omit(props, ['placeholder', 'place', 'selectFirstOnEnter', 'value', 'componentRestrictions']));
 
       _this.$autocomplete.addListener('place_changed', function () {
         _this.$emit('place_changed', _this.$autocomplete.getPlace());

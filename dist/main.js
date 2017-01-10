@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Autocomplete = exports.MapElementMixin = exports.PlaceInput = exports.Map = exports.InfoWindow = exports.Rectangle = exports.Circle = exports.Polygon = exports.Polyline = exports.Cluster = exports.Marker = exports.loaded = exports.load = undefined;
+exports.MountableMixin = exports.Autocomplete = exports.MapElementMixin = exports.PlaceInput = exports.Map = exports.InfoWindow = exports.Rectangle = exports.Circle = exports.Polygon = exports.Polyline = exports.Cluster = exports.Marker = exports.loaded = exports.load = undefined;
 exports.install = install;
 
 var _manager = require('./manager.js');
@@ -44,6 +44,10 @@ var _map = require('./components/map.vue');
 
 var _map2 = _interopRequireDefault(_map);
 
+var _streetViewPanorama = require('./components/streetViewPanorama.vue');
+
+var _streetViewPanorama2 = _interopRequireDefault(_streetViewPanorama);
+
 var _placeInput = require('./components/placeInput.vue');
 
 var _placeInput2 = _interopRequireDefault(_placeInput);
@@ -55,6 +59,10 @@ var _autocomplete2 = _interopRequireDefault(_autocomplete);
 var _mapElementMixin = require('./components/mapElementMixin');
 
 var _mapElementMixin2 = _interopRequireDefault(_mapElementMixin);
+
+var _mountableMixin = require('./utils/mountableMixin');
+
+var _mountableMixin2 = _interopRequireDefault(_mountableMixin);
 
 var _deferredReady = require('./utils/deferredReady');
 
@@ -77,12 +85,21 @@ exports.Map = _map2.default;
 exports.PlaceInput = _placeInput2.default;
 exports.MapElementMixin = _mapElementMixin2.default;
 exports.Autocomplete = _autocomplete2.default;
+exports.MountableMixin = _mountableMixin2.default;
 function install(Vue, options) {
   options = _lodash2.default.defaults(options, {
     installComponents: true
   });
 
   Vue.use(_deferredReady.DeferredReady);
+
+  var defaultResizeBus = new Vue();
+  Vue.$gmapDefaultResizeBus = defaultResizeBus;
+  Vue.mixin({
+    created: function created() {
+      this.$gmapDefaultResizeBus = defaultResizeBus;
+    }
+  });
 
   if (options.load) {
     (0, _manager.load)(options.load);
@@ -99,5 +116,6 @@ function install(Vue, options) {
     Vue.component('GmapRectangle', _rectangle2.default);
     Vue.component('GmapAutocomplete', _autocomplete2.default);
     Vue.component('GmapPlaceInput', _placeInput2.default);
+    Vue.component('GmapStreetViewPanorama', _streetViewPanorama2.default);
   }
 }
