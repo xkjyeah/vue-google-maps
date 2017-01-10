@@ -55,21 +55,6 @@ exports.default = {
     // <div><slot></slot></div>
     return h('div', this.$slots.default);
   },
-
-  computed: {
-    local_maxZoom: function local_maxZoom() {
-      return this.maxZoom;
-    },
-    local_calculor: function local_calculor() {
-      return this.calculor;
-    },
-    local_gridSize: function local_gridSize() {
-      return this.gridSize;
-    },
-    local_styles: function local_styles() {
-      return this.styles;
-    }
-  },
   created: function created() {
     this.$acceptMarker = true;
     this.$on('register-marker', this.addMarker);

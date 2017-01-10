@@ -8,36 +8,32 @@ import {DeferredReady} from '../utils/deferredReady.js'
 import getPropsMixin from '../utils/getPropsValuesMixin.js'
 import mountableMixin from '../utils/mountableMixin.js'
 import latlngChangedHandler from '../utils/latlngChangedHandler.js';
+import generatePropsToBind from "../utils/generatePropsToBind"
 
+const twoWayProps = ["zoom","pov","position","pano","visible"]
+const excludedProps = ["zoom","position"]
+const trackProps = {"pov":['pitch', 'heading']}
 const props = {
   zoom: {
-    twoWay: true,
     type: Number
   },
   pov: {
-    twoWay: true,
-    type: Object,
-    trackProperties: ['pitch', 'heading']
+    type: Object
   },
   position: {
-    twoWay: true,
-    type: Object,
+    type: Object
   },
   pano: {
-    twoWay: true,
     type: String
   },
   motionTracking: {
-    twoWay: false,
     type: Boolean
   },
   visible: {
-    twoWay: true,
     type: Boolean,
     default: true,
   },
   options: {
-    twoWay: false,
     type: Object,
     default () {return {}}
   }
@@ -103,8 +99,7 @@ export default {
       this.$panoObject = new google.maps.StreetViewPanorama(element, options);
 
       // binding properties (two and one way)
-      propsBinder(this, this.$panoObject,
-          _.omit(props, ['position', 'zoom']));
+      propsBinder(this, this.$panoObject,generatePropsToBind(props,twoWayProps,excludedProps,trackProps));
 
       //binding events
       eventsBinder(this, this.$panoObject, events);

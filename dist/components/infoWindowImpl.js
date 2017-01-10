@@ -20,26 +20,14 @@ var _mapElementMixin = require("./mapElementMixin");
 
 var _mapElementMixin2 = _interopRequireDefault(_mapElementMixin);
 
+var _generatePropsToBind = require("../utils/generatePropsToBind");
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var infoWindowProps = {
-  options: {
-    type: Object,
-    twoWay: false
-  },
-  content: {
-    twoWay: false
-  },
-  position: {
-    type: Object,
-    twoWay: true
-  },
-  zIndex: {
-    type: Number,
-    twoWay: true
-  }
-};
-
+var twoWayProps = ["position", "zIndex"];
+var excludedProps = ["opened"];
 var props = {
   options: {
     type: Object,
@@ -78,20 +66,13 @@ exports.default = {
   },
 
   computed: {
-    local_options: function local_options() {
-      return this.options;
-    },
-    local_content: function local_content() {
-      return this.content;
-    },
-
     local_opened: {
       get: function get() {
         return typeof this.$options.propsData['opened'] !== 'undefined' ? this.opened : this.infoWindowObj.opened;
       },
       set: function set(value) {
         this.infoWindowObj.opened = value;
-        this.$emit('opened-changed', value);
+        this.$emit('opened_changed', value);
         this.$nextTick(function () {
           if (this.infoWindowObj.opened == this.local_opened) return;
           this.infoWindowObj.opened = this.local_opened;
@@ -106,14 +87,6 @@ exports.default = {
       set: function set(value) {
         this.infoWindowObj.position = value;
         this.$emit('position-changed', value);
-      }
-    },
-    local_zIndex: {
-      get: function get() {
-        return this.zIndex;
-      },
-      set: function set(value) {
-        this.$emit('z-index-changed', value);
       }
     }
   },
@@ -163,7 +136,7 @@ exports.default = {
       var _this = this;
 
       // setting options
-      var options = _lodash2.default.clone(this.local_options);
+      var options = _lodash2.default.clone(this.options);
       options.content = this.$refs.flyaway;
 
       // only set the position if the info window is not bound to a marker
@@ -174,7 +147,7 @@ exports.default = {
       this.$infoWindow = this.createInfoWindowObject(options);
 
       // Binding
-      (0, _propsBinder2.default)(this, this.$infoWindow, infoWindowProps);
+      (0, _propsBinder2.default)(this, this.$infoWindow, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
       (0, _eventsBinder2.default)(this, this.$infoWindow, events);
 
       // watching

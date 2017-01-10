@@ -24,28 +24,14 @@ var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
 
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var circleProps = {
-  center: {
-    type: Object,
-    twoWay: true
-  },
-  radius: {
-    type: Number,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean
-  },
-  options: {
-    type: Object
-  }
-};
-
+var twoWayProps = ["center", "radius"];
+var excludedProps = ["bounds"];
 var props = {
   center: {
     type: Object,
@@ -81,41 +67,6 @@ exports.default = {
   },
 
   props: props,
-  computed: {
-    local_center: {
-      get: function get() {
-        return this.center;
-      },
-      set: function set(value) {
-        this.$emit('center-changed', value);
-      }
-    },
-    local_radius: {
-      get: function get() {
-        return this.radius;
-      },
-      set: function set(value) {
-        this.$emit('radius-changed', value);
-      }
-    },
-    local_bounds: {
-      get: function get() {
-        return this.bounds;
-      },
-      set: function set(value) {
-        this.$emit('bounds-changed', value);
-      }
-    },
-    local_draggable: function local_draggable() {
-      return this.draggable;
-    },
-    local_editable: function local_editable() {
-      return this.editable;
-    },
-    local_options: function local_options() {
-      return this.options;
-    }
-  },
   created: function created() {
     this.$acceptInfoWindow = true;
     this.$on('register-info-window', this.registerInfoWindow);
@@ -138,16 +89,14 @@ exports.default = {
 
       this.$circleObject = this.createCircleObject(options);
 
-      (0, _propsBinder2.default)(this, this.$circleObject, circleProps);
+      (0, _propsBinder2.default)(this, this.$circleObject, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
       (0, _eventsBinder2.default)(this, this.$circleObject, events);
 
       var updateBounds = function updateBounds() {
-        _this.local_bounds = _this.$circleObject.getBounds();
+        _this.$emit('bounds_changed', _this.$circleObject.getBounds());
       };
-
-      this.$watch('local_radius', updateBounds);
-      // because center is an object and we need to be warned even if only the lat or lng change. not the whole reference
-      this.$watch('local_center', updateBounds, { deep: true });
+      this.$on('radius_changed', updateBounds);
+      this.$on('center_changed', updateBounds);
       updateBounds();
     },
     registerInfoWindow: function registerInfoWindow(infoWindow) {
@@ -155,7 +104,7 @@ exports.default = {
         infoWindow.local_opened = !infoWindow.local_opened;
       };
       this.$on('click', this.infoWindowClickEvent);
-      this.infoWindowCenterChangeWatch = this.$watch('local_center', function (newValue) {
+      this.infoWindowCenterChangeWatch = this.$watch('center', function (newValue) {
         infoWindow.local_position = newValue;
       }, { deep: true });
     },
@@ -170,7 +119,6 @@ exports.default = {
       this.infoWindowCenterChangeWatch = null;
     }
   },
-
   destroyed: function destroyed() {
     if (this.$circleObject) {
       this.$circleObject.setMap(null);

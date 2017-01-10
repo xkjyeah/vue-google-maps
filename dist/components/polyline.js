@@ -28,43 +28,30 @@ var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
 
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var polylineProps = {
-  path: {
-    type: Array,
-    twoWay: true
-  },
+var twoWayProps = ["path"];
+var excludedProps = ["path", "deepWatch"];
+var props = {
   draggable: {
     type: Boolean
   },
   editable: {
-    type: Boolean
-  },
-  deepWatch: {
     type: Boolean
   },
   options: {
     type: Object
-  }
-};
-
-var props = {
+  },
   path: {
     type: Array
-  },
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean
   },
   deepWatch: {
     type: Boolean,
     default: false
-  },
-  options: {
-    type: Object
   }
 };
 
@@ -76,29 +63,6 @@ exports.default = {
   render: function render() {
     return '';
   },
-
-  computed: {
-    local_path: {
-      get: function get() {
-        return this.path;
-      },
-      set: function set(value) {
-        this.$emit('path-changed', value);
-      }
-    },
-    local_draggable: function local_draggable() {
-      return this.draggable;
-    },
-    local_editable: function local_editable() {
-      return this.editable;
-    },
-    local_deepWatch: function local_deepWatch() {
-      return this.deepWatch;
-    },
-    local_options: function local_options() {
-      return this.options;
-    }
-  },
   destroyed: function destroyed() {
     if (this.$polylineObject) {
       this.$polylineObject.setMap(null);
@@ -109,16 +73,16 @@ exports.default = {
 
     var options = _lodash2.default.clone(this.getPropsValues());
     delete options.options;
-    _lodash2.default.assign(options, this.local_options);
+    _lodash2.default.assign(options, this.options);
     this.$polylineObject = this.createPolylineObject(options);
     this.$polylineObject.setMap(this.$map);
 
-    (0, _propsBinder2.default)(this, this.$polylineObject, _lodash2.default.omit(polylineProps, ['deepWatch', 'path']));
+    (0, _propsBinder2.default)(this, this.$polylineObject, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
     (0, _eventsBinder2.default)(this, this.$polylineObject, events);
 
     var clearEvents = function clearEvents() {};
 
-    this.$watch('local_path', function (path) {
+    var pathChange = function pathChange(path) {
       if (path) {
         (function () {
           clearEvents();
@@ -129,12 +93,7 @@ exports.default = {
           var eventListeners = [];
 
           var updatePaths = function updatePaths() {
-            _this.local_path = _lodash2.default.map(_this.$polylineObject.getPath().getArray(), function (v) {
-              return {
-                lat: v.lat(),
-                lng: v.lng()
-              };
-            });
+            _this.$emit('path_changed', _this.$polylineObject.getPath());
           };
 
           eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)]);
@@ -152,8 +111,10 @@ exports.default = {
           };
         })();
       }
-    }, {
-      deep: this.local_deepWatch
+    };
+    pathChange(this.path);
+    this.$watch('path', pathChange, {
+      deep: this.deepWatch
     });
 
     // Display the map

@@ -24,23 +24,13 @@ var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
 
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind.js');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var rectangleProps = {
-  bounds: {
-    type: Object,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean
-  },
-  options: {
-    type: Object
-  }
-};
+var twoWayProps = ["bounds"];
 var props = {
   bounds: {
     type: Object
@@ -67,26 +57,6 @@ exports.default = {
   render: function render() {
     return '';
   },
-
-  computed: {
-    local_bounds: {
-      get: function get() {
-        return this.bounds;
-      },
-      set: function set(value) {
-        this.$emit('bounds-changed', value);
-      }
-    },
-    local_draggable: function local_draggable() {
-      return this.draggable;
-    },
-    local_editable: function local_editable() {
-      return this.editable;
-    },
-    local_options: function local_options() {
-      return this.options;
-    }
-  },
   deferredReady: function deferredReady() {
     var options = _lodash2.default.clone(this.getPropsValues());
     options.map = this.$map;
@@ -99,7 +69,7 @@ exports.default = {
     },
     createRectangle: function createRectangle(options, map) {
       this.$rectangleObject = this.createRectangleObject(options);
-      (0, _propsBinder2.default)(this, this.$rectangleObject, props);
+      (0, _propsBinder2.default)(this, this.$rectangleObject, (0, _generatePropsToBind2.default)(props, twoWayProps));
       (0, _eventsBinder2.default)(this, this.$rectangleObject, events);
     }
   },

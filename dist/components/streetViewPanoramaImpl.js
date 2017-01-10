@@ -36,37 +36,36 @@ var _latlngChangedHandler = require('../utils/latlngChangedHandler.js');
 
 var _latlngChangedHandler2 = _interopRequireDefault(_latlngChangedHandler);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var twoWayProps = ["zoom", "pov", "position", "pano", "visible"];
+var excludedProps = ["zoom", "position"];
+var trackProps = { "pov": ['pitch', 'heading'] };
 var props = {
   zoom: {
-    twoWay: true,
     type: Number
   },
   pov: {
-    twoWay: true,
-    type: Object,
-    trackProperties: ['pitch', 'heading']
+    type: Object
   },
   position: {
-    twoWay: true,
     type: Object
   },
   pano: {
-    twoWay: true,
     type: String
   },
   motionTracking: {
-    twoWay: false,
     type: Boolean
   },
   visible: {
-    twoWay: true,
     type: Boolean,
     default: true
   },
   options: {
-    twoWay: false,
     type: Object,
     default: function _default() {
       return {};
@@ -133,7 +132,7 @@ exports.default = {
       _this2.$panoObject = new google.maps.StreetViewPanorama(element, options);
 
       // binding properties (two and one way)
-      (0, _propsBinder2.default)(_this2, _this2.$panoObject, _lodash2.default.omit(props, ['position', 'zoom']));
+      (0, _propsBinder2.default)(_this2, _this2.$panoObject, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps, trackProps));
 
       //binding events
       (0, _eventsBinder2.default)(_this2, _this2.$panoObject, events);

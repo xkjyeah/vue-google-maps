@@ -36,37 +36,36 @@ var _latlngChangedHandler = require('../utils/latlngChangedHandler.js');
 
 var _latlngChangedHandler2 = _interopRequireDefault(_latlngChangedHandler);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind.js');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var twoWayProps = ["center", "zoom", "heading", "mapTypeId", "projection", "tilt"];
+var excludedProps = ['center', 'zoom', 'bounds'];
 var props = {
   center: {
-    required: true,
-    twoWay: true,
-    type: Object
+    type: Object,
+    required: true
   },
   zoom: {
-    required: false,
-    twoWay: true,
-    type: Number
+    type: Number,
+    default: 8
   },
   heading: {
-    type: Number,
-    twoWay: true
+    type: Number
   },
   mapTypeId: {
-    twoWay: true,
     type: String
   },
   bounds: {
-    twoWay: true,
     type: Object
   },
   projection: {
-    twoWay: true,
     type: Object
   },
   tilt: {
-    twoWay: true,
     type: Number
   },
   options: {
@@ -158,7 +157,7 @@ exports.default = {
       _this2.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)
-      (0, _propsBinder2.default)(_this2, _this2.$mapObject, _lodash2.default.omit(props, ['center', 'zoom', 'bounds']));
+      (0, _propsBinder2.default)(_this2, _this2.$mapObject, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
 
       // manually trigger center and zoom
       _this2.$mapObject.addListener('center_changed', function () {

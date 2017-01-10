@@ -34,26 +34,14 @@ var _assert = require('assert');
 
 var _assert2 = _interopRequireDefault(_assert);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var placeInputProps = {
-  bounds: {
-    type: Object,
-    twoWay: true
-  },
-  componentRestrictions: {
-    type: Object
-  },
-  types: {
-    type: Array
-  },
-  className: {
-    type: String
-  },
-  label: {
-    type: String
-  }
-};
+var twoWayProps = ["bounds"];
+var excludedProps = ["place", "defaultPlace", "placeholder", "selectFirstOnEnter", "autoFitOnUpdatePlace", "mapEmbedded"];
 var props = {
   bounds: {
     type: Object
@@ -118,14 +106,6 @@ exports.default = {
   },
 
   computed: {
-    local_bounds: {
-      get: function get() {
-        return this.bounds;
-      },
-      set: function set(value) {
-        this.$emit('bounds-changed', value);
-      }
-    },
     local_place: {
       get: function get() {
         return typeof this.$options.propsData['place'] !== 'undefined' ? this.place : this.placeInputObj.place;
@@ -138,20 +118,8 @@ exports.default = {
     local_defaultPlace: function local_defaultPlace() {
       return typeof this.$options.propsData['defaultPlace'] !== 'undefined' ? this.defaultPlace : this.local_place.name;
     },
-    local_componentRestrictions: function local_componentRestrictions() {
-      return this.componentRestrictions;
-    },
-    local_types: function local_types() {
-      return this.types;
-    },
     local_placeholder: function local_placeholder() {
       return this.placeholder;
-    },
-    local_className: function local_className() {
-      return this.className;
-    },
-    local_label: function local_label() {
-      return this.label;
     },
     local_selectFirstOnEnter: function local_selectFirstOnEnter() {
       return this.selectFirstOnEnter;
@@ -189,7 +157,7 @@ exports.default = {
       (0, _assert2.default)(typeof google.maps.places.Autocomplete === 'function', "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?");
 
       _this.autoCompleter = new google.maps.places.Autocomplete(_this.$refs.input, options);
-      (0, _propsBinder2.default)(_this, _this.autoCompleter, placeInputProps);
+      (0, _propsBinder2.default)(_this, _this.autoCompleter, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
       _this.autoCompleter.addListener('place_changed', _this.placeChanged);
     });
   },

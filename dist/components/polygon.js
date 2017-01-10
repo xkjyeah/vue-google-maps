@@ -32,31 +32,14 @@ var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
 
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
+var _generatePropsToBind = require('../utils/generatePropsToBind');
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var polygonProps = {
-  path: {
-    type: Array,
-    twoWay: true
-  },
-  paths: {
-    type: Array,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean
-  },
-  deepWatch: {
-    type: Boolean
-  },
-  options: {
-    type: Object
-  }
-};
-
+var twoWayProps = ["path", "paths"];
+var excludedProps = ["path", "paths", "deepWatch"];
 var props = {
   draggable: {
     type: Boolean
@@ -84,39 +67,9 @@ var events = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 
 exports.default = {
   mixins: [_mapElementMixin2.default, _getPropsValuesMixin2.default],
   props: props,
+
   render: function render() {
     return '';
-  },
-
-  computed: {
-    local_path: {
-      get: function get() {
-        return this.path;
-      },
-      set: function set(value) {
-        this.$emit('path-changed', value);
-      }
-    },
-    local_paths: {
-      get: function get() {
-        return this.paths;
-      },
-      set: function set(value) {
-        this.$emit('paths-changed', value);
-      }
-    },
-    local_draggable: function local_draggable() {
-      return this.draggable;
-    },
-    local_editable: function local_editable() {
-      return this.editable;
-    },
-    local_deepWatch: function local_deepWatch() {
-      return this.deepWatch;
-    },
-    local_options: function local_options() {
-      return this.options;
-    }
   },
   destroyed: function destroyed() {
     if (this.$polygonObject) {
@@ -128,7 +81,7 @@ exports.default = {
 
     var options = _lodash2.default.clone(this.getPropsValues());
     delete options.options;
-    _lodash2.default.assign(options, this.local_options);
+    _lodash2.default.assign(options, this.options);
     if (!options.path) {
       delete options.path;
     }
@@ -137,23 +90,14 @@ exports.default = {
     }
     this.$polygonObject = this.createPolygonObject(options);
 
-    (0, _propsBinder2.default)(this, this.$polygonObject, _lodash2.default.omit(polygonProps, ['path', 'paths']));
+    (0, _propsBinder2.default)(this, this.$polygonObject, (0, _generatePropsToBind2.default)(props, twoWayProps, excludedProps));
     (0, _eventsBinder2.default)(this, this.$polygonObject, events);
 
     var clearEvents = function clearEvents() {};
 
-    var convertToLatLng = function convertToLatLng(arr) {
-      return _lodash2.default.map(arr, function (v) {
-        return {
-          lat: v.lat(),
-          lng: v.lng()
-        };
-      });
-    };
-
     // Watch paths, on our own, because we do not want to set either when it is
     // empty
-    this.$watch('local_paths', function (paths) {
+    var pathsChange = function pathsChange(paths) {
       if (paths) {
         (function () {
           clearEvents();
@@ -164,9 +108,7 @@ exports.default = {
           }
 
           var updatePaths = function updatePaths() {
-            _this.local_paths = _lodash2.default.map(_this.$polygonObject.getPaths().getArray(), function (pArray) {
-              return convertToLatLng(pArray.getArray());
-            });
+            _this.$emit('paths_changed', _this.$polygonObject.getPaths());
           };
           var eventListeners = [];
 
@@ -213,11 +155,15 @@ exports.default = {
           };
         })();
       }
-    }, {
-      deep: this.local_deepWatch
+    };
+    if (this.paths) {
+      pathsChange(this.paths);
+    }
+    this.$watch('paths', pathsChange, {
+      deep: this.deepWatch
     });
 
-    this.$watch('local_path', function (path) {
+    var pathChange = function pathChange(path) {
       if (path) {
         (function () {
           clearEvents();
@@ -228,7 +174,7 @@ exports.default = {
           var eventListeners = [];
 
           var updatePaths = function updatePaths() {
-            _this.local_path = convertToLatLng(_this.$polygonObject.getPath().getArray());
+            _this.$emit('path_changed', _this.$polygonObject.getPath());
           };
 
           eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)]);
@@ -246,8 +192,12 @@ exports.default = {
           };
         })();
       }
-    }, {
-      deep: this.local_deepWatch
+    };
+    if (this.path) {
+      pathChange(this.path);
+    }
+    this.$watch('path', pathChange, {
+      deep: this.deepWatch
     });
 
     // Display the map

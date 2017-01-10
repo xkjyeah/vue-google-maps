@@ -24,62 +24,13 @@ var _mapElementMixin = require("./mapElementMixin");
 
 var _mapElementMixin2 = _interopRequireDefault(_mapElementMixin);
 
+var _generatePropsToBind = require("../utils/generatePropsToBind");
+
+var _generatePropsToBind2 = _interopRequireDefault(_generatePropsToBind);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var markerProps = {
-  animation: {
-    type: Number,
-    twoWay: true
-  },
-  attribution: {
-    type: Object
-  },
-  clickable: {
-    type: Boolean,
-    twoWay: true
-  },
-  cursor: {
-    type: String,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean,
-    twoWay: true
-  },
-  icon: {
-    type: Object,
-    twoWay: true
-  },
-  label: {
-    type: String
-  },
-  opacity: {
-    type: Number
-  },
-  place: {
-    type: Object
-  },
-  position: {
-    type: Object,
-    twoWay: true
-  },
-  shape: {
-    type: Object,
-    twoWay: true
-  },
-  title: {
-    type: String,
-    twoWay: true
-  },
-  zIndex: {
-    type: Number,
-    twoWay: true
-  },
-  visible: {
-    twoWay: true
-  }
-};
-
+var twoWayProps = ["animation", "clickable", "cursor", "draggable", "icon", "position", "shape", "title", "zIndex", "visible"];
 var props = {
   animation: {
     type: Number
@@ -149,103 +100,6 @@ exports.default = {
     return h( // So that infowindows can have a marker parent
     'div', this.$slots.default);
   },
-
-  computed: {
-    local_animation: {
-      get: function get() {
-        return this.animation;
-      },
-      set: function set(value) {
-        this.$emit('animation-changed', value);
-      }
-    },
-    local_attribution: function local_attribution() {
-      return this.attribution;
-    },
-
-    local_clickable: {
-      get: function get() {
-        return this.clickable;
-      },
-      set: function set(value) {
-        this.$emit('clickable-changed', value);
-      }
-    },
-    local_cursor: {
-      get: function get() {
-        return this.cursor;
-      },
-      set: function set(value) {
-        this.$emit('cursor-changed', value);
-      }
-    },
-    local_draggable: {
-      get: function get() {
-        return this.draggable;
-      },
-      set: function set(value) {
-        this.$emit('draggable-changed', value);
-      }
-    },
-    local_icon: {
-      get: function get() {
-        return this.icon;
-      },
-      set: function set(value) {
-        this.$emit('icon-changed', value);
-      }
-    },
-    local_label: function local_label() {
-      return this.label;
-    },
-    local_opacity: function local_opacity() {
-      return this.opacity;
-    },
-    local_place: function local_place() {
-      return this.place;
-    },
-
-    local_position: {
-      get: function get() {
-        return this.position;
-      },
-      set: function set(value) {
-        this.$emit('position-changed', value);
-      }
-    },
-    local_shape: {
-      get: function get() {
-        return this.shape;
-      },
-      set: function set(value) {
-        this.$emit('shape-changed', value);
-      }
-    },
-    local_title: {
-      get: function get() {
-        return this.title;
-      },
-      set: function set(value) {
-        this.$emit('title-changed', value);
-      }
-    },
-    local_zIndex: {
-      get: function get() {
-        return this.zIndex;
-      },
-      set: function set(value) {
-        this.$emit('z-index-changed', value);
-      }
-    },
-    local_visible: {
-      get: function get() {
-        return this.visible;
-      },
-      set: function set(value) {
-        this.$emit('visible-changed', value);
-      }
-    }
-  },
   created: function created() {
     this.$parentAcceptMarker = null;
     this.$acceptInfoWindow = true;
@@ -272,7 +126,7 @@ exports.default = {
   methods: {
     createMarker: function createMarker(options, map) {
       this.$markerObject = this.createMarkerObject(options);
-      (0, _propsBinder2.default)(this, this.$markerObject, markerProps);
+      (0, _propsBinder2.default)(this, this.$markerObject, (0, _generatePropsToBind2.default)(props, twoWayProps));
       (0, _eventsBinder2.default)(this, this.$markerObject, events);
 
       /* Send an event to any <cluster ou similar> parent */
@@ -295,11 +149,6 @@ exports.default = {
         this.$off('click', this.infoWindowClickEvent);
       }
       this.infoWindowClickEvent = null;
-    },
-    getParentAcceptMarker: function getParentAcceptMarker(child) {
-      return getParentTest(child, function (component) {
-        return component._acceptMarker == true;
-      });
     }
   }
 };
