@@ -1,32 +1,13 @@
 import _ from 'lodash';
+
 import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import generatePropsToBind from "../utils/generatePropsToBind";
 
-const polygonProps = {
-  path: {
-    type: Array,
-    twoWay: true
-  },
-  paths: {
-    type: Array,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean
-  },
-  deepWatch: {
-    type: Boolean
-  },
-  options: {
-    type: Object
-  },
-}
-
+const twoWayProps = ["path","paths"];
+const excludedProps = ["path","paths"];
 const props = {
   draggable: {
     type: Boolean
@@ -47,7 +28,7 @@ const props = {
     type: Boolean,
     default: false
   }
-}
+};
 
 const events = [
   'click',
@@ -61,42 +42,14 @@ const events = [
   'mouseover',
   'mouseup',
   'rightclick'
-]
+];
 
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
+
   render() { return '' },
-  computed:{
-    local_path:{
-      get(){
-        return this.path;
-      },
-      set(value){
-        this.$emit('path-changed', value);
-      }
-    },
-    local_paths:{
-      get(){
-        return this.paths;
-      },
-      set(value){
-        this.$emit('paths-changed', value);
-      }
-    },
-    local_draggable(){
-        return this.draggable;
-    },
-    local_editable(){
-        return this.editable;
-    },
-    local_deepWatch(){
-        return this.deepWatch;
-    },
-    local_options(){
-        return this.options;
-    }
-  },
+
   destroyed () {
     if (this.$polygonObject) {
       this.$polygonObject.setMap(null);
@@ -106,7 +59,7 @@ export default {
   deferredReady() {
     const options = _.clone(this.getPropsValues());
     delete options.options;
-    _.assign(options, this.local_options);
+    _.assign(options, this.options);
     if (!options.path) {
       delete options.path;
     }
@@ -115,23 +68,14 @@ export default {
     }
     this.$polygonObject = this.createPolygonObject(options);
 
-    propsBinder(this, this.$polygonObject, _.omit(polygonProps, ['path', 'paths']));
+    propsBinder(this, this.$polygonObject, generatePropsToBind(props,twoWayProps,excludedProps));
     eventBinder(this, this.$polygonObject, events);
 
     let clearEvents = () => {};
 
-    const convertToLatLng = (arr) => {
-      return _.map((arr), (v) => {
-        return {
-          lat: v.lat(),
-          lng: v.lng()
-        }
-      });
-    }
-
     // Watch paths, on our own, because we do not want to set either when it is
     // empty
-    this.$watch('local_paths', (paths) => {
+    let pathsChange = (paths) => {
       if (paths) {
         clearEvents();
         if (typeof paths[0][0] == 'undefined') {
@@ -141,10 +85,8 @@ export default {
         }
 
         const updatePaths = () => {
-          this.local_paths = _.map(this.$polygonObject.getPaths().getArray(), (pArray) => {
-            return convertToLatLng(pArray.getArray());
-          });
-        }
+          this.$emit('paths_changed', this.$polygonObject.getPaths())
+        };
         const eventListeners = [];
 
         const mvcArray = this.$polygonObject.getPaths();
@@ -162,11 +104,15 @@ export default {
             google.maps.event.removeListener(listenerHandle))
         }
       }
-    }, {
-      deep: this.local_deepWatch
+    };
+    if (this.paths){
+      pathsChange(this.paths);
+    }
+    this.$watch('paths', pathsChange, {
+      deep: this.deepWatch
     });
 
-    this.$watch('local_path', (path) => {
+    let pathChange = (path) => {
       if (path) {
         clearEvents();
 
@@ -176,8 +122,8 @@ export default {
         const eventListeners = [];
 
         const updatePaths = () => {
-          this.local_path = convertToLatLng(this.$polygonObject.getPath().getArray());
-        }
+          this.$emit('path_changed', this.$polygonObject.getPath())
+        };
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
         eventListeners.push([mvcPath, mvcPath.addListener('remove_at', updatePaths)])
@@ -188,8 +134,12 @@ export default {
             google.maps.event.removeListener(listenerHandle))
         }
       }
-    }, {
-      deep: this.local_deepWatch
+    };
+    if (this.path){
+      pathChange(this.path);
+    }
+    this.$watch('path', pathChange, {
+      deep: this.deepWatch
     });
 
     // Display the map

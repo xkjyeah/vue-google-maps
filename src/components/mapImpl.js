@@ -1,42 +1,16 @@
-import _ from "lodash";
-import {loaded} from "../manager.js";
-import eventsBinder from "../utils/eventsBinder.js";
-import propsBinder from "../utils/propsBinder.js";
-import {DeferredReadyMixin} from "../utils/deferredReady.js";
+import _ from 'lodash';
+
+import {loaded} from '../manager.js';
+import {DeferredReadyMixin} from '../utils/deferredReady.js';
+import eventsBinder from '../utils/eventsBinder.js';
+import propsBinder from '../utils/propsBinder.js';
+import getPropsMixin from '../utils/getPropsValuesMixin.js'
 import mountableMixin from '../utils/mountableMixin.js'
-import getPropsMixin from "../utils/getPropsValuesMixin.js";
+import latlngChangedHandler from '../utils/latlngChangedHandler.js';
+import generatePropsToBind from '../utils/generatePropsToBind.js'
 
-const mapsProps = {
-  center: {
-    twoWay: true,
-    type: Object
-  },
-  zoom: {
-    twoWay: true,
-    type: Number
-  },
-  heading: {
-    twoWay: true,
-    type: Number
-  },
-  mapTypeId: {
-    twoWay: true,
-    type: String
-  },
-  projection: {
-    twoWay: true,
-    type: Object,
-  },
-  tilt: {
-    twoWay: true,
-    type: Number,
-  },
-  options: {
-    twoWay: false,
-    type: Object,
-  }
-};
-
+const twoWayProps = ["center","zoom","heading","mapTypeId","projection","tilt"];
+const excludedProps = ['center', 'zoom', 'bounds'];
 const props = {
   center: {
     type: Object,
@@ -86,18 +60,18 @@ const events = [
 
 // Plain Google Maps methods exposed here for convenience
 const linkedMethods = _([
-    'panBy',
-    'panTo',
-    'panToBounds',
-    'fitBounds'
-  ])
-    .map(methodName => [methodName, function () {
-      if (this.$mapObject)
-        this.$mapObject[methodName].apply(this.$mapObject, arguments);
-    }])
-    .fromPairs()
-    .value()
-  ;
+  'panBy',
+  'panTo',
+  'panToBounds',
+  'fitBounds'
+])
+  .map(methodName => [methodName, function() {
+    if (this.$mapObject)
+      this.$mapObject[methodName].apply(this.$mapObject, arguments);
+  }])
+  .fromPairs()
+  .value()
+;
 
 // Other convenience methods exposed by Vue Google Maps
 const customMethods = {
@@ -129,72 +103,28 @@ const methods = _.assign({}, customMethods, linkedMethods);
 export default {
   mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
   props: props,
-  //replace: false, // necessary for css styles
-  computed: {
-    local_center: {
-      get(){
-        return this.center;
-      },
-      set(value){
-        this.$emit('center-changed', value);
-      }
-    },
-    local_zoom: {
-      get(){
-        return this.zoom;
-      },
-      set(value){
-        this.$emit('zoom-changed', value);
-      }
-    },
-    local_heading: {
-      get(){
-        return this.heading;
-      },
-      set(value){
-        this.$emit('heading-changed', value);
-      }
-    },
-    local_mapTypeId: {
-      get(){
-        return this.mapTypeId;
-      },
-      set(value){
-        this.$emit('mapTypeId-changed', value);
-      }
-    },
-    local_bounds: {
-      get(){
-        return this.bounds;
-      },
-      set(value){
-        this.$emit('bounds-changed', value);
-      }
-    },
-    local_projection: {
-      get(){
-        return this.projection;
-      },
-      set(value){
-        this.$emit('projection-changed', value);
-      }
-    },
-    local_tilt: {
-      get(){
-        return this.tilt;
-      },
-      set(value){
-        this.$emit('tilt-changed', value);
-      }
-    },
-    local_options(){
-      return this.options;
-    }
-  },
+  replace: false, // necessary for css styles
+
   created() {
     this.$mapCreated = new Promise((resolve, reject) => {
       this.$mapCreatedDeferred = {resolve, reject}
     });
+  },
+
+  watch: {
+    center: {
+      deep: true,
+      handler: latlngChangedHandler(function (val, oldVal) {
+        if (this.$mapObject) {
+          this.$mapObject.setCenter(val);
+        }
+      }),
+    },
+    zoom(zoom) {
+      if (this.$mapObject) {
+        this.$mapObject.setZoom(zoom);
+      }
+    }
   },
 
   deferredReady() {
@@ -205,30 +135,33 @@ export default {
       // creating the map
       const copiedData = _.clone(this.getPropsValues());
       delete copiedData.options;
-      const options = _.clone(this.local_options);
+      const options = _.clone(this.options);
       _.assign(options, copiedData);
       this.$mapObject = new google.maps.Map(element, options);
 
-      //binding properties (two and one way)
-      propsBinder(this, this.$mapObject, mapsProps);
+      // binding properties (two and one way)
+      propsBinder(this, this.$mapObject, generatePropsToBind(props,twoWayProps,excludedProps));
+
+      // manually trigger center and zoom
+      this.$mapObject.addListener('center_changed', () => {
+        this.$emit('center_changed', this.$mapObject.getCenter())
+        this.$emit('bounds_changed', this.$mapObject.getBounds())
+      });
+      this.$mapObject.addListener('zoom_changed', () => {
+        this.$emit('zoom_changed', this.$mapObject.getZoom())
+        this.$emit('bounds_changed', this.$mapObject.getBounds())
+      });
 
       //binding events
       eventsBinder(this, this.$mapObject, events);
-
-      let updateBounds = () => {
-        this.local_bounds = this.$mapObject.getBounds();
-      };
-
-      this.$watch('local_center', updateBounds);
-      this.$watch('local_zoom', updateBounds);
 
       this.$mapCreatedDeferred.resolve(this.$mapObject);
 
       return this.$mapCreated;
     })
-      .catch((error) => {
-        throw error;
-      });
+    .catch((error) => {
+      throw error;
+    });
   },
   methods: methods
 }

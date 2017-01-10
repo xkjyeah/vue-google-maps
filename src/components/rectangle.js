@@ -4,22 +4,9 @@ import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import generatePropsToBind from '../utils/generatePropsToBind.js'
 
-const rectangleProps = {
-    bounds: {
-        type: Object,
-        twoWay: true
-    },
-    draggable: {
-        type: Boolean
-    },
-    editable: {
-        type: Boolean
-    },
-    options: {
-        type: Object
-    }
-};
+const twoWayProps = ["bounds"];
 const props = {
     bounds: {
         type: Object
@@ -58,25 +45,6 @@ export default {
   render() {
     return '';
   },
-  computed:{
-    local_bounds:{
-      get(){
-        return this.bounds;
-      },
-      set(value){
-        this.$emit('bounds-changed', value);
-      }
-    },
-    local_draggable(){
-      return this.draggable;
-    },
-    local_editable(){
-      return this.editable;
-    },
-    local_options(){
-      return this.options;
-    }
-  },
   deferredReady() {
     const options = _.clone(this.getPropsValues());
     options.map = this.$map;
@@ -88,7 +56,7 @@ export default {
     },
     createRectangle (options, map) {
         this.$rectangleObject = this.createRectangleObject(options);
-        propsBinder(this, this.$rectangleObject, props);
+        propsBinder(this, this.$rectangleObject, generatePropsToBind(props,twoWayProps));
         eventBinder(this, this.$rectangleObject, events);
     },
   },

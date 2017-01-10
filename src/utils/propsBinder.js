@@ -20,14 +20,14 @@ export default (vueElement, googleMapsElement, props, options) => {
     let timesSet = 0;
 
     if (type !== Object || !trackProperties) {
-      // Track the object deeplyvueElement.$watch('local_'+attribute, () => {
+      // Track the object deeply
       vueElement.$watch(attribute, () => {
-        const attributeValue = vueElement['local_'+attribute];
+        const attributeValue = vueElement[attribute];
 
         timesSet++;
         googleMapsElement[setMethodName](attributeValue);
         if (afterModelChanged) {
-          afterModelChanged('local_'+attribute, attributeValue);
+          afterModelChanged(attribute, attributeValue);
         }
       }, {
         deep: type === Object
@@ -56,28 +56,16 @@ export default (vueElement, googleMapsElement, props, options) => {
     }
 
     if (twoWay) {
-      let gmapWatcher = () => {
-        if (timesSet > 0) {
-          timesSet--;
-          return;
+      googleMapsElement.addListener(eventName, (ev) => {
+          if (timesSet > 0) {
+            timesSet --;
+            return;
+          }
+          else {
+            vueElement.$emit(eventName, googleMapsElement[getMethodName]());
+          }
         }
-        const value = googleMapsElement[getMethodName]();
-        if (value instanceof google.maps.LatLng) {
-          vueElement['local_' + attribute] = {
-            lat: value.lat(),
-            lng: value.lng()
-          };
-        }
-        else { //TODO Handle more google types !!
-          vueElement['local_' + attribute] = value;
-        }
-      };
-
-      googleMapsElement.addListener(eventName,
-        _.throttle(gmapWatcher, 100, {
-          leading: true,
-          trailing: true
-        }));
+      );
     }
   });
 }

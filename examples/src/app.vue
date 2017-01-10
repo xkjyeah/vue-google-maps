@@ -454,7 +454,9 @@ export default {
     },
 
     updatePolygonPaths(paths) {
-      // TODO
+      this.pgPath = _.map(paths.getArray(), (value) => {
+        return value.getArray()
+      });
     },
 
     updatePolylinePath(paths) {
