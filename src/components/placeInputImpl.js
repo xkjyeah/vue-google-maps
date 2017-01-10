@@ -6,25 +6,10 @@ import MapElementMixin from './mapElementMixin';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
 import {loaded} from '../manager.js'
 import assert from 'assert';
+import generatePropsToBind from "../utils/generatePropsToBind"
 
-const placeInputProps = {
-  bounds: {
-    type: Object,
-    twoWay: true
-  },
-  componentRestrictions: {
-    type: Object
-  },
-  types: {
-    type: Array
-  },
-  className: {
-    type: String
-  },
-  label: {
-    type: String
-  }
-}
+const twoWayProps = ["bounds"];
+const excludedProps = ["place","defaultPlace","placeholder","selectFirstOnEnter","autoFitOnUpdatePlace","mapEmbedded"];
 const props = {
   bounds: {
     type: Object
@@ -88,14 +73,6 @@ export default {
     }
   },
   computed: {
-    local_bounds: {
-      get(){
-        return this.bounds;
-      },
-      set(value){
-        this.$emit('bounds-changed', value);
-      }
-    },
     local_place: {
       get(){
         return (typeof this.$options.propsData['place'] !== 'undefined') ? this.place : this.placeInputObj.place;
@@ -108,20 +85,8 @@ export default {
     local_defaultPlace(){
       return (typeof this.$options.propsData['defaultPlace'] !== 'undefined') ? this.defaultPlace : this.local_place.name;
     },
-    local_componentRestrictions(){
-      return this.componentRestrictions;
-    },
-    local_types(){
-      return this.types;
-    },
     local_placeholder(){
       return this.placeholder;
-    },
-    local_className(){
-      return this.className;
-    },
-    local_label(){
-      return this.label;
     },
     local_selectFirstOnEnter(){
       return this.selectFirstOnEnter;
@@ -158,7 +123,7 @@ export default {
         "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?")
 
       this.autoCompleter = new google.maps.places.Autocomplete(this.$refs.input, options);
-      propsBinder(this, this.autoCompleter, placeInputProps);
+      propsBinder(this, this.autoCompleter, generatePropsToBind(props,twoWayProps,excludedProps));
       this.autoCompleter.addListener('place_changed', this.placeChanged);
     })
   },
