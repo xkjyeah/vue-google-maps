@@ -1,29 +1,13 @@
 import _ from 'lodash';
+
 import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import generatePropsToBind from "../utils/generatePropsToBind"
 
-const circleProps = {
-  center: {
-    type: Object,
-    twoWay: true
-  },
-  radius: {
-    type: Number,
-    twoWay: true
-  },
-  draggable: {
-    type: Boolean
-  },
-  editable: {
-    type: Boolean
-  },
-  options: {
-    type: Object
-  }
-}
-
+const twoWayProps = ["center","radius"]
+const excludedProps = ["bounds"]
 const props = {
   center: {
     type: Object,
@@ -72,41 +56,6 @@ export default {
     )
   },
   props: props,
-  computed: {
-    local_center: {
-      get(){
-        return this.center;
-      },
-      set(value){
-        this.$emit('center-changed', value);
-      }
-    },
-    local_radius: {
-      get(){
-        return this.radius;
-      },
-      set(value){
-        this.$emit('radius-changed', value);
-      }
-    },
-    local_bounds: {
-      get(){
-        return this.bounds;
-      },
-      set(value){
-        this.$emit('bounds-changed', value);
-      }
-    },
-    local_draggable(){
-      return this.draggable;
-    },
-    local_editable(){
-      return this.editable;
-    },
-    local_options(){
-      return this.options;
-    }
-  },
   created(){
     this.$acceptInfoWindow = true;
     this.$on('register-info-window', this.registerInfoWindow);
@@ -126,16 +75,14 @@ export default {
     createCircle (options, map) {
       this.$circleObject = this.createCircleObject(options);
 
-      propsBinder(this, this.$circleObject, circleProps);
+      propsBinder(this, this.$circleObject, generatePropsToBind(props,twoWayProps,excludedProps));
       eventBinder(this, this.$circleObject, events);
 
       const updateBounds = () => {
-        this.local_bounds = this.$circleObject.getBounds();
+        this.$emit('bounds_changed', this.$circleObject.getBounds())
       };
-
-      this.$watch('local_radius', updateBounds);
-      // because center is an object and we need to be warned even if only the lat or lng change. not the whole reference
-      this.$watch('local_center', updateBounds, {deep: true});
+      this.$on('radius_changed', updateBounds);
+      this.$on('center_changed', updateBounds);
       updateBounds();
     },
     registerInfoWindow(infoWindow) {
@@ -143,7 +90,7 @@ export default {
         infoWindow.local_opened = !infoWindow.local_opened;
       };
       this.$on('click', this.infoWindowClickEvent);
-      this.infoWindowCenterChangeWatch = this.$watch('local_center', (newValue) => {
+      this.infoWindowCenterChangeWatch = this.$watch('center', (newValue) => {
         infoWindow.local_position = newValue
       }, {deep: true});
     },
@@ -158,7 +105,6 @@ export default {
       this.infoWindowCenterChangeWatch = null;
     }
   },
-
   destroyed () {
     if (this.$circleObject) {
       this.$circleObject.setMap(null);
