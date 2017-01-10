@@ -61,7 +61,7 @@ export default {
   },
   created(){
     this.$hybridComponent = !this.mapEmbedded;
-    this.autocompleter = null;
+    this.$autocomplete = null;
   },
   mounted () {
     const input = this.$refs.input;
@@ -74,11 +74,11 @@ export default {
       assert(typeof(google.maps.places.Autocomplete) === 'function',
         "google.maps.places.Autocomplete is undefined. Did you add 'places' to libraries when loading Google Maps?")
 
-      const finalOptions = _.defaults(
+      const finalOptions = _.omitBy(_.defaults(
         {},
         options.options,
         _.omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder',"autoFitOnUpdatePlace","mapEmbedded"])
-      ).omitBy(_.isUndefined);
+      ),_.isUndefined);
 
       // Component restrictions is rather particular. Undefined not allowed
       this.$watch('componentRestrictions', v => {
@@ -88,8 +88,8 @@ export default {
       })
 
       this.$autocomplete = new google.maps.places.Autocomplete(this.$refs.input, finalOptions);
-      propsBinder(this, this.autocompleter, generatePropsToBind(props,twoWayProps,excludedProps));
-      this.autocompleter.addListener('place_changed', this.placeChanged);
+      propsBinder(this, this.$autocomplete, generatePropsToBind(props,twoWayProps,excludedProps));
+      this.$autocomplete.addListener('place_changed', this.placeChanged);
     })
   },
   deferredReady() {
@@ -106,9 +106,9 @@ export default {
       this.$map.fitBounds(place.geometry.viewport);
     },
     placeChanged() {
-      this.$emit('place_changed', this.autocompleter.getPlace());
+      this.$emit('place_changed', this.$autocomplete.getPlace());
       if (this.autoFitOnUpdatePlace)
-        this.autoFitPlace(this.autocompleter.getPlace());
+        this.autoFitPlace(this.$autocomplete.getPlace());
     }
   }
 }
