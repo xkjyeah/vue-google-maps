@@ -138,7 +138,12 @@ export default {
     autoFitPlace(place){
       if (typeof this.$map === 'undefined' || typeof place.geometry === 'undefined')
         return;
-      this.$map.fitBounds(place.geometry.viewport);
+      if(place.geometry.viewport){
+        this.$map.fitBounds(place.geometry.viewport);
+      } else {
+        this.$map.setCenter(place.geometry.location);
+        this.$map.setZoom(17);
+      }
     },
     placeChanged() {
       this.local_place = this.autoCompleter.getPlace();
