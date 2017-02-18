@@ -26,9 +26,7 @@ const props = {
     type: Boolean,
     default: false
   },
-  icon: {
-    type: Object,
-  },
+  icon: {},
   label: {},
   opacity: {
     type: Number,

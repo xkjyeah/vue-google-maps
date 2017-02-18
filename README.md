@@ -36,8 +36,8 @@ If you want to write google map this way :
 ```html
 <gmap-map
   :center="{lat:10, lng:10}"
-  map-type-id="terrain"
   :zoom="7"
+  map-type-id="terrain"
   style="width: 500px; height: 300px"
 ></gmap-map>
 ```
@@ -49,6 +49,7 @@ Or use the power of Vue.js within a google map like this:
     :center="center"
     @center-changed="center=$event"
     :zoom="7"
+    style="width: 500px; height: 300px"
   >
     <gmap-marker
       v-for="m in markers"
