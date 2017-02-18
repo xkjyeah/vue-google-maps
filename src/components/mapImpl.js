@@ -9,7 +9,7 @@ import mountableMixin from '../utils/mountableMixin.js'
 import latlngChangedHandler from '../utils/latlngChangedHandler.js';
 import generatePropsToBind from '../utils/generatePropsToBind.js'
 
-const twoWayProps = ["center","zoom","heading","mapTypeId","projection","tilt"];
+const twoWayProps = ["center","zoom","bounds","heading","mapTypeId","projection","tilt"];
 const excludedProps = ['center', 'zoom', 'bounds'];
 const props = {
   center: {
@@ -145,10 +145,11 @@ export default {
       // manually trigger center and zoom
       this.$mapObject.addListener('center_changed', () => {
         this.$emit('center_changed', this.$mapObject.getCenter())
-        this.$emit('bounds_changed', this.$mapObject.getBounds())
       });
       this.$mapObject.addListener('zoom_changed', () => {
         this.$emit('zoom_changed', this.$mapObject.getZoom())
+      });
+      this.$mapObject.addListener('bounds_changed', () => {
         this.$emit('bounds_changed', this.$mapObject.getBounds())
       });
 

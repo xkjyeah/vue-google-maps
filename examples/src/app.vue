@@ -130,6 +130,13 @@
     @maptypeid_changed="update('mapType', $event)"
     @bounds_changed="update('bounds', $event)"
     >
+      <gmap-autocomplete
+        label="Add a marker at this place"
+        :select-first-on-enter="true"
+        :map-embedded="true"
+        :auto-fit-on-update-place="true"
+        @place_changed="updatePlace($event)"
+      ></gmap-autocomplete>
     <gmap-cluster
     :grid-size="gridSize"
     v-if="clustering"

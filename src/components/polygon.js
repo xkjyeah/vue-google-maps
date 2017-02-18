@@ -75,7 +75,7 @@ export default {
 
     // Watch paths, on our own, because we do not want to set either when it is
     // empty
-    let pathsChange = (paths) => {
+    this.$watch('paths', (paths) => {
       if (paths) {
         clearEvents();
         if (typeof paths[0][0] == 'undefined') {
@@ -104,15 +104,12 @@ export default {
             google.maps.event.removeListener(listenerHandle))
         }
       }
-    };
-    if (this.paths){
-      pathsChange(this.paths);
-    }
-    this.$watch('paths', pathsChange, {
-      deep: this.deepWatch
+    }, {
+      deep: this.deepWatch,
+      immediate: true,
     });
 
-    let pathChange = (path) => {
+    this.$watch('path', (path) => {
       if (path) {
         clearEvents();
 
@@ -134,12 +131,9 @@ export default {
             google.maps.event.removeListener(listenerHandle))
         }
       }
-    };
-    if (this.path){
-      pathChange(this.path);
-    }
-    this.$watch('path', pathChange, {
-      deep: this.deepWatch
+    }, {
+      deep: this.deepWatch,
+      immediate: true,
     });
 
     // Display the map

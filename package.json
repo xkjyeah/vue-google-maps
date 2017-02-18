@@ -1,6 +1,6 @@
 {
   "name": "vue2-google-maps",
-  "version": "0.4.10",
+  "version": "0.5.2",
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
   "main": "dist/main.js",
   "scripts": {
@@ -14,9 +14,6 @@
     "build-examples-before": "npm run build && shx cp dist/vue-google-maps.js examples",
     "build-examples": "npm run build-examples-before && npm run build-examples-webpack",
     "deploy": "npm run build-examples && gh-pages -d examples"
-  },
-  "dependencies": {
-    "vue-loader": "^10.0.0"
   },
   "peerDependencies": {
     "vue": "^2.1.0",
