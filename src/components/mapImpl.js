@@ -152,7 +152,7 @@ export default {
       this.$mapObject.addListener('bounds_changed', () => {
         this.$emit('bounds_changed', this.$mapObject.getBounds())
       });
-
+      this.$emit('bounds_changed', this.$mapObject.getBounds());
       //binding events
       eventsBinder(this, this.$mapObject, events);
 
