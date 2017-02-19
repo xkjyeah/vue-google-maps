@@ -49,6 +49,11 @@ const props = {
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
+  data:function(){
+    return {
+      mapControlIndex: null
+    }
+  },
   computed: {
     placeName: {
       get(){
@@ -92,10 +97,17 @@ export default {
       this.$autocomplete.addListener('place_changed', this.placeChanged);
     })
   },
+  beforeDestroy:function () {
+    if (this.local_mapEmbedded) {
+      if (this.$map) {
+        this.$map.controls[google.maps.ControlPosition.TOP_LEFT].removeAt(this.mapControlIndex);
+      }
+    }
+  },
   deferredReady() {
     if (this.mapEmbedded) {
       if (this.$map) {
-        this.$map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.$refs.input);
+        this.mapControlIndex = this.$map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.$refs.input) - 1;
       }
     }
   },
