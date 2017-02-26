@@ -89,6 +89,57 @@ Or use the power of Vue.js within a google map like this:
 </script>
 ```
 
+## Custom markers
+
+To implement custom marker, best practice is to create a map settings file, which you can import into the page(s) where you use the gmap-map and gmap-marker tags. This is usually done in a project configuration folder.
+
+An example of the map settings file:
+
+**mapSettings.js**
+
+```javascript
+import { loaded } from 'vue2-google-maps';
+
+var settings = new Vue({
+    data: {
+        defaultIconSettings: {},
+        defaultMapOptions: {
+          /* below, useful default options */
+          clickableIcons: false,
+	        streetViewControl: false,
+	        panControlOptions: false,
+	        gestureHandling: 'greedy'
+        },
+    }
+})
+export default settings;
+
+loaded.then(() => {
+    /* google.maps.Size is now available! */
+    settings.defaultIconSettings = /* Do something with google.maps.Size */
+})
+```
+
+**yourMap.vue**
+
+```javascript
+<template>
+<gmap-map :options="mapSettings.defaultMapSettings">
+    <gmap-marker :icon="mapSettings.defaultIconSettings"></gmap-marker>
+</gmap-map>
+</template>
+
+<script>
+import mapSettings from './mapSettings';
+
+export default {
+    data() {
+        return { mapSettings }
+    }
+}
+</script>
+```
+
 ## Use with `vue-router` / components that change their visibility
 
 If you are using `vue-router`, you may encounter the problem where
