@@ -106,9 +106,9 @@ var settings = new Vue({
         defaultMapOptions: {
           /* below, useful default options */
           clickableIcons: false,
-	        streetViewControl: false,
-	        panControlOptions: false,
-	        gestureHandling: 'greedy'
+          streetViewControl: false,
+          panControlOptions: false,
+          gestureHandling: 'greedy'
         },
     }
 })
