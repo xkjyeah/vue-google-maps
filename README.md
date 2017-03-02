@@ -115,10 +115,13 @@ var settings = new Vue({
 export default settings;
 
 loaded.then(() => {
-    /* google.maps.Size is now available! */
-    settings.defaultIconSettings = /* Do something with google.maps.Size */
+    // (1) see note below for information about what is available from
+    // the google.maps object.
+    settings.defaultIconSettings = {};
 })
 ```
+
+(1) In the [Google Maps Javascript Docs](https://developers.google.com/maps/documentation/javascript/3.exp/reference), you can find all of the options available in the google.maps object.
 
 **yourMap.vue**
 
