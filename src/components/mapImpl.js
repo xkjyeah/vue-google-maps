@@ -122,7 +122,7 @@ export default {
     },
     zoom(zoom) {
       if (this.$mapObject) {
-        this.$mapObject.setZoom(zoom);
+        this.$mapObject.setZoom(Number(zoom));
       }
     }
   },
