@@ -1,0 +1,84 @@
+<body>
+<div id="root">
+    A basic example of using a single infowindow for 3 markers.
+
+    <gmap-map
+            :center="center"
+            :zoom="15"
+            style="width: 100%; height: 500px"
+    >
+        <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" :content="infoContent" @closeclick="infoWinOpen=false" >
+
+        <gmap-marker
+                v-for="(m,i) in markers"
+                :position="m.position"
+                :clickable="true"
+                @click="toggleInfoWindow(m,i)"
+
+        ></gmap-marker>
+
+
+    </gmap-map>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.1/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+<script src="vue-google-maps.js"></script>
+
+<script>
+
+    Vue.use(VueGoogleMap, {
+        load: {
+            key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw'
+        },
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        new Vue({
+            el: '#root',
+            data: {
+                center: {lat: 47.376332, lng: 8.547511},
+                infoContent: '',
+                infoWindowPos: {lat:0,lng:0},
+                infoWinOpen: false,
+                currentMidx: null,
+                //optional: offset infowindow so it visually sits nicely on top of our marker
+                infoOptions:{pixelOffset: {width: 0, height: -35}},
+                markers: [{
+                    position: {lat:47.376332,lng:8.547511},
+                    infoText: 'Marker 1'
+                }, {
+                    position: {lat:47.374592, lng:8.548867},
+                    infoText: 'Marker 2'
+                }, {
+                    position: {lat:47.379592, lng:8.549867},
+                    infoText: 'Marker 3'
+                }]
+            },
+            methods:{
+                toggleInfoWindow: function (marker,idx){
+
+                    this.infoWindowPos = marker.position ;
+                    this.infoContent = marker.infoText;
+
+                    //check if its the same marker that was selected if yes toggle
+                    if(this.currentMidx == idx)
+                    {
+                        this.infoWinOpen = !this.infoWinOpen
+                    }
+                    //if different marker set infowindow to open and reset current marker index
+                    else
+                    {
+                        this.infoWinOpen = true;
+                        this.currentMidx = idx;
+
+                    }
+                }
+
+            }
+        });
+    });
+
+</script>
+
+</body>

@@ -1,6 +1,11 @@
 var webpack = require('webpack')
 var path = require('path');
 
+const babelOptions = {
+  presets: ['es2015', 'stage-0'],
+  plugins: ['transform-runtime']
+};
+
 module.exports = {
   entry: './src/main.js',
   output: {
@@ -9,28 +14,22 @@ module.exports = {
     filename: 'build.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader',
       },
       {
         test: /\.js$/,
-        loader: 'babel',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        loader: 'babel-loader',
       },
       {
         // edit this for additional asset file types
         test: /\.(png|jpg|gif)$/,
-        loader: 'file?name=[name].[ext]?[hash]'
+        loader: 'file-loader?name=[name].[ext]?[hash]',
       }
     ],
-  },
-  // example: if you wish to apply custom babel options
-  // instead of using vue-loader's default:
-  babel: {
-    presets: ['es2015', 'stage-0'],
-    plugins: ['transform-runtime']
   },
 }
 
@@ -46,7 +45,6 @@ if (process.env.NODE_ENV === 'production') {
         warnings: false
       }
     }),
-    new webpack.optimize.OccurenceOrderPlugin()
   ]
 } else {
   module.exports.devtool = 'source-map'
