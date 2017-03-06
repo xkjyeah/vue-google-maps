@@ -61,8 +61,9 @@ export default {
   methods: {
     createMarkerClusterObject(map, opt_markers, opt_options){
       if (typeof MarkerClusterer === 'undefined') {
-        console.error("MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js")
-        throw new Error("MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js")
+        let errorMessage = "MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"
+        console.error(errorMessage)
+        throw new Error(errorMessage)
       }
       return new MarkerClusterer(map, opt_markers, opt_options)
     },

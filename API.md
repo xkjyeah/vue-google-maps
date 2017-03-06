@@ -365,6 +365,12 @@ google.maps.event.trigger(this.$refs.map.$mapObject, 'resize')
 Promise resolved when the map has been created
 
 #### Methods
+Methods can be executed on a map using the `ref` attribute supplied to your `gmap-map` element. For example, if you have an element of `<gmap-map ref="example" ...  > </gmap-map>`, you can pan this map by doing:
+
+```js
+this.$refs.example.panBy(10,10)
+```
+
 ##### `panBy()`
 ##### `panTo()`
 ##### `panToBounds()`
@@ -555,6 +561,9 @@ Example:
 ```js
 <gmap-info-window>Hello world!</gmap-info-window>
 ```
+
+[InfoWindow example](https://xkjyeah.github.io/vue-google-maps/examples/infowindow.html)
+
 #### Properties
 ##### `options : object`
 ##### `opened : object`

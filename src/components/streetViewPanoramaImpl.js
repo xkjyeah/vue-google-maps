@@ -51,6 +51,9 @@ const customMethods = {
       google.maps.event.trigger(this.$panoObject, 'resize');
     }
   },
+  createStreetViewPanoramaObject(element, options) {
+    return new google.maps.StreetViewPanorama(element, options)
+  },
 };
 
 // Methods is a combination of customMethods and linkedMethods
@@ -73,7 +76,7 @@ export default {
       deep: true,
       handler: latlngChangedHandler((val, oldVal) => {
         if (this.$panoObject) {
-          this.$panoObject.setCenter(val);
+          this.$panoObject.setPosition(val);
         }
       }),
     },
@@ -96,7 +99,7 @@ export default {
         );
       console.log(options);
 
-      this.$panoObject = new google.maps.StreetViewPanorama(element, options);
+      this.$panoObject = this.createStreetViewPanoramaObject(element, options);
 
       // binding properties (two and one way)
       propsBinder(this, this.$panoObject,generatePropsToBind(props,twoWayProps,excludedProps,trackProps));
