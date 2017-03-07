@@ -1,8 +1,5 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
-
-import {DeferredReadyMixin} from '../utils/deferredReady'
-import {DeferredReady} from '../utils/deferredReady.js'
-import Map from './map.vue'
+import {DeferredReadyMixin} from "../utils/deferredReady";
 
 /**
  * @class MapElementMixin @mixins DeferredReadyMixin
@@ -23,7 +20,14 @@ export default {
     }
   },
 
-  created() {
+  beforeCreate(){
+    //components what can be user inside and outside of a map
+    this.$hybridComponent = false;
+  },
+  beforeMount() {
+    if (this.$hybridComponent) {
+      return;
+    }
     /* Search for the Map component in the parent */
     let search = this.$findAncestor(
       ans => ans.$mapCreated

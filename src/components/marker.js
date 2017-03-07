@@ -1,14 +1,15 @@
-import _ from 'lodash';
-import eventsBinder from '../utils/eventsBinder.js';
-import propsBinder from '../utils/propsBinder.js';
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
-import MapElementMixin from './mapElementMixin';
-import Clusterer from './cluster';
-import assert from 'assert';
+import _ from "lodash";
+import eventsBinder from "../utils/eventsBinder.js";
+import propsBinder from "../utils/propsBinder.js";
+import getPropsValuesMixin from "../utils/getPropsValuesMixin.js";
+import MapElementMixin from "./mapElementMixin";
+import generatePropsToBind from "../utils/generatePropsToBind"
 
+const twoWayProps = [
+  "animation", "clickable", "cursor", "draggable", "icon", "position", "shape", "title", "zIndex", "visible"
+];
 const props = {
   animation: {
-    twoWay: true,
     type: Number
   },
   attribution: {
@@ -16,23 +17,17 @@ const props = {
   },
   clickable: {
     type: Boolean,
-    twoWay: true,
     default: true
   },
   cursor: {
     type: String,
-    twoWay: true
   },
   draggable: {
     type: Boolean,
-    twoWay: true,
-  default: false
+    default: false
   },
-  icon: {
-    twoWay: true
-  },
-  label: {
-  },
+  icon: {},
+  label: {},
   opacity: {
     type: Number,
     default: 1
@@ -42,25 +37,20 @@ const props = {
   },
   position: {
     type: Object,
-    twoWay: true,
   },
   shape: {
     type: Object,
-    twoWay: true
   },
   title: {
     type: String,
-    twoWay: true
   },
   zIndex: {
     type: Number,
-    twoWay: true
   },
   visible: {
-    twoWay: true,
-    default: true,
+    default: true
   }
-}
+};
 
 const events = [
   'click',
@@ -92,48 +82,61 @@ var container;
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
-
   render(h) {
     return h( // So that infowindows can have a marker parent
       'div',
       this.$slots.default
     )
   },
-
+  created() {
+    this.$parentAcceptMarker = null;
+    this.$acceptInfoWindow = true;
+    this.$on('register-info-window', this.registerInfoWindow);
+    this.$on('unregister-info-window', this.unregisterInfoWindow);
+  },
   destroyed() {
     if (!this.$markerObject)
-        return;
-
-    if (this.$clusterObject) {
-      this.$clusterObject.removeMarker(this.$markerObject);
+      return;
+    if (this.$parentAcceptMarker) {
+      this.$parentAcceptMarker.$emit('unregister-marker', this, this.$markerObject);
     }
-    else {
-      this.$markerObject.setMap(null);
-    }
+    this.$markerObject.setMap(null);
   },
-
   deferredReady() {
-    const options = _.mapValues(props, (value, prop) => this[prop]);
-    options.map = this.$map;
-
     // search ancestors for cluster object
-    let search = this.$findAncestor(
-      ans => ans.$clusterObject
+    this.$parentAcceptMarker = this.$findAncestor(
+      ans => ans.$acceptMarker
     );
-
-    this.$clusterObject = search ? search.$clusterObject : null;
+    const options = _.clone(this.getPropsValues());
+    options.map = this.$map;
     this.createMarker(options, this.$map);
   },
-
   methods: {
     createMarker (options, map) {
-      this.$markerObject = new google.maps.Marker(options);
-      propsBinder(this, this.$markerObject, props);
+      this.$markerObject = this.createMarkerObject(options);
+      propsBinder(this, this.$markerObject, generatePropsToBind(props,twoWayProps));
       eventsBinder(this, this.$markerObject, events);
 
-      if (this.$clusterObject) {
-        this.$clusterObject.addMarker(this.$markerObject);
+      /* Send an event to any <cluster ou similar> parent */
+      if (this.$parentAcceptMarker) {
+        this.$parentAcceptMarker.$emit('register-marker', this, this.$markerObject);
       }
-    }
-  },
+    },
+    createMarkerObject(options){
+      return new google.maps.Marker(options);
+    },
+    registerInfoWindow(infoWindow) {
+      infoWindow.$markerObject = this.$markerObject;
+      this.infoWindowClickEvent = () => {
+        infoWindow.local_opened = !infoWindow.local_opened;
+      };
+      this.$on('click', this.infoWindowClickEvent);
+    },
+    unregisterInfoWindow(infoWindow) {
+      if (this.infoWindowClickEvent) {
+        this.$off('click', this.infoWindowClickEvent);
+      }
+      this.infoWindowClickEvent = null;
+    },
+  }
 }

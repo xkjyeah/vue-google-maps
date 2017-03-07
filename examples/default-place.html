@@ -3,7 +3,7 @@
     <h1>Test</h1>
     "Singapore" should appear in the text box on page load. No errors in console.
     <gmap-place-input default-place="Singapore"
-      @place_changed="updatePlace">
+      @place-changed="updatePlace">
     </gmap-place-input>
     {{place && place.lat}},
     {{place && place.lng}},
@@ -32,11 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       methods: {
         updatePlace(what) {
-          console.log(what)
-          this.place = {
-            lat: what.geometry.location.lat(),
-            lng: what.geometry.location.lng()
-          };
+          console.log(what);
+          if (what.geometry) {
+            this.place = {
+              lat: what.geometry.location.lat(),
+              lng: what.geometry.location.lng()
+            };
+          }
         }
       }
   });

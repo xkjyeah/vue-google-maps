@@ -42,7 +42,7 @@ export const load = (apiKey, version, libraries, loadCn) => {
     // This is to support more esoteric means of loading Google Maps,
     // such as Google for business
     // https://developers.google.com/maps/documentation/javascript/get-api-key#premium-auth
-    var options = {};
+    let options = {};
     if (typeof apiKey == 'string') {
       options.key = apiKey;
     }

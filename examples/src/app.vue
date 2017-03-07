@@ -130,6 +130,13 @@
     @maptypeid_changed="update('mapType', $event)"
     @bounds_changed="update('bounds', $event)"
     >
+      <gmap-autocomplete
+        label="Add a marker at this place"
+        :select-first-on-enter="true"
+        :map-embedded="true"
+        :auto-fit-on-update-place="true"
+        @place_changed="updatePlace($event)"
+      ></gmap-autocomplete>
     <gmap-cluster
     :grid-size="gridSize"
     v-if="clustering"
@@ -150,6 +157,7 @@
       >
         <gmap-info-window
         :opened="m.ifw"
+        @opened_changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -169,6 +177,7 @@
       >
         <gmap-info-window
         :opened="m.ifw"
+        @opened_changed="m.ifw=$event"
         :content="m.ifw2text"
         ></gmap-info-window>
       </gmap-marker>
@@ -177,6 +186,7 @@
     <gmap-info-window
     :position="reportedCenter"
     :opened="ifw"
+    @opened_changed="ifw=$event"
     >
     To show you the bindings are working I will stay on the center of the screen whatever you do :)
     <br/>
@@ -187,6 +197,7 @@
     <gmap-info-window
     :position="reportedCenter"
     :opened="ifw2"
+    @opened_changed="ifw2=$event"
     :content="ifw2text"
     ></gmap-info-window>
 
@@ -456,11 +467,13 @@ export default {
     },
 
     updatePolygonPaths(paths) {
-      // TODO
+      this.pgPath = _.map(paths.getArray(), (value) => {
+        return value.getArray()
+      });
     },
 
-    updatePolylinePath(paths) {
-      // TODO:
+    updatePolylinePath(path) {
+      this.plPath = path.getArray();
     },
 
     updateCircle(prop, value) {

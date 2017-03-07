@@ -4,7 +4,10 @@ import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import generatePropsToBind from "../utils/generatePropsToBind"
 
+const twoWayProps = ["path"]
+const excludedProps = ["path","deepWatch"]
 const props = {
   draggable: {
     type: Boolean
@@ -13,12 +16,10 @@ const props = {
     type: Boolean,
   },
   options: {
-    twoWay: false,
     type: Object
   },
   path: {
     type: Array,
-    twoWay: true
   },
   deepWatch: {
     type: Boolean,
@@ -43,28 +44,25 @@ const events = [
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
-
   render() { return '' },
-
   destroyed () {
     if (this.$polylineObject) {
       this.$polylineObject.setMap(null);
     }
   },
-
   deferredReady() {
     const options = _.clone(this.getPropsValues());
     delete options.options;
     _.assign(options, this.options);
-    this.$polylineObject = new google.maps.Polyline(options);
+    this.$polylineObject = this.createPolylineObject(options);
     this.$polylineObject.setMap(this.$map);
 
-    propsBinder(this, this.$polylineObject, _.omit(props, ['deepWatch', 'path']));
+    propsBinder(this, this.$polylineObject, generatePropsToBind(props,twoWayProps,excludedProps));
     eventBinder(this, this.$polylineObject, events);
 
-    var clearEvents = () => {}
+    let clearEvents = () => {}
 
-    this.$watch('path', (path) => {
+    let pathChange = (path) => {
       if (path) {
         clearEvents();
 
@@ -86,11 +84,18 @@ export default {
             google.maps.event.removeListener(listenerHandle))
         }
       }
-    }, {
+    };
+    pathChange(this.path);
+    this.$watch('path', pathChange, {
       deep: this.deepWatch
     });
 
     // Display the map
     this.$polylineObject.setMap(this.$map);
   },
+  methods:{
+    createPolylineObject(options){
+      return new google.maps.Polyline(options);
+    }
+  }
 }

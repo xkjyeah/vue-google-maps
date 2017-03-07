@@ -8,7 +8,7 @@ function capitalizeFirstLetter(string) {
 
 export default (vueElement, googleMapsElement, props, options) => {
   options = options || {};
-  var {afterModelChanged} = options;
+  let {afterModelChanged} = options;
   _.forEach(props, ({twoWay, type, trackProperties}, attribute) => {
     const setMethodName = 'set' + capitalizeFirstLetter(attribute);
     const getMethodName = 'get' + capitalizeFirstLetter(attribute);
@@ -17,7 +17,7 @@ export default (vueElement, googleMapsElement, props, options) => {
     // We need to avoid an endless
     // propChanged -> event emitted -> propChanged -> event emitted loop
     // although this may really be the user's responsibility
-    var timesSet = 0;
+    let timesSet = 0;
 
     if (type !== Object || !trackProperties) {
       // Track the object deeply

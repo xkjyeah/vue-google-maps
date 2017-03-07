@@ -4,45 +4,42 @@ import {loaded} from '../manager.js';
 import {DeferredReadyMixin} from '../utils/deferredReady.js';
 import eventsBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
-import {DeferredReady} from '../utils/deferredReady.js'
 import getPropsMixin from '../utils/getPropsValuesMixin.js'
 import mountableMixin from '../utils/mountableMixin.js'
 import latlngChangedHandler from '../utils/latlngChangedHandler.js';
+import generatePropsToBind from '../utils/generatePropsToBind.js'
 
+const twoWayProps = ["center","zoom","bounds","heading","mapTypeId","projection","tilt"];
+const excludedProps = ['center', 'zoom', 'bounds'];
 const props = {
   center: {
-    required: true,
-    twoWay: true,
-    type: Object
+    type: Object,
+    required: true
   },
   zoom: {
-    required: false,
-    twoWay: true,
-    type: Number
+    type: Number,
+    default: 8
   },
   heading: {
-    type: Number,
-    twoWay: true,
+    type: Number
   },
   mapTypeId: {
-    twoWay: true,
     type: String
   },
   bounds: {
-    twoWay: true,
     type: Object,
   },
   projection: {
-    twoWay: true,
-    type: Object,
+    type: Object
   },
   tilt: {
-    twoWay: true,
-    type: Number,
+    type: Number
   },
   options: {
     type: Object,
-    default () {return {}}
+    default () {
+      return {}
+    }
   }
 };
 
@@ -125,7 +122,7 @@ export default {
     },
     zoom(zoom) {
       if (this.$mapObject) {
-        this.$mapObject.setZoom(zoom);
+        this.$mapObject.setZoom(Number(zoom));
       }
     }
   },
@@ -143,19 +140,19 @@ export default {
       this.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)
-      propsBinder(this, this.$mapObject, _.omit(props, ['center', 'zoom', 'bounds']));
+      propsBinder(this, this.$mapObject, generatePropsToBind(props,twoWayProps,excludedProps));
 
       // manually trigger center and zoom
       this.$mapObject.addListener('center_changed', () => {
         this.$emit('center_changed', this.$mapObject.getCenter())
-      })
+      });
       this.$mapObject.addListener('zoom_changed', () => {
         this.$emit('zoom_changed', this.$mapObject.getZoom())
-      })
+      });
       this.$mapObject.addListener('bounds_changed', () => {
         this.$emit('bounds_changed', this.$mapObject.getBounds())
-      })
-
+      });
+      this.$emit('bounds_changed', this.$mapObject.getBounds());
       //binding events
       eventsBinder(this, this.$mapObject, events);
 

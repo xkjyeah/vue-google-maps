@@ -4,7 +4,10 @@ import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import generatePropsToBind from "../utils/generatePropsToBind";
 
+const twoWayProps = ["path","paths"];
+const excludedProps = ["path","paths","deepWatch"];
 const props = {
   draggable: {
     type: Boolean
@@ -16,18 +19,16 @@ const props = {
     type: Object
   },
   path: {
-    type: Array,
-    twoWay: true
+    type: Array
   },
   paths: {
-    type: Array,
-    twoWay: true
+    type: Array
   },
   deepWatch: {
     type: Boolean,
     default: false
   }
-}
+};
 
 const events = [
   'click',
@@ -41,7 +42,7 @@ const events = [
   'mouseover',
   'mouseup',
   'rightclick'
-]
+];
 
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
@@ -65,29 +66,31 @@ export default {
     if (!options.paths) {
       delete options.paths;
     }
-    this.$polygonObject = new google.maps.Polygon(options);
+    this.$polygonObject = this.createPolygonObject(options);
 
-    propsBinder(this, this.$polygonObject, _.omit(props, ['path', 'paths']));
+    propsBinder(this, this.$polygonObject, generatePropsToBind(props,twoWayProps,excludedProps));
     eventBinder(this, this.$polygonObject, events);
 
-    var clearEvents = () => {};
+    let clearEvents = () => {};
 
     // Watch paths, on our own, because we do not want to set either when it is
     // empty
     this.$watch('paths', (paths) => {
       if (paths) {
         clearEvents();
-
-        this.$polygonObject.setPaths(paths);
+        if (typeof paths[0][0] == 'undefined') {
+          this.$polygonObject.setPaths([paths]);
+        }else{
+          this.$polygonObject.setPaths(paths);
+        }
 
         const updatePaths = () => {
           this.$emit('paths_changed', this.$polygonObject.getPaths())
-        }
+        };
         const eventListeners = [];
 
         const mvcArray = this.$polygonObject.getPaths();
-        for (let i=0; i<mvcArray.getLength(); i++) {
-          let mvcPath = mvcArray.getAt(i);
+        for (let mvcPath of mvcArray.getArray()) {
           eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
           eventListeners.push([mvcPath, mvcPath.addListener('remove_at', updatePaths)])
           eventListeners.push([mvcPath, mvcPath.addListener('set_at', updatePaths)])
@@ -110,14 +113,14 @@ export default {
       if (path) {
         clearEvents();
 
-        this.$polygonObject.setPaths(path);
+        this.$polygonObject.setPath(path);
 
         const mvcPath = this.$polygonObject.getPath();
         const eventListeners = [];
 
         const updatePaths = () => {
           this.$emit('path_changed', this.$polygonObject.getPath())
-        }
+        };
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
         eventListeners.push([mvcPath, mvcPath.addListener('remove_at', updatePaths)])
@@ -136,4 +139,9 @@ export default {
     // Display the map
     this.$polygonObject.setMap(this.$map);
   },
+  methods:{
+    createPolygonObject(options){
+      return new google.maps.Polygon(options);
+    }
+  }
 }

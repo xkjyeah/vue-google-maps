@@ -15,27 +15,22 @@ import MarkerClusterer from 'marker-clusterer-plus'
 
 const props = {
   maxZoom: {
-    type: Number,
-    twoWay: false
+    type: Number
   },
-  calculator: {
-    type: Function,
-    twoWay: false
+  calculor: {
+    type: Function
   },
   gridSize: {
-    type: Number,
-    twoWay: false
+    type: Number
   },
   styles: {
-    type: Array,
-    twoWay: false
+    type: Array
   }
 };
 
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
-
   render(h) {
     // <div><slot></slot></div>
     return h(
@@ -43,16 +38,14 @@ export default {
       this.$slots.default
     )
   },
-
+  created(){
+    this.$acceptMarker = true;
+    this.$on('register-marker', this.addMarker);
+    this.$on('unregister-marker', this.removeMarker);
+  },
   deferredReady () {
     const options = _.clone(this.getPropsValues());
-
-    if (typeof MarkerClusterer === 'undefined') {
-      console.error("MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js")
-      throw new Error("MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js")
-    }
-
-    this.$clusterObject = new MarkerClusterer(this.$map, [], options);
+    this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options);
 
     propsBinder(this, this.$clusterObject, props, {
       afterModelChanged: (a, v) => {
@@ -62,8 +55,23 @@ export default {
       }
     });
   },
-
-  detached() {
+  destroyed() {
     this.$clusterObject.clearMarkers();
   },
+  methods: {
+    createMarkerClusterObject(map, opt_markers, opt_options){
+      if (typeof MarkerClusterer === 'undefined') {
+        let errorMessage = "MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"
+        console.error(errorMessage)
+        throw new Error(errorMessage)
+      }
+      return new MarkerClusterer(map, opt_markers, opt_options)
+    },
+    addMarker(element, marker) {
+      this.$clusterObject.addMarker(marker);
+    },
+    removeMarker(element, marker) {
+      this.$clusterObject.removeMarker(marker);
+    }
+  }
 }

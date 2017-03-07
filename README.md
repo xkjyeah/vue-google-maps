@@ -47,12 +47,14 @@ Or use the power of Vue.js within a google map like this:
 <template>
   <gmap-map
     :center="center"
+    @center-changed="center=$event"
     :zoom="7"
     style="width: 500px; height: 300px"
   >
     <gmap-marker
       v-for="m in markers"
       :position="m.position"
+      @position-changed="m.position=$event"
       :clickable="true"
       :draggable="true"
       @click="center=m.position"

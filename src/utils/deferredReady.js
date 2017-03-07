@@ -68,7 +68,7 @@ export var DeferredReadyMixin = {
   $deferredReadyPromiseResolve: false,
   $deferredReadyAncestor: false,
 
-  created() {
+  beforeMount() {
     this.$deferredReadyPromise = new Promise((resolve, reject) => {
       this.$deferredReadyPromiseResolve = resolve;
     })
