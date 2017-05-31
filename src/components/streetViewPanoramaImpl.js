@@ -6,7 +6,6 @@ import eventsBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
 import getPropsMixin from '../utils/getPropsValuesMixin.js';
 import mountableMixin from '../utils/mountableMixin.js';
-import latlngChangedHandler from '../utils/latlngChangedHandler.js';
 
 const props = {
   zoom: {
@@ -74,11 +73,11 @@ export default {
   watch: {
     position: {
       deep: true,
-      handler: latlngChangedHandler(function(val, oldVal) { // eslint-disable-line no-unused-vars
+      handler: function(val, oldVal) { // eslint-disable-line no-unused-vars
         if (this.$panoObject) {
           this.$panoObject.setPosition(val);
         }
-      }),
+      },
     },
     zoom(zoom) {
       if (this.$panoObject) {
