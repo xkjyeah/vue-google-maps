@@ -1,6 +1,6 @@
 {
-  "name": "vue2-google-maps",
-  "version": "0.7.5",
+  "name": "vue2.1-google-maps",
+  "version": "0.7.6",
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
   "main": "dist/main.js",
   "scripts": {

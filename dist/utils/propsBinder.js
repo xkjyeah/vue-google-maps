@@ -48,32 +48,32 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
         deep: type === Object
       });
     } else if (type === Object && trackProperties) {
-      (function () {
-        // The indicator variable that is updated whenever any of the properties have changed
-        // This ensures that the event handler will only be fired once
-        var attributeTrackerName = '_' + attribute + '_changeTracker';
-        var attributeTrackerRoot = '$data._changeIndicators';
-        var attributeValue = vueElement[attribute];
+      // (function () {
+      //   // The indicator variable that is updated whenever any of the properties have changed
+      //   // This ensures that the event handler will only be fired once
+      //   var attributeTrackerName = '_' + attribute + '_changeTracker';
+      //   var attributeTrackerRoot = '$data._changeIndicators';
+      //   var attributeValue = vueElement[attribute];
 
-        vueElement.$set(vueElement.$data._changeIndicators, attributeTrackerName, 0);
+      //   vueElement.$set(vueElement.$data._changeIndicators, attributeTrackerName, 0);
 
-        vueElement.$watch(attributeTrackerRoot + '.' + attributeTrackerName, function () {
-          googleMapsElement[setMethodName](vueElement[attribute]);
-          if (afterModelChanged) {
-            afterModelChanged(attribute, attributeValue);
-          }
-        }, {
-          immediate: typeof initialValue !== 'undefined'
-        });
+      //   vueElement.$watch(attributeTrackerRoot + '.' + attributeTrackerName, function () {
+      //     googleMapsElement[setMethodName](vueElement[attribute]);
+      //     if (afterModelChanged) {
+      //       afterModelChanged(attribute, attributeValue);
+      //     }
+      //   }, {
+      //     immediate: typeof initialValue !== 'undefined'
+      //   });
 
-        trackProperties.forEach(function (propName) {
-          vueElement.$watch(attribute + '.' + propName, function () {
-            vueElement.$set(attributeTrackerRoot, attributeTrackerName, vueElement.$get(attributeTrackerRoot, attributeTrackerName) + 1);
-          }, {
-            immediate: typeof initialValue !== 'undefined'
-          });
-        });
-      })();
+      //   trackProperties.forEach(function (propName) {
+      //     vueElement.$watch(attribute + '.' + propName, function () {
+      //       vueElement.$set(attributeTrackerRoot, attributeTrackerName, vueElement.$get(attributeTrackerRoot, attributeTrackerName) + 1);
+      //     }, {
+      //       immediate: typeof initialValue !== 'undefined'
+      //     });
+      //   });
+      // })();
     }
 
     if (twoWay) {

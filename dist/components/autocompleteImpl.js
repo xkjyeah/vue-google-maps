@@ -41,10 +41,6 @@ var props = {
       return [];
     }
   },
-  placeholder: {
-    required: false,
-    type: String
-  },
   selectFirstOnEnter: {
     require: false,
     type: Boolean,
