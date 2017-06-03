@@ -64,10 +64,10 @@ Or use the power of Vue.js within a google map like this:
 <script>
   /////////////////////////////////////////
   // New in 0.4.0
-  import * as VueGoogleMaps from 'vue2-google-maps';
+  import * as VueGoogleMap from 'vue2-google-maps';
   import Vue from 'vue';
 
-  Vue.use(VueGoogleMaps, {
+  Vue.use(VueGoogleMap, {
     load: {
       key: 'YOUR_API_TOKEN',
       v: 'OPTIONAL VERSION NUMBER',
@@ -162,7 +162,7 @@ However you will need to include Vue and Lodash beforehand:
   </div>
 
   <script>
-    Vue.use(VueGoogleMaps, {
+    Vue.use(VueGoogleMap, {
       load: {
         key: 'YOUR_API_TOKEN',
         v: 'OPTIONAL VERSION NUMBER',
