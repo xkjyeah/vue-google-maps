@@ -32,7 +32,7 @@
     </gmap-map>
 
     <gmap-street-view-panorama :position="mapCenter" :zoom="12"
-      @position_changed="updateCenter"
+      @position_changed="updateCenter" :pov="pov"
       class="map-container">
     </gmap-street-view-panorama>
   </div>
@@ -56,6 +56,10 @@
             lat: 1.38,
             lng: 103.8,
           },
+          pov: {
+            pitch: 0,
+            heading: 0,
+          }
         },
         methods: {
           updateCenter(newCenter) {
