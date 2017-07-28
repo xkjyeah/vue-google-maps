@@ -1,6 +1,6 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
-const _ = require('lodash');
+import {forEach} from 'lodash';
 const assert = require('assert');
 
 function capitalizeFirstLetter(string) {
@@ -10,7 +10,7 @@ function capitalizeFirstLetter(string) {
 export default (vueElement, googleMapsElement, props, options) => {
   options = options || {};
   var {afterModelChanged} = options;
-  _.forEach(props, ({twoWay, type, trackProperties}, attribute) => {
+  forEach(props, ({twoWay, type, trackProperties}, attribute) => {
     const setMethodName = 'set' + capitalizeFirstLetter(attribute);
     const getMethodName = 'get' + capitalizeFirstLetter(attribute);
     const eventName = attribute.toLowerCase() + '_changed';

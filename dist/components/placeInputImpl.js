@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _propsBinder = require('../utils/propsBinder.js');
 
 var _propsBinder2 = _interopRequireDefault(_propsBinder);
@@ -28,6 +26,8 @@ var _assert2 = _interopRequireDefault(_assert);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import clone from 'lodash/clone';
+// import omit from 'lodash/omit';
 var props = {
   bounds: {
     type: Object
@@ -81,7 +81,7 @@ exports.default = {
     });
 
     _manager.loaded.then(function () {
-      var options = _lodash2.default.clone(_this.getPropsValues());
+      var options = (0, _lodash.clone)(_this.getPropsValues());
       if (_this.selectFirstOnEnter) {
         (0, _simulateArrowDown2.default)(_this.$refs.input);
       }
@@ -89,7 +89,7 @@ exports.default = {
       (0, _assert2.default)(typeof google.maps.places.Autocomplete === 'function', 'google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?');
 
       _this.autoCompleter = new google.maps.places.Autocomplete(_this.$refs.input, options);
-      (0, _propsBinder2.default)(_this, _this.autoCompleter, _lodash2.default.omit(props, ['placeholder', 'place', 'selectFirstOnEnter', 'defaultPlace', 'className', 'label']));
+      (0, _propsBinder2.default)(_this, _this.autoCompleter, (0, _lodash.omit)(props, ['placeholder', 'place', 'selectFirstOnEnter', 'defaultPlace', 'className', 'label']));
 
       _this.autoCompleter.addListener('place_changed', function () {
         _this.$emit('place_changed', _this.autoCompleter.getPlace());

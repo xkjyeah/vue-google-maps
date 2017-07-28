@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _propsBinder = require('../utils/propsBinder.js');
 
 var _propsBinder2 = _interopRequireDefault(_propsBinder);
@@ -28,6 +26,10 @@ var _assert2 = _interopRequireDefault(_assert);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import clone from 'lodash/clone';
+// import pickBy from 'lodash/pickBy';
+// import defaults from 'lodash/defaults';
+// import omit from 'lodash/omit';
 var props = {
   bounds: {
     type: Object
@@ -66,7 +68,7 @@ exports.default = {
     var _this = this;
 
     _manager.loaded.then(function () {
-      var options = _lodash2.default.clone(_this.getPropsValues());
+      var options = (0, _lodash.clone)(_this.getPropsValues());
       if (_this.selectFirstOnEnter) {
         (0, _simulateArrowDown2.default)(_this.$refs.input);
       }
@@ -74,7 +76,7 @@ exports.default = {
       (0, _assert2.default)(typeof google.maps.places.Autocomplete === 'function', 'google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?');
 
       /* eslint-disable no-unused-vars */
-      var finalOptions = _lodash2.default.pickBy(_lodash2.default.defaults({}, options.options, _lodash2.default.omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder'])), function (v, k) {
+      var finalOptions = (0, _lodash.pickBy)((0, _lodash.defaults)({}, options.options, (0, _lodash.omit)(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder'])), function (v, k) {
         return v !== undefined;
       });
 
@@ -86,7 +88,7 @@ exports.default = {
       });
 
       _this.$autocomplete = new google.maps.places.Autocomplete(_this.$refs.input, finalOptions);
-      (0, _propsBinder2.default)(_this, _this.$autocomplete, _lodash2.default.omit(props, ['placeholder', 'place', 'selectFirstOnEnter', 'value', 'componentRestrictions']));
+      (0, _propsBinder2.default)(_this, _this.$autocomplete, (0, _lodash.omit)(props, ['placeholder', 'place', 'selectFirstOnEnter', 'value', 'componentRestrictions']));
 
       _this.$autocomplete.addListener('place_changed', function () {
         _this.$emit('place_changed', _this.$autocomplete.getPlace());

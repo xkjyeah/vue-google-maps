@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _eventsBinder = require('../utils/eventsBinder.js');
 
 var _eventsBinder2 = _interopRequireDefault(_eventsBinder);
@@ -121,7 +119,7 @@ exports.default = {
   deferredReady: function deferredReady() {
     var _this = this;
 
-    var options = _lodash2.default.mapValues(props, function (value, prop) {
+    var options = (0, _lodash.mapValues)(props, function (value, prop) {
       return _this[prop];
     });
     options.map = this.$map;

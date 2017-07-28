@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {clone} from 'lodash';
 
 import eventBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
@@ -47,7 +47,7 @@ export default {
   },
 
   deferredReady() {
-    const options = _.clone(this.getPropsValues());
+    const options = clone(this.getPropsValues());
     options.map = this.$map;
     this.createRectangle(options);
   },

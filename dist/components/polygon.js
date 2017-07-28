@@ -10,8 +10,6 @@ var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _eventsBinder = require('../utils/eventsBinder.js');
 
 var _eventsBinder2 = _interopRequireDefault(_eventsBinder);
@@ -52,7 +50,10 @@ var props = {
     type: Boolean,
     default: false
   }
-};
+}; // import clone from 'lodash/clone';
+// import assign from 'lodash/assign';
+// import omit from 'lodash/omit';
+
 
 var events = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
 
@@ -71,9 +72,9 @@ exports.default = {
   deferredReady: function deferredReady() {
     var _this = this;
 
-    var options = _lodash2.default.clone(this.getPropsValues());
+    var options = (0, _lodash.clone)(this.getPropsValues());
     delete options.options;
-    _lodash2.default.assign(options, this.options);
+    (0, _lodash.assign)(options, this.options);
     if (!options.path) {
       delete options.path;
     }
@@ -82,7 +83,7 @@ exports.default = {
     }
     this.$polygonObject = new google.maps.Polygon(options);
 
-    (0, _propsBinder2.default)(this, this.$polygonObject, _lodash2.default.omit(props, ['path', 'paths', 'deepWatch']));
+    (0, _propsBinder2.default)(this, this.$polygonObject, (0, _lodash.omit)(props, ['path', 'paths', 'deepWatch']));
     (0, _eventsBinder2.default)(this, this.$polygonObject, events);
 
     var clearEvents = function clearEvents() {};

@@ -34,8 +34,6 @@ var _rectangle2 = _interopRequireDefault(_rectangle);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _infoWindow = require('./components/infoWindow.vue');
 
 var _infoWindow2 = _interopRequireDefault(_infoWindow);
@@ -87,7 +85,7 @@ exports.MapElementMixin = _mapElementMixin2.default;
 exports.Autocomplete = _autocomplete2.default;
 exports.MountableMixin = _mountableMixin2.default;
 function install(Vue, options) {
-  options = _lodash2.default.defaults(options, {
+  options = (0, _lodash.defaults)(options, {
     installComponents: true
   });
 

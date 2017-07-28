@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {clone} from 'lodash';
 
 import eventBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
@@ -52,7 +52,7 @@ export default {
   render() { return ''; },
 
   deferredReady() {
-    const options = _.clone(this.getPropsValues());
+    const options = clone(this.getPropsValues());
     options.map = this.$map;
     delete options.bounds;
     this.createCircle(options);
@@ -63,7 +63,7 @@ export default {
       this.$circleObject = new google.maps.Circle(options);
             // we cant bind bounds because there is no `setBounds` method
             // on the Circle object
-      const boundProps = _.clone(props);
+      const boundProps = clone(props);
       delete boundProps.bounds;
       propsBinder(this, this.$circleObject, boundProps);
       eventBinder(this, this.$circleObject, events);

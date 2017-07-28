@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _propsBinder = require('../utils/propsBinder.js');
 
 var _propsBinder2 = _interopRequireDefault(_propsBinder);
@@ -22,6 +20,8 @@ var _mapElementMixin2 = _interopRequireDefault(_mapElementMixin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import clone from 'lodash/clone';
+// import omit from 'lodash/omit';
 var props = {
   options: {
     type: Object,
@@ -93,7 +93,7 @@ exports.default = {
       var _this = this;
 
       // setting options
-      var options = _lodash2.default.clone(this.options);
+      var options = (0, _lodash.clone)(this.options);
       options.content = this.$refs.flyaway;
 
       // only set the position if the info window is not bound to a marker
@@ -104,7 +104,7 @@ exports.default = {
       this.$infoWindow = new google.maps.InfoWindow(options);
 
       // Binding
-      (0, _propsBinder2.default)(this, this.$infoWindow, _lodash2.default.omit(props, ['opened']));
+      (0, _propsBinder2.default)(this, this.$infoWindow, (0, _lodash.omit)(props, ['opened']));
       (0, _eventsBinder2.default)(this, this.$infoWindow, events);
 
       this.openInfoWindow();

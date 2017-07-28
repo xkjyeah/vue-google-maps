@@ -3,10 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
-var _ = require('lodash');
-var assert = require('assert');
+var _lodash = require('lodash');
+
+var assert = require('assert'); /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -17,7 +17,7 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
   var _options = options,
       afterModelChanged = _options.afterModelChanged;
 
-  _.forEach(props, function (_ref, attribute) {
+  (0, _lodash.forEach)(props, function (_ref, attribute) {
     var twoWay = _ref.twoWay,
         type = _ref.type,
         trackProperties = _ref.trackProperties;

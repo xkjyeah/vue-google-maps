@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {mapValues} from 'lodash';
 import eventsBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js';
@@ -115,7 +115,7 @@ export default {
   },
 
   deferredReady() {
-    const options = _.mapValues(props, (value, prop) => this[prop]);
+    const options = mapValues(props, (value, prop) => this[prop]);
     options.map = this.$map;
 
     // search ancestors for cluster object

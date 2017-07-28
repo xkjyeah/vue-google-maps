@@ -7,7 +7,7 @@
         extending the class
 **/
 
-import _ from 'lodash';
+import {clone} from 'lodash';
 import eventsBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
 import MapElementMixin from './mapElementMixin';
@@ -60,7 +60,7 @@ export default {
   },
 
   deferredReady () {
-    const options = _.clone(this.getPropsValues());
+    const options = clone(this.getPropsValues());
 
     if (typeof MarkerClusterer === 'undefined') {
       /* eslint-disable no-console */

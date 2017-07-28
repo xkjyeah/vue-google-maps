@@ -10,8 +10,6 @@ var _promise2 = _interopRequireDefault(_promise);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _manager = require('../manager.js');
 
 var _deferredReady = require('../utils/deferredReady.js');
@@ -68,7 +66,9 @@ var props = {
       return {};
     }
   }
-};
+}; // import assign from 'lodash/assign';
+// import defaults from 'lodash/defaults';
+// import omit from 'lodash/omit';
 
 var events = ['closeclick', 'status_changed'];
 
@@ -82,7 +82,7 @@ var customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-var methods = _lodash2.default.assign({}, customMethods);
+var methods = (0, _lodash.assign)({}, customMethods);
 
 exports.default = {
   mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
@@ -135,12 +135,12 @@ exports.default = {
       var element = _this2.$refs['vue-street-view-pano'];
 
       // creating the map
-      var options = _lodash2.default.defaults({}, _lodash2.default.omit(_this2.getPropsValues(), ['options']), _this2.options);
+      var options = (0, _lodash.defaults)({}, (0, _lodash.omit)(_this2.getPropsValues(), ['options']), _this2.options);
 
       _this2.$panoObject = new google.maps.StreetViewPanorama(element, options);
 
       // binding properties (two and one way)
-      (0, _propsBinder2.default)(_this2, _this2.$panoObject, _lodash2.default.omit(props, ['position', 'zoom']));
+      (0, _propsBinder2.default)(_this2, _this2.$panoObject, (0, _lodash.omit)(props, ['position', 'zoom']));
 
       //binding events
       (0, _eventsBinder2.default)(_this2, _this2.$panoObject, events);
