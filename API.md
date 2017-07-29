@@ -14,7 +14,7 @@ Table of Contents
    * [vue2-google-maps](#vue2-google-maps)
       * [Note on events](#note-on-events)
    * [Table of Contents](#table-of-contents)
-      * [Getting Started (with Nuxt.js)](#getting-started-with-nuxt)
+      * [Getting Started (with Nuxt.js)](#getting-started-with-nuxtjs)
       * [Getting Started (with CDN)](#getting-started-with-cdn)
       * [Getting Started (with NPM)](#getting-started-with-npm)
       * [Classes](#classes)
