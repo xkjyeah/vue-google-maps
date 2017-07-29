@@ -14,6 +14,29 @@ If you have used vue-google-maps with Vue 1.x before, refer to [Upgrading](UPGRA
 npm install vue2-google-maps
 ```
 
+In your project:
+
+```js
+import Vue from 'vue'
+import * as VueGoogleMaps from 'vue2-google-maps'
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBvWE_sIwKbWkiuJQOf8gSk9qzpO96fhfY',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+    // OR: libraries: 'places,drawing'
+    // OR: libraries: 'places,drawing,visualization'
+    // (as you require)
+  }
+})
+```
+
+### Nuxt.js projects
+
+For Nuxt.js projects, please import VueGoogleMaps in the following matter:
+```js
+import * as VueGoogleMaps from '~/node_modules/vue2-google-maps'
+```
+
 ### Manually
 
 Just download `dist/vue-google-maps.js` file and include it from your HTML.
@@ -25,7 +48,7 @@ Just download `dist/vue-google-maps.js` file and include it from your HTML.
 
 See [API](API.md).
 
-## Demo:
+## Demos:
 
 [Showcase with a lot of features](http://xkjyeah.github.io/vue-google-maps/)
 
@@ -129,13 +152,9 @@ instance that you have
 There is a non-comprehensive test for the DeferredReady mixin.
 More automated tests should be written to help new contributors.
 
-Meanwhile, please test your changes against the suite of examples.
+Meanwhile, please test your changes against the suite of [examples](examples).
 
 Improvements to the tests are welcome :)
-
-## Example Project
-
-Refer to the [examples](examples).
 
 #### Standalone / CDN
 
