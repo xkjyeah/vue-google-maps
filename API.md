@@ -1,8 +1,5 @@
 # vue2-google-maps
 
-## Note on events
-__Update(16 Oct 2016): All events are NO LONGER prefixed with `g-`__
-
 Most of the properties and events here are not documented unless they do not
 exist in the original [Google Maps API](https://developers.google.com/maps/documentation/javascript/reference).
 Otherwise they behave similarly to a direct call to the API so you are advised to read that
@@ -17,9 +14,9 @@ Table of Contents
    * [vue2-google-maps](#vue2-google-maps)
       * [Note on events](#note-on-events)
    * [Table of Contents](#table-of-contents)
-      * [<a name="user-content-getting-started-nuxt"></a> Getting Started (with Nuxt.js)](#-getting-started-with-nuxt)
-      * [<a name="user-content-getting-started-cdn"></a> Getting Started (with CDN)](#-getting-started-with-cdn)
-      * [<a name="user-content-getting-started-npm"></a> Getting Started (with NPM)](#-getting-started-with-npm)
+      * [Getting Started (with Nuxt.js)](#-getting-started-with-nuxt)
+      * [Getting Started (with CDN)](#-getting-started-with-cdn)
+      * [Getting Started (with NPM)](#-getting-started-with-npm)
       * [Classes](#classes)
          * [install(Vue: Vue, options: InstallOptions) : void](#installvue-vue-options-installoptions--void)
             * [installComponents : boolean](#installcomponents--boolean)
@@ -28,7 +25,7 @@ Table of Contents
          * [Map class (mixes in <code>DeferredReadyMixin</code>)](#map-class-mixes-in-deferredreadymixin)
             * [Fields](#fields)
                * [$mapObject : google.maps.Map](#mapobject--googlemapsmap)
-               * [$mapCreated : Promise`](#mapcreated--promise)
+               * [$mapCreated : Promise](#mapcreated--promise)
             * [Methods](#methods)
                * [panBy()](#panby)
                * [panTo()](#panto)
@@ -248,20 +245,24 @@ Table of Contents
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
-## <a name="getting-started-nuxt"></a> Getting Started (with Nuxt.js)
+## Getting Started (with Nuxt.js)
 
 1. Create a plugin:
 
 **plugins/maps.js**
 ```js
 import Vue from 'vue'
-import * as VueGoogleMaps from 'vue2-google-maps/dist/vue-google-maps-stubbed'
+import * as VueGoogleMaps from '~/node_modules/vue2-google-maps'
 
 Vue.use(VueGoogleMaps)
 ```
-
-Note that you should use the stubbed version instead of the default version.
-The stubbed version will ensure that you get full server-side rendering.
+The reason you need `~/node_modules` is found [here](https://github.com/vuejs/vue/blob/fd68195/packages/vue-server-renderer/build.js#L7738).
+This can be summarized as, _when rendering server-side, (1) if the `require()`-ed object is part of a
+module (e.g. `require('vue2-google-maps')`), load it as a Javascript module.
+(2) Otherwise (e.g. `require('./node_modules/vue2-google-maps')`) evaluate it as a webpack module_.
+Because .vue files are syntactically invalid Javascript, they will break your server-side loader
+if they are loaded as a Javascript module. However they work fine if we can somehow instruct
+Webpack to compile it. Hence, we do (2).
 
 2. Include your plugin in `nuxt.config.js`:
 
@@ -274,11 +275,11 @@ The stubbed version will ensure that you get full server-side rendering.
 }
 ```
 
-## <a name="getting-started-cdn"></a> Getting Started (with CDN)
+## Getting Started (with CDN)
 
 TODO (this package has not yet been published to a CDN).
 
-## <a name="getting-started-npm"></a> Getting Started (with NPM)
+## Getting Started (with NPM)
 
 Install your package via NPM:
 
