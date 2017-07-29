@@ -254,7 +254,13 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 import Vue from 'vue'
 import * as VueGoogleMaps from '~/node_modules/vue2-google-maps'
 
-Vue.use(VueGoogleMaps)
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'YOUR_API_KEY',
+    v: 'GOOGLE_MAPS_VERSION',
+    libraries: 'places' // Only if you need Autocomplete
+  }
+})
 ```
 The reason you need `~/node_modules` is found [here](https://github.com/vuejs/vue/blob/fd68195/packages/vue-server-renderer/build.js#L7738).
 This can be summarized as, _when rendering server-side, (1) if the `require()`-ed object is part of a
