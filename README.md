@@ -32,10 +32,11 @@ Vue.use(VueGoogleMaps, {
 
 ### Nuxt.js projects
 
-For Nuxt.js projects, please import VueGoogleMaps in the following matter:
+For Nuxt.js projects, please import VueGoogleMaps in the following manner:
 ```js
 import * as VueGoogleMaps from '~/node_modules/vue2-google-maps'
 ```
+This is required for successful server-side rendering.
 
 ### Manually
 
