@@ -4,6 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.MountableMixin = exports.Autocomplete = exports.MapElementMixin = exports.PlaceInput = exports.Map = exports.InfoWindow = exports.Rectangle = exports.Circle = exports.Polygon = exports.Polyline = exports.Cluster = exports.Marker = exports.loaded = exports.load = undefined;
+
+var _defaults2 = require('lodash/defaults');
+
+var _defaults3 = _interopRequireDefault(_defaults2);
+
 exports.install = install;
 
 var _manager = require('./manager.js');
@@ -31,8 +36,6 @@ var _circle2 = _interopRequireDefault(_circle);
 var _rectangle = require('./components/rectangle');
 
 var _rectangle2 = _interopRequireDefault(_rectangle);
-
-var _lodash = require('lodash');
 
 var _infoWindow = require('./components/infoWindow.vue');
 
@@ -85,7 +88,7 @@ exports.MapElementMixin = _mapElementMixin2.default;
 exports.Autocomplete = _autocomplete2.default;
 exports.MountableMixin = _mountableMixin2.default;
 function install(Vue, options) {
-  options = (0, _lodash.defaults)(options, {
+  options = (0, _defaults3.default)(options, {
     installComponents: true
   });
 

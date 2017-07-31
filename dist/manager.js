@@ -3,27 +3,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.load = exports.loaded = undefined;
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
-var _typeof2 = require('babel-runtime/helpers/typeof');
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 var setUp = false;
 
-var loaded = exports.loaded = new _promise2.default(function (resolve, reject) {
+var loaded = exports.loaded = new Promise(function (resolve, reject) {
   // eslint-disable-line no-unused-vars
   if (typeof window === 'undefined') {
     // Do nothing if run from server-side
@@ -75,7 +62,7 @@ var load = exports.load = function load(apiKey, version, libraries, loadCn) {
     var options = {};
     if (typeof apiKey == 'string') {
       options.key = apiKey;
-    } else if ((typeof apiKey === 'undefined' ? 'undefined' : (0, _typeof3.default)(apiKey)) == 'object') {
+    } else if ((typeof apiKey === 'undefined' ? 'undefined' : _typeof(apiKey)) == 'object') {
       for (var k in apiKey) {
         // transfer values in apiKey to options
         options[k] = apiKey[k];
@@ -100,7 +87,7 @@ var load = exports.load = function load(apiKey, version, libraries, loadCn) {
       baseUrl = 'http://maps.google.cn/';
     }
 
-    var url = baseUrl + 'maps/api/js?' + (0, _keys2.default)(options).map(function (key) {
+    var url = baseUrl + 'maps/api/js?' + Object.keys(options).map(function (key) {
       return encodeURIComponent(key) + '=' + encodeURIComponent(options[key]);
     }).join('&');
 

@@ -1,4 +1,18 @@
 {
-  "presets": ["es2015", "stage-2"],
-  "plugins": ["transform-runtime"]
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "safari >= 7"
+          ]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "lodash"
+  ]
 }

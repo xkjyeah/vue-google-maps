@@ -2,6 +2,8 @@
 var webpack = require('webpack');
 var path = require('path')
 var _ = require('lodash')
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+
 
 var baseConfig = {
   entry: [
@@ -30,6 +32,9 @@ var baseConfig = {
       },
     ],
   },
+  plugins: [
+    new LodashModuleReplacementPlugin()
+  ]
 }; /* baseConfig */
 
 /**
@@ -49,11 +54,13 @@ webConfig.output = {
 };
 
 var stubbedConfig = _.clone(baseConfig);
-stubbedConfig.resolve = {
-  alias: {
-    lodash: path.resolve(__dirname, './src/stubs/stub-lodash.js'),
-    'marker-clusterer-plus': path.resolve(__dirname, './src/stubs/stub-marker-clusterer-plus.js'),
-  }
+stubbedConfig.externals = {
+  // alias: {
+    // lodash: path.resolve(__dirname, './src/stubs/stub-lodash.js'),
+    // 'marker-clusterer-plus': path.resolve(__dirname, './src/stubs/stub-marker-clusterer-plus.js'),
+    lodash: '_',
+    'marker-clusterer-plus': 'MarkerClusterer'
+  // }
 };
 stubbedConfig.module.noParse = /stub-/
 stubbedConfig.output = {

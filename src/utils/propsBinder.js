@@ -1,7 +1,6 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 import {forEach} from 'lodash';
-const assert = require('assert');
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,7 +15,9 @@ export default (vueElement, googleMapsElement, props, options) => {
     const eventName = attribute.toLowerCase() + '_changed';
     const initialValue = vueElement[attribute];
 
-    assert(googleMapsElement[setMethodName], `${setMethodName} is not a method of (the Maps object corresponding to) ${vueElement.$options._componentTag}`);
+    if(typeof googleMapsElement[setMethodName] === 'undefined'){
+      throw new Error(`${setMethodName} is not a method of (the Maps object corresponding to) ${vueElement.$options._componentTag}`)
+    }
 
     // We need to avoid an endless
     // propChanged -> event emitted -> propChanged -> event emitted loop

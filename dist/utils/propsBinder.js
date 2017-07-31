@@ -4,9 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _lodash = require('lodash');
+var _forEach2 = require('lodash/forEach');
 
-var assert = require('assert'); /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
+var _forEach3 = _interopRequireDefault(_forEach2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -17,7 +21,7 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
   var _options = options,
       afterModelChanged = _options.afterModelChanged;
 
-  (0, _lodash.forEach)(props, function (_ref, attribute) {
+  (0, _forEach3.default)(props, function (_ref, attribute) {
     var twoWay = _ref.twoWay,
         type = _ref.type,
         trackProperties = _ref.trackProperties;
@@ -27,7 +31,9 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
     var eventName = attribute.toLowerCase() + '_changed';
     var initialValue = vueElement[attribute];
 
-    assert(googleMapsElement[setMethodName], setMethodName + ' is not a method of (the Maps object corresponding to) ' + vueElement.$options._componentTag);
+    if (typeof googleMapsElement[setMethodName] === 'undefined') {
+      throw new Error(setMethodName + ' is not a method of (the Maps object corresponding to) ' + vueElement.$options._componentTag);
+    }
 
     // We need to avoid an endless
     // propChanged -> event emitted -> propChanged -> event emitted loop

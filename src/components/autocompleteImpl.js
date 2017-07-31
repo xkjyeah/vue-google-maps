@@ -9,7 +9,6 @@ import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
 import {
   loaded
 } from '../manager.js'
-import assert from 'assert'
 
 const props = {
   bounds: {
@@ -52,8 +51,9 @@ export default {
         downArrowSimulator(this.$refs.input)
       }
 
-      assert(typeof(google.maps.places.Autocomplete) === 'function',
-        'google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?')
+      if(typeof(google.maps.places.Autocomplete) !== 'function'){
+        throw new Error('google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?')
+      }
 
       /* eslint-disable no-unused-vars */
       const finalOptions = pickBy(defaults(

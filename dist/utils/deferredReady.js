@@ -3,14 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DeferredReadyMixin = exports.DeferredReady = undefined;
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
  * 1. Create a DeferredReady plugin.
  *
@@ -50,13 +42,13 @@ function runHooks(vm) {
   var hooks = vm.$options.deferredReady || [];
 
   // Run the beforeDeferredReady methods first
-  var beforePromise = vm.beforeDeferredReady ? typeof vm.beforeDeferredReady.then === 'function' ? vm.beforeDeferredReady : _promise2.default.all(vm.beforeDeferredReady) : _promise2.default.resolve(null);
+  var beforePromise = vm.beforeDeferredReady ? typeof vm.beforeDeferredReady.then === 'function' ? vm.beforeDeferredReady : Promise.all(vm.beforeDeferredReady) : Promise.resolve(null);
 
   beforePromise.then(function () {
     if (typeof hooks === 'function') {
       hooks = [hooks];
     }
-    return _promise2.default.all(hooks.map(function (x) {
+    return Promise.all(hooks.map(function (x) {
       try {
         return x.apply(vm);
       } catch (err) {
@@ -81,7 +73,7 @@ var DeferredReadyMixin = exports.DeferredReadyMixin = {
   created: function created() {
     var _this = this;
 
-    this.$deferredReadyPromise = new _promise2.default(function (resolve, reject) {
+    this.$deferredReadyPromise = new Promise(function (resolve, reject) {
       // eslint-disable-line no-unused-vars
       _this.$deferredReadyPromiseResolve = resolve;
     });

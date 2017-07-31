@@ -4,7 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _lodash = require('lodash');
+var _clone2 = require('lodash/clone');
+
+var _clone3 = _interopRequireDefault(_clone2);
+
+var _omit2 = require('lodash/omit');
+
+var _omit3 = _interopRequireDefault(_omit2);
 
 var _propsBinder = require('../utils/propsBinder.js');
 
@@ -19,10 +25,6 @@ var _getPropsValuesMixin = require('../utils/getPropsValuesMixin.js');
 var _getPropsValuesMixin2 = _interopRequireDefault(_getPropsValuesMixin);
 
 var _manager = require('../manager.js');
-
-var _assert = require('assert');
-
-var _assert2 = _interopRequireDefault(_assert);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -81,15 +83,17 @@ exports.default = {
     });
 
     _manager.loaded.then(function () {
-      var options = (0, _lodash.clone)(_this.getPropsValues());
+      var options = (0, _clone3.default)(_this.getPropsValues());
       if (_this.selectFirstOnEnter) {
         (0, _simulateArrowDown2.default)(_this.$refs.input);
       }
 
-      (0, _assert2.default)(typeof google.maps.places.Autocomplete === 'function', 'google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?');
+      if (typeof google.maps.places.Autocomplete !== 'function') {
+        throw new Error('google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?');
+      }
 
       _this.autoCompleter = new google.maps.places.Autocomplete(_this.$refs.input, options);
-      (0, _propsBinder2.default)(_this, _this.autoCompleter, (0, _lodash.omit)(props, ['placeholder', 'place', 'selectFirstOnEnter', 'defaultPlace', 'className', 'label']));
+      (0, _propsBinder2.default)(_this, _this.autoCompleter, (0, _omit3.default)(props, ['placeholder', 'place', 'selectFirstOnEnter', 'defaultPlace', 'className', 'label']));
 
       _this.autoCompleter.addListener('place_changed', function () {
         _this.$emit('place_changed', _this.autoCompleter.getPlace());

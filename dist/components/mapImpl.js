@@ -4,11 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _promise = require('babel-runtime/core-js/promise');
+var _assign2 = require('lodash/assign');
 
-var _promise2 = _interopRequireDefault(_promise);
+var _assign3 = _interopRequireDefault(_assign2);
 
-var _lodash = require('lodash');
+var _clone2 = require('lodash/clone');
+
+var _clone3 = _interopRequireDefault(_clone2);
+
+var _omit2 = require('lodash/omit');
+
+var _omit3 = _interopRequireDefault(_omit2);
 
 var _manager = require('../manager.js');
 
@@ -32,6 +38,9 @@ var _mountableMixin2 = _interopRequireDefault(_mountableMixin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import assign from 'lodash/assign';
+// import clone from 'lodash/clone';
+// import omit from 'lodash/omit';
 var props = {
   center: {
     required: true,
@@ -65,10 +74,7 @@ var props = {
       return {};
     }
   }
-}; // import assign from 'lodash/assign';
-// import clone from 'lodash/clone';
-// import omit from 'lodash/omit';
-
+};
 
 var events = ['click', 'dblclick', 'drag', 'dragend', 'dragstart', 'idle', 'mousemove', 'mouseout', 'mouseover', 'resize', 'rightclick', 'tilesloaded'];
 
@@ -105,7 +111,7 @@ var customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-var methods = (0, _lodash.assign)({}, customMethods, linkedMethods);
+var methods = (0, _assign3.default)({}, customMethods, linkedMethods);
 
 exports.default = {
   mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
@@ -115,7 +121,7 @@ exports.default = {
   created: function created() {
     var _this = this;
 
-    this.$mapCreated = new _promise2.default(function (resolve, reject) {
+    this.$mapCreated = new Promise(function (resolve, reject) {
       _this.$mapCreatedDeferred = { resolve: resolve, reject: reject };
     });
 
@@ -157,14 +163,14 @@ exports.default = {
       var element = _this2.$refs['vue-map'];
 
       // creating the map
-      var copiedData = (0, _lodash.clone)(_this2.getPropsValues());
+      var copiedData = (0, _clone3.default)(_this2.getPropsValues());
       delete copiedData.options;
-      var options = (0, _lodash.clone)(_this2.options);
-      (0, _lodash.assign)(options, copiedData);
+      var options = (0, _clone3.default)(_this2.options);
+      (0, _assign3.default)(options, copiedData);
       _this2.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)
-      (0, _propsBinder2.default)(_this2, _this2.$mapObject, (0, _lodash.omit)(props, ['center', 'zoom', 'bounds']));
+      (0, _propsBinder2.default)(_this2, _this2.$mapObject, (0, _omit3.default)(props, ['center', 'zoom', 'bounds']));
 
       // manually trigger center and zoom
       _this2.$mapObject.addListener('center_changed', function () {
