@@ -1,8 +1,4 @@
-// import clone from 'lodash/clone';
-// import pickBy from 'lodash/pickBy';
-// import defaults from 'lodash/defaults';
-// import omit from 'lodash/omit';
-import { clone, pickBy, defaults, omit } from 'lodash'
+import { clone, pickBy, omit } from 'lodash'
 import propsBinder from '../utils/propsBinder.js'
 import downArrowSimulator from '../utils/simulateArrowDown.js'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -56,10 +52,10 @@ export default {
       }
 
       /* eslint-disable no-unused-vars */
-      const finalOptions = pickBy(defaults(
+      const finalOptions = pickBy(Object.assign(
         {},
-        options.options,
-        omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder'])
+        omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder']),
+        options.options
       ), (v, k) => v !== undefined)
 
       // Component restrictions is rather particular. Undefined not allowed

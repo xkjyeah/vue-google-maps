@@ -1,7 +1,4 @@
-// import clone from 'lodash/clone';
-// import assign from 'lodash/assign';
-// import omit from 'lodash/omit';
-import {omit, assign, clone} from 'lodash';
+import {omit, clone} from 'lodash';
 
 import eventBinder from '../utils/eventsBinder.js';
 import propsBinder from '../utils/propsBinder.js';
@@ -61,7 +58,7 @@ export default {
   deferredReady() {
     const options = clone(this.getPropsValues());
     delete options.options;
-    assign(options, this.options);
+    Object.assign(options, this.options);
     if (!options.path) {
       delete options.path;
     }

@@ -1,5 +1,3 @@
-// import clone from 'lodash/clone';
-// import omit from 'lodash/omit';
 import {omit, clone} from 'lodash';
 import propsBinder from '../utils/propsBinder.js';
 import eventsBinder from '../utils/eventsBinder.js';

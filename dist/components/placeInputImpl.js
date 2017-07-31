@@ -28,8 +28,6 @@ var _manager = require('../manager.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import clone from 'lodash/clone';
-// import omit from 'lodash/omit';
 var props = {
   bounds: {
     type: Object

@@ -8,10 +8,6 @@ var _omit2 = require('lodash/omit');
 
 var _omit3 = _interopRequireDefault(_omit2);
 
-var _defaults2 = require('lodash/defaults');
-
-var _defaults3 = _interopRequireDefault(_defaults2);
-
 var _pickBy2 = require('lodash/pickBy');
 
 var _pickBy3 = _interopRequireDefault(_pickBy2);
@@ -36,10 +32,6 @@ var _manager = require('../manager.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import clone from 'lodash/clone';
-// import pickBy from 'lodash/pickBy';
-// import defaults from 'lodash/defaults';
-// import omit from 'lodash/omit';
 var props = {
   bounds: {
     type: Object
@@ -88,7 +80,7 @@ exports.default = {
       }
 
       /* eslint-disable no-unused-vars */
-      var finalOptions = (0, _pickBy3.default)((0, _defaults3.default)({}, options.options, (0, _omit3.default)(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder'])), function (v, k) {
+      var finalOptions = (0, _pickBy3.default)(Object.assign({}, (0, _omit3.default)(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder']), options.options), function (v, k) {
         return v !== undefined;
       });
 

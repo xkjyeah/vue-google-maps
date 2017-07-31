@@ -1,8 +1,4 @@
-// import assign from 'lodash/assign';
-// import defaults from 'lodash/defaults';
-// import omit from 'lodash/omit';
-
-import {omit, defaults, assign} from 'lodash';
+import {omit} from 'lodash';
 
 import {loaded} from '../manager.js';
 import {DeferredReadyMixin} from '../utils/deferredReady.js';
@@ -60,7 +56,7 @@ const customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-const methods = assign({}, customMethods);
+const methods = Object.assign({}, customMethods);
 
 export default {
   mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
@@ -110,9 +106,9 @@ export default {
       const element = this.$refs['vue-street-view-pano'];
 
       // creating the map
-      const options = defaults({},
-          omit(this.getPropsValues(), ['options']),
-          this.options
+      const options = Object.assign({},
+          this.options,
+          omit(this.getPropsValues(), ['options'])
         );
 
       this.$panoObject = new google.maps.StreetViewPanorama(element, options);

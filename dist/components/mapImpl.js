@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _assign2 = require('lodash/assign');
-
-var _assign3 = _interopRequireDefault(_assign2);
-
 var _clone2 = require('lodash/clone');
 
 var _clone3 = _interopRequireDefault(_clone2);
@@ -38,9 +34,6 @@ var _mountableMixin2 = _interopRequireDefault(_mountableMixin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import assign from 'lodash/assign';
-// import clone from 'lodash/clone';
-// import omit from 'lodash/omit';
 var props = {
   center: {
     required: true,
@@ -111,7 +104,7 @@ var customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-var methods = (0, _assign3.default)({}, customMethods, linkedMethods);
+var methods = Object.assign({}, customMethods, linkedMethods);
 
 exports.default = {
   mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
@@ -166,7 +159,7 @@ exports.default = {
       var copiedData = (0, _clone3.default)(_this2.getPropsValues());
       delete copiedData.options;
       var options = (0, _clone3.default)(_this2.options);
-      (0, _assign3.default)(options, copiedData);
+      Object.assign(options, copiedData);
       _this2.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)

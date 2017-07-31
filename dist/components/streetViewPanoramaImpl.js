@@ -4,14 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _assign2 = require('lodash/assign');
-
-var _assign3 = _interopRequireDefault(_assign2);
-
-var _defaults2 = require('lodash/defaults');
-
-var _defaults3 = _interopRequireDefault(_defaults2);
-
 var _omit2 = require('lodash/omit');
 
 var _omit3 = _interopRequireDefault(_omit2);
@@ -37,10 +29,6 @@ var _mountableMixin = require('../utils/mountableMixin.js');
 var _mountableMixin2 = _interopRequireDefault(_mountableMixin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// import assign from 'lodash/assign';
-// import defaults from 'lodash/defaults';
-// import omit from 'lodash/omit';
 
 var props = {
   zoom: {
@@ -90,7 +78,7 @@ var customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-var methods = (0, _assign3.default)({}, customMethods);
+var methods = Object.assign({}, customMethods);
 
 exports.default = {
   mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
@@ -143,7 +131,7 @@ exports.default = {
       var element = _this2.$refs['vue-street-view-pano'];
 
       // creating the map
-      var options = (0, _defaults3.default)({}, (0, _omit3.default)(_this2.getPropsValues(), ['options']), _this2.options);
+      var options = Object.assign({}, _this2.options, (0, _omit3.default)(_this2.getPropsValues(), ['options']));
 
       _this2.$panoObject = new google.maps.StreetViewPanorama(element, options);
 

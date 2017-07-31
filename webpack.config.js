@@ -55,12 +55,8 @@ webConfig.output = {
 
 var stubbedConfig = _.clone(baseConfig);
 stubbedConfig.externals = {
-  // alias: {
-    // lodash: path.resolve(__dirname, './src/stubs/stub-lodash.js'),
-    // 'marker-clusterer-plus': path.resolve(__dirname, './src/stubs/stub-marker-clusterer-plus.js'),
     lodash: '_',
     'marker-clusterer-plus': 'MarkerClusterer'
-  // }
 };
 stubbedConfig.module.noParse = /stub-/
 stubbedConfig.output = {

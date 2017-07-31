@@ -1,7 +1,4 @@
-// import assign from 'lodash/assign';
-// import clone from 'lodash/clone';
-// import omit from 'lodash/omit';
-import {omit, clone, assign} from 'lodash';
+import {omit, clone} from 'lodash';
 
 import { loaded } from '../manager.js';
 import { DeferredReadyMixin } from '../utils/deferredReady.js';
@@ -97,7 +94,7 @@ const customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-const methods = assign({}, customMethods, linkedMethods);
+const methods = Object.assign({}, customMethods, linkedMethods);
 
 export default {
   mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
@@ -149,7 +146,7 @@ export default {
       const copiedData = clone(this.getPropsValues());
       delete copiedData.options;
       const options = clone(this.options);
-      assign(options, copiedData);
+      Object.assign(options, copiedData);
       this.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)

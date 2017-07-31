@@ -47,9 +47,7 @@ var props = {
     type: Number,
     twoWay: true
   }
-}; // import clone from 'lodash/clone';
-// import omit from 'lodash/omit';
-
+};
 
 var events = ['domready', 'closeclick', 'content_changed'];
 
