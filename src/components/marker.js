@@ -35,6 +35,9 @@ const props = {
     type: Number,
     default: 1
   },
+  options: {
+    type: Object
+  },
   place: {
     type: Object
   },
@@ -117,6 +120,8 @@ export default {
   deferredReady() {
     const options = mapValues(props, (value, prop) => this[prop]);
     options.map = this.$map;
+    delete options.options;
+    Object.assign(options, this.options);
 
     // search ancestors for cluster object
     let search = this.$findAncestor(
