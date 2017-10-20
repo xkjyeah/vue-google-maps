@@ -87,7 +87,8 @@ export default {
         marker.$clusterObject = null
       }
     })
-
-    this.$clusterObject.clearMarkers();
+    if (this.$clusterObject) {
+      this.$clusterObject.clearMarkers();
+    }
   },
 };
