@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _mapValues2 = require('lodash/mapValues');
 
 var _mapValues3 = _interopRequireDefault(_mapValues2);
@@ -129,7 +133,7 @@ exports.default = {
     });
     options.map = this.$map;
     delete options.options;
-    Object.assign(options, this.options);
+    (0, _assign2.default)(options, this.options);
 
     // search ancestors for cluster object
     var search = this.$findAncestor(function (ans) {

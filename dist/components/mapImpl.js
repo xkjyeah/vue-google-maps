@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _clone2 = require('lodash/clone');
 
 var _clone3 = _interopRequireDefault(_clone2);
@@ -77,10 +85,10 @@ var linkedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds'].reduce(functi
     if (this.$mapObject) this.$mapObject[methodName].apply(this.$mapObject, arguments);
   };
   return all;
-}, {}
+}, {});
 
 // Other convenience methods exposed by Vue Google Maps
-);var customMethods = {
+var customMethods = {
   resize: function resize() {
     if (this.$mapObject) {
       google.maps.event.trigger(this.$mapObject, 'resize');
@@ -104,7 +112,7 @@ var linkedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds'].reduce(functi
 };
 
 // Methods is a combination of customMethods and linkedMethods
-var methods = Object.assign({}, customMethods, linkedMethods);
+var methods = (0, _assign2.default)({}, customMethods, linkedMethods);
 
 exports.default = {
   mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
@@ -114,7 +122,7 @@ exports.default = {
   created: function created() {
     var _this = this;
 
-    this.$mapCreated = new Promise(function (resolve, reject) {
+    this.$mapCreated = new _promise2.default(function (resolve, reject) {
       _this.$mapCreatedDeferred = { resolve: resolve, reject: reject };
     });
 
@@ -159,7 +167,7 @@ exports.default = {
       var copiedData = (0, _clone3.default)(_this2.getPropsValues());
       delete copiedData.options;
       var options = (0, _clone3.default)(_this2.options);
-      Object.assign(options, copiedData);
+      (0, _assign2.default)(options, copiedData);
       _this2.$mapObject = new google.maps.Map(element, options);
 
       // binding properties (two and one way)

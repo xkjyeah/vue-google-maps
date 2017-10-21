@@ -4,6 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.MountableMixin = exports.Autocomplete = exports.MapElementMixin = exports.PlaceInput = exports.Map = exports.InfoWindow = exports.Rectangle = exports.Circle = exports.Polygon = exports.Polyline = exports.Cluster = exports.Marker = exports.loaded = exports.load = undefined;
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 exports.install = install;
 
 var _manager = require('./manager.js');
@@ -83,7 +88,7 @@ exports.MapElementMixin = _mapElementMixin2.default;
 exports.Autocomplete = _autocomplete2.default;
 exports.MountableMixin = _mountableMixin2.default;
 function install(Vue, options) {
-  options = Object.assign({}, {
+  options = (0, _assign2.default)({}, {
     installComponents: true
   }, options);
 

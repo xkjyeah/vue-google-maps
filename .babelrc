@@ -13,6 +13,7 @@
     ]
   ],
   "plugins": [
-    "lodash"
+    "lodash",
+    "transform-runtime"
   ]
 }

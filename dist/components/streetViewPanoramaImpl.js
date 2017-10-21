@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _omit2 = require('lodash/omit');
 
 var _omit3 = _interopRequireDefault(_omit2);
@@ -78,7 +86,7 @@ var customMethods = {
 };
 
 // Methods is a combination of customMethods and linkedMethods
-var methods = Object.assign({}, customMethods);
+var methods = (0, _assign2.default)({}, customMethods);
 
 exports.default = {
   mixins: [_getPropsValuesMixin2.default, _deferredReady.DeferredReadyMixin, _mountableMixin2.default],
@@ -89,7 +97,7 @@ exports.default = {
   created: function created() {
     var _this = this;
 
-    this.$panoCreated = new Promise(function (resolve, reject) {
+    this.$panoCreated = new _promise2.default(function (resolve, reject) {
       _this.$panoCreatedDeferred = { resolve: resolve, reject: reject };
     });
 
@@ -131,7 +139,7 @@ exports.default = {
       var element = _this2.$refs['vue-street-view-pano'];
 
       // creating the map
-      var options = Object.assign({}, _this2.options, (0, _omit3.default)(_this2.getPropsValues(), ['options']));
+      var options = (0, _assign2.default)({}, _this2.options, (0, _omit3.default)(_this2.getPropsValues(), ['options']));
 
       _this2.$panoObject = new google.maps.StreetViewPanorama(element, options);
 

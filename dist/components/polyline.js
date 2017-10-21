@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _clone2 = require('lodash/clone');
 
 var _clone3 = _interopRequireDefault(_clone2);
@@ -11,8 +19,6 @@ var _clone3 = _interopRequireDefault(_clone2);
 var _omit2 = require('lodash/omit');
 
 var _omit3 = _interopRequireDefault(_omit2);
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _eventsBinder = require('../utils/eventsBinder.js');
 
@@ -72,7 +78,7 @@ exports.default = {
 
     var options = (0, _clone3.default)(this.getPropsValues());
     delete options.options;
-    Object.assign(options, this.options);
+    (0, _assign2.default)(options, this.options);
     this.$polylineObject = new google.maps.Polyline(options);
     this.$polylineObject.setMap(this.$map);
 
@@ -100,7 +106,7 @@ exports.default = {
 
         clearEvents = function clearEvents() {
           eventListeners.map(function (_ref) {
-            var _ref2 = _slicedToArray(_ref, 2),
+            var _ref2 = (0, _slicedToArray3.default)(_ref, 2),
                 obj = _ref2[0],
                 listenerHandle = _ref2[1];
 

@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _omit2 = require('lodash/omit');
 
 var _omit3 = _interopRequireDefault(_omit2);
@@ -80,12 +84,12 @@ exports.default = {
       }
 
       /* eslint-disable no-unused-vars */
-      var finalOptions = (0, _pickBy3.default)(Object.assign({}, (0, _omit3.default)(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder']), options.options), function (v, k) {
+      var finalOptions = (0, _pickBy3.default)((0, _assign2.default)({}, (0, _omit3.default)(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder']), options.options), function (v, k) {
         return v !== undefined;
-      }
+      });
 
       // Component restrictions is rather particular. Undefined not allowed
-      );_this.$watch('componentRestrictions', function (v) {
+      _this.$watch('componentRestrictions', function (v) {
         if (v !== undefined) {
           _this.$autocomplete.setComponentRestrictions(v);
         }
