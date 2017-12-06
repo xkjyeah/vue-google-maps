@@ -21,7 +21,7 @@ import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyBvWE_sIwKbWkiuJQOf8gSk9qzpO96fhfY',
+    key: 'YOUR_API_TOKEN',
     libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'
@@ -48,6 +48,8 @@ Just download `dist/vue-google-maps.js` file and include it from your HTML.
 [Example](http://xkjyeah.github.io/vue-google-maps/overlay.html).
 
 ### Basic usage / Documentation
+
+[Generating an Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key).
 
 See [API](API.md).
 
