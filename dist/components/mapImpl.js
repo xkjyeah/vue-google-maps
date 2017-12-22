@@ -77,10 +77,10 @@ var linkedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds'].reduce(functi
     if (this.$mapObject) this.$mapObject[methodName].apply(this.$mapObject, arguments);
   };
   return all;
-}, {}
+}, {});
 
 // Other convenience methods exposed by Vue Google Maps
-);var customMethods = {
+var customMethods = {
   resize: function resize() {
     if (this.$mapObject) {
       google.maps.event.trigger(this.$mapObject, 'resize');
@@ -161,7 +161,9 @@ exports.default = {
       var options = (0, _clone3.default)(_this2.options);
       Object.assign(options, copiedData);
       _this2.$mapObject = new google.maps.Map(element, options);
-
+      // console.log('map: ', this.$mapObject)
+      var streetViewLayer = new google.maps.StreetViewCoverageLayer();
+      streetViewLayer.setMap(_this2.$mapObject);
       // binding properties (two and one way)
       (0, _propsBinder2.default)(_this2, _this2.$mapObject, (0, _omit3.default)(props, ['center', 'zoom', 'bounds']));
 

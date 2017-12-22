@@ -97,6 +97,7 @@ exports.default = function (vueElement, googleMapsElement, props, options) {
         /* Check for type === Object because we're quite happy
           when primitive types change -- the change detection is cheap
         */
+        // console.log('propsbinder', eventName)
         if (type === Object && timesSet > 0) {
           timesSet--;
           return;

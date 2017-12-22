@@ -53,6 +53,7 @@ export default {
   },
 
   deferredReady() {
+    console.log('polyline')
     const options = clone(this.getPropsValues());
     delete options.options;
     Object.assign(options, this.options);

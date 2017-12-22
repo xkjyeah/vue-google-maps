@@ -70,6 +70,7 @@ exports.default = {
   deferredReady: function deferredReady() {
     var _this = this;
 
+    console.log('polyline');
     var options = (0, _clone3.default)(this.getPropsValues());
     delete options.options;
     Object.assign(options, this.options);

@@ -148,7 +148,9 @@ export default {
       const options = clone(this.options);
       Object.assign(options, copiedData);
       this.$mapObject = new google.maps.Map(element, options);
-
+      // console.log('map: ', this.$mapObject)
+      var streetViewLayer = new google.maps.StreetViewCoverageLayer();
+      streetViewLayer.setMap(this.$mapObject);
       // binding properties (two and one way)
       propsBinder(this, this.$mapObject, omit(props, ['center', 'zoom', 'bounds']));
 

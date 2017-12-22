@@ -16,6 +16,7 @@ exports.default = function (input) {
     if (type == 'keydown') {
       var orig_listener = listener;
       listener = function listener(event) {
+        console.log('arrow down');
         var suggestion_selected = document.getElementsByClassName('pac-item-selected').length > 0;
         if (event.which == 13 && !suggestion_selected) {
           var simulatedEvent = document.createEvent('Event');
