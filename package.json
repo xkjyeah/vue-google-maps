@@ -1,5 +1,5 @@
 {
-  "name": "vue2-google-maps",
+  "name": "super-maps",
   "version": "0.8.4",
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
   "main": "dist/main.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xkjyeah/vue-google-maps.git"
+    "url": "git+https://github.com/antoniohof/vue-google-maps.git"
   },
   "bugs": {
     "url": "https://github.com/xkjyeah/vue-google-maps/issues"
