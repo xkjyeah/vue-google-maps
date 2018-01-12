@@ -328,15 +328,13 @@ Write your Vue component
   }
 </style>
 <div id="app">
-  <div class="map-container">
-    <gmap-map :center="{lat:1.38, lng:103.8}" :zoom="12">
-      <gmap-marker :position="{lat:1.38, lng:103.8}">
-      </gmap-marker>
-      <gmap-info-window :position="{lat:1.38, lng:103.8}">
-        Hello world!
-      </gmap-info-window>
-    </gmap-map>
-  </div>
+  <gmap-map class="map-container" :center="{lat:1.38, lng:103.8}" :zoom="12">
+    <gmap-marker :position="{lat:1.38, lng:103.8}">
+    </gmap-marker>
+    <gmap-info-window :position="{lat:1.38, lng:103.8}">
+      Hello world!
+    </gmap-info-window>
+  </gmap-map>
 </div>
 <script>
 new Vue({
