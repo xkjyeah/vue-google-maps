@@ -107,12 +107,6 @@ Table of Contents
                * [calculator : function](#calculator--function)
                * [gridSize : number](#gridsize--number)
                * [styles : object[]](#styles--object)
-         * [Cluster class (mixes in <code>MapElementMixin</code>)](#cluster-class-mixes-in-mapelementmixin-1)
-            * [Properties](#properties-4)
-               * [maxZoom : number](#maxzoom--number-1)
-               * [calculator : function](#calculator--function-1)
-               * [gridSize : number](#gridsize--number-1)
-               * [styles : object[]](#styles--object-1)
          * [InfoWindow class (mixes in <code>MapElementMixin</code>)](#infowindow-class-mixes-in-mapelementmixin)
             * [Properties](#properties-5)
                * [options : object](#options--object-1)
@@ -592,13 +586,6 @@ To use this class with NPM, you need to `npm install marker-clusterer-plus`.
 Place `Marker` objects within `<gmap-cluster></gmap-cluster>`
 in order to use marker clustering.
 
-#### Properties
-##### `maxZoom : number`
-##### `calculator : function`
-##### `gridSize : number`
-##### `styles : object[]`
-
-### `Cluster` class (mixes in `MapElementMixin`)
 #### Properties
 ##### `maxZoom : number`
 ##### `calculator : function`
