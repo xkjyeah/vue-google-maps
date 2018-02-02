@@ -38,7 +38,7 @@ export function install(Vue, options) {
   });
 
   if (options.load) {
-    load(options.load);
+    load(options.load, options.version, options.libraries, options.loadCn);
   }
 
   if (options.installComponents) {
