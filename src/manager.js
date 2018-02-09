@@ -90,7 +90,15 @@ export const load = (apiKey, version, libraries, loadCn) => {
     }
 
     googleMapScript.setAttribute('src', url);
-    googleMapScript.setAttribute('async', '');
+
+    if(typeof options['async'] === 'undefined' || options['async']){
+      googleMapScript.setAttribute('async', '');
+    }
+
+    if(typeof options['defer'] === 'undefined' && options['defer']){
+      googleMapScript.setAttribute('defer', '');
+    }
+
     googleMapScript.setAttribute('defer', '');
     document.body.appendChild(googleMapScript);
   } else {
