@@ -95,7 +95,7 @@ export const load = (apiKey, version, libraries, loadCn) => {
       googleMapScript.setAttribute('async', '');
     }
 
-    if(typeof options['defer'] === 'undefined' && options['defer']){
+    if(typeof options['defer'] === 'undefined' || options['defer']){
       googleMapScript.setAttribute('defer', '');
     }
 
