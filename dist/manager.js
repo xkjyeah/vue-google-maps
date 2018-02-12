@@ -96,8 +96,15 @@ var load = exports.load = function load(apiKey, version, libraries, loadCn) {
     }
 
     googleMapScript.setAttribute('src', url);
-    googleMapScript.setAttribute('async', '');
-    googleMapScript.setAttribute('defer', '');
+
+    if (typeof options['async'] === 'undefined' || options['async']) {
+      googleMapScript.setAttribute('async', '');
+    }
+
+    if (typeof options['defer'] === 'undefined' || options['defer']) {
+      googleMapScript.setAttribute('defer', '');
+    }
+
     document.body.appendChild(googleMapScript);
   } else {
     throw new Error('You already started the loading of google maps');

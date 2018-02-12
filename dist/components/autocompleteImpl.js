@@ -82,10 +82,10 @@ exports.default = {
       /* eslint-disable no-unused-vars */
       var finalOptions = (0, _pickBy3.default)(Object.assign({}, (0, _omit3.default)(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder']), options.options), function (v, k) {
         return v !== undefined;
-      }
+      });
 
       // Component restrictions is rather particular. Undefined not allowed
-      );_this.$watch('componentRestrictions', function (v) {
+      _this.$watch('componentRestrictions', function (v) {
         if (v !== undefined) {
           _this.$autocomplete.setComponentRestrictions(v);
         }

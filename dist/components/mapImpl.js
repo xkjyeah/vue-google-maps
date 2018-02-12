@@ -77,10 +77,10 @@ var linkedMethods = ['panBy', 'panTo', 'panToBounds', 'fitBounds'].reduce(functi
     if (this.$mapObject) this.$mapObject[methodName].apply(this.$mapObject, arguments);
   };
   return all;
-}, {}
+}, {});
 
 // Other convenience methods exposed by Vue Google Maps
-);var customMethods = {
+var customMethods = {
   resize: function resize() {
     if (this.$mapObject) {
       google.maps.event.trigger(this.$mapObject, 'resize');
