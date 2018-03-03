@@ -42,7 +42,7 @@ function runHooks (vm) {
     : Promise.resolve(null)
 
   beforePromise.then(() => {
-    if (vm._isDestroyed) return;
+    if (vm._isDestroyed) return
     if (typeof hooks === 'function') {
       hooks = [hooks]
     }
