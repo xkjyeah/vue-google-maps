@@ -89,7 +89,7 @@ export const load = (apiKey, version, libraries, loadCn) => {
     googleMapScript.setAttribute('src', url)
     googleMapScript.setAttribute('async', '')
     googleMapScript.setAttribute('defer', '')
-    document.body.appendChild(googleMapScript)
+    document.head.appendChild(googleMapScript)
   } else {
     throw new Error('You already started the loading of google maps')
   }
