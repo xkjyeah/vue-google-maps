@@ -150,6 +150,7 @@ export default {
         this.$mapObject.addListener('center_changed', () => {
           if (shouldUpdate()) {
             this.$emit('center_changed', this.$mapObject.getCenter())
+            this.$emit('update:center', this.$mapObject.getCenter())
           }
           decrement()
         })
@@ -162,9 +163,21 @@ export default {
       })
       this.$mapObject.addListener('zoom_changed', () => {
         this.$emit('zoom_changed', this.$mapObject.getZoom())
+        this.$emit('update:zoom', this.$mapObject.getZoom())
       })
       this.$mapObject.addListener('bounds_changed', () => {
         this.$emit('bounds_changed', this.$mapObject.getBounds())
+        this.$emit('update:bounds', this.$mapObject.getBounds())
+      })
+
+      this.$on('tilt_changed', () => {
+        this.$emit('update:tilt', this.$mapObject.tilt)
+      })
+      this.$on('maptypeid_changed', () => {
+        this.$emit('update:mapTypeId', this.$mapObject.mapTypeId)
+      })
+      this.$on('heading_changed', () => {
+        this.$emit('update:heading', this.$infoWindow.heading)
       })
 
       // binding events

@@ -109,7 +109,7 @@
       <b>{{mapClickedCount}}</b>
     </gmap-info-window>
 
-    <gmap-info-window :position="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
+    <gmap-info-window :position.sync="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
 
     <gmap-polyline v-if="plvisible" :path="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
     </gmap-polyline>
