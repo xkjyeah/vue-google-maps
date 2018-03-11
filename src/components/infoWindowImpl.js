@@ -15,6 +15,7 @@ const props = {
   opened: {
     type: Boolean,
     default: true,
+    twoWay:true
   },
   position: {
     type: Object,
@@ -91,6 +92,16 @@ export default {
       // Binding
       propsBinder(this, this.$infoWindow, omit(props, ['opened']))
       eventsBinder(this, this.$infoWindow, events)
+
+      this.$on('closeclick', () => {
+        this.$emit('update:opened', false)
+      })
+      this.$on('position_changed', () => {
+        this.$emit('update:position', this.$infoWindow.position)
+      })
+      this.$on('zindex_changed', () => {
+        this.$emit('update:zIndex', this.$infoWindow.zIndex)
+      })
 
       this.openInfoWindow()
       this.$watch('opened', () => {
