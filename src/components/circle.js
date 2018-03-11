@@ -71,9 +71,16 @@ export default {
       const updateBounds = () => {
         this.$emit('bounds_changed', this.$circleObject.getBounds())
       }
-
-      this.$on('radius_changed', updateBounds)
-      this.$on('center_changed', updateBounds)
+      const radiusChange = () => {
+        this.$emit('update:radius', this.$circleObject.radius)
+        updateBounds()
+      }
+      const centerChange = () => {
+        this.$emit('update:center', this.$circleObject.center)
+        updateBounds()
+      }
+      this.$on('radius_changed', radiusChange)
+      this.$on('center_changed', centerChange)
     }
   },
 
