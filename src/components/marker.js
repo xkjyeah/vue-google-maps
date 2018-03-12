@@ -136,6 +136,34 @@ export default {
       propsBinder(this, this.$markerObject, props)
       eventsBinder(this, this.$markerObject, events)
 
+      this.$on('animation_changed', () => {
+        this.$emit('update:animation', this.$markerObject.animation)
+      })
+      this.$on('clickable_changed', () => {
+        this.$emit('update:clickable', this.$markerObject.clickable)
+      })
+      this.$on('cursor_changed', () => {
+        this.$emit('update:cursor', this.$markerObject.cursor)
+      })
+      this.$on('draggable_changed', () => {
+        this.$emit('update:draggable', this.$markerObject.draggable)
+      })
+      this.$on('icon_changed', () => {
+        this.$emit('update:icon', this.$markerObject.icon)
+      })
+      this.$on('position_changed', () => {
+        this.$emit('update:position', this.$markerObject.position)
+      })
+      this.$on('shape_changed', () => {
+        this.$emit('update:shape', this.$markerObject.shape)
+      })
+      this.$on('visible_changed', () => {
+        this.$emit('update:visible', this.$markerObject.visible)
+      })
+      this.$on('zindex_changed', () => {
+        this.$emit('update:zIndex', this.$markerObject.zIndex)
+      })
+
       if (this.$clusterObject) {
         this.$clusterObject.addMarker(this.$markerObject)
       }
