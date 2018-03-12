@@ -58,7 +58,6 @@ export default {
     delete options.options
     Object.assign(options, this.options)
     this.$polylineObject = new google.maps.Polyline(options)
-    this.$polylineObject.setMap(this.$map)
 
     propsBinder(this, this.$polylineObject, omit(props, ['deepWatch', 'path']))
     eventBinder(this, this.$polylineObject, events)
@@ -85,7 +84,7 @@ export default {
 
         const updatePaths = () => {
           this.$emit('path_changed', this.$polylineObject.getPath())
-          this.$emit('update:path', extractPath(this.$polygonObject.getPath()))
+          this.$emit('update:path', extractPath(this.$polylineObject.getPath()))
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
@@ -98,7 +97,8 @@ export default {
         }
       }
     }, {
-      deep: this.deepWatch
+      deep: this.deepWatch,
+      immediate: true,
     })
 
     // Display the map
