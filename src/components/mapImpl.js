@@ -9,6 +9,7 @@ import getPropsMixin from '../utils/getPropsValuesMixin.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
+import WatchPrimitiveProperties from '../utils/WatchPrimitiveProperties.js'
 
 const props = {
   center: {
@@ -159,7 +160,12 @@ export default {
           increment()
           this.$mapObject.setCenter(this.finalLatLng)
         }
-        this.$watch('finalLatLng', updateCenter)
+
+        WatchPrimitiveProperties(
+          this,
+          ['finalLat', 'finalLng'],
+          updateCenter
+        )
       })
       this.$mapObject.addListener('zoom_changed', () => {
         this.$emit('zoom_changed', this.$mapObject.getZoom())

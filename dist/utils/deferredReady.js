@@ -45,6 +45,7 @@ function runHooks(vm) {
   var beforePromise = vm.beforeDeferredReady ? typeof vm.beforeDeferredReady.then === 'function' ? vm.beforeDeferredReady : Promise.all(vm.beforeDeferredReady) : Promise.resolve(null);
 
   beforePromise.then(function () {
+    if (vm._isDestroyed) return;
     if (typeof hooks === 'function') {
       hooks = [hooks];
     }
