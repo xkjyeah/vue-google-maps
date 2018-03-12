@@ -60,9 +60,9 @@ var load = exports.load = function load(apiKey, version, libraries, loadCn) {
     // such as Google for business
     // https://developers.google.com/maps/documentation/javascript/get-api-key#premium-auth
     var options = {};
-    if (typeof apiKey == 'string') {
+    if (typeof apiKey === 'string') {
       options.key = apiKey;
-    } else if ((typeof apiKey === 'undefined' ? 'undefined' : _typeof(apiKey)) == 'object') {
+    } else if ((typeof apiKey === 'undefined' ? 'undefined' : _typeof(apiKey)) === 'object') {
       for (var k in apiKey) {
         // transfer values in apiKey to options
         options[k] = apiKey[k];
@@ -83,7 +83,7 @@ var load = exports.load = function load(apiKey, version, libraries, loadCn) {
 
     var baseUrl = 'https://maps.googleapis.com/';
 
-    if (typeof loadCn == 'boolean' && loadCn === true) {
+    if (typeof loadCn === 'boolean' && loadCn === true) {
       baseUrl = 'http://maps.google.cn/';
     }
 

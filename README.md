@@ -1,5 +1,7 @@
 # vue-google-maps
 
+[![Build Status](https://travis-ci.org/xkjyeah/vue-google-maps.svg?branch=vue2)](https://travis-ci.org/xkjyeah/vue-google-maps)
+
 ## Vue-2 port of vue-google-maps
 
 This is the Vue 2.x port of vue-google-maps!

@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _clone2 = require('lodash/clone');
+var _clone = require('lodash/clone');
 
-var _clone3 = _interopRequireDefault(_clone2);
+var _clone2 = _interopRequireDefault(_clone);
 
 var _eventsBinder = require('../utils/eventsBinder.js');
 
@@ -30,6 +30,15 @@ var _markerClustererPlus2 = _interopRequireDefault(_markerClustererPlus);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* vim: set softtabstop=2 shiftwidth=2 expandtab : */
+
+/**
+  * @class Cluster
+  * @prop $clusterObject -- Exposes the marker clusterer to
+        descendent Marker classes. Override this if you area
+        extending the class
+**/
+
 var props = {
   maxZoom: {
     type: Number,
@@ -47,14 +56,7 @@ var props = {
     type: Array,
     twoWay: false
   }
-}; /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
-
-/**
-  * @class Cluster
-  * @prop $clusterObject -- Exposes the marker clusterer to
-        descendent Marker classes. Override this if you area
-        extending the class
-**/
+};
 
 var events = ['click', 'rightclick', 'dblclick', 'drag', 'dragstart', 'dragend', 'mouseup', 'mousedown', 'mouseover', 'mouseout'];
 
@@ -69,7 +71,7 @@ exports.default = {
   deferredReady: function deferredReady() {
     var _this = this;
 
-    var options = (0, _clone3.default)(this.getPropsValues());
+    var options = (0, _clone2.default)(this.getPropsValues());
 
     if (typeof _markerClustererPlus2.default === 'undefined') {
       /* eslint-disable no-console */

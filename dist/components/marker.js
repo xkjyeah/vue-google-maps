@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mapValues2 = require('lodash/mapValues');
+var _mapValues = require('lodash/mapValues');
 
-var _mapValues3 = _interopRequireDefault(_mapValues2);
+var _mapValues2 = _interopRequireDefault(_mapValues);
 
 var _eventsBinder = require('../utils/eventsBinder.js');
 
@@ -103,9 +103,9 @@ exports.default = {
   props: props,
 
   render: function render(h) {
-    if (!this.$slots.default || this.$slots.default.length == 0) {
+    if (!this.$slots.default || this.$slots.default.length === 0) {
       return '';
-    } else if (this.$slots.default.length == 1) {
+    } else if (this.$slots.default.length === 1) {
       // So that infowindows can have a marker parent
       return this.$slots.default[0];
     } else {
@@ -113,7 +113,9 @@ exports.default = {
     }
   },
   destroyed: function destroyed() {
-    if (!this.$markerObject) return;
+    if (!this.$markerObject) {
+      return;
+    }
 
     if (this.$clusterObject) {
       this.$clusterObject.removeMarker(this.$markerObject);
@@ -124,7 +126,7 @@ exports.default = {
   deferredReady: function deferredReady() {
     var _this = this;
 
-    var options = (0, _mapValues3.default)(props, function (value, prop) {
+    var options = (0, _mapValues2.default)(props, function (value, prop) {
       return _this[prop];
     });
     options.map = this.$map;

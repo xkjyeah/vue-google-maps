@@ -1,4 +1,6 @@
-import { clone, pickBy, omit } from 'lodash'
+import clone from 'lodash/clone'
+import pickBy from 'lodash/pickBy'
+import omit from 'lodash/omit'
 import propsBinder from '../utils/propsBinder.js'
 import downArrowSimulator from '../utils/simulateArrowDown.js'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -47,7 +49,7 @@ export default {
         downArrowSimulator(this.$refs.input)
       }
 
-      if(typeof(google.maps.places.Autocomplete) !== 'function'){
+      if (typeof (google.maps.places.Autocomplete) !== 'function') {
         throw new Error('google.maps.places.Autocomplete is undefined. Did you add \'places\' to libraries when loading Google Maps?')
       }
 

@@ -4,15 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _clone2 = require('lodash/clone');
-
-var _clone3 = _interopRequireDefault(_clone2);
-
-var _omit2 = require('lodash/omit');
-
-var _omit3 = _interopRequireDefault(_omit2);
-
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _omit = require('lodash/omit');
+
+var _omit2 = _interopRequireDefault(_omit);
+
+var _clone = require('lodash/clone');
+
+var _clone2 = _interopRequireDefault(_clone);
 
 var _eventsBinder = require('../utils/eventsBinder.js');
 
@@ -73,7 +73,7 @@ exports.default = {
   deferredReady: function deferredReady() {
     var _this = this;
 
-    var options = (0, _clone3.default)(this.getPropsValues());
+    var options = (0, _clone2.default)(this.getPropsValues());
     delete options.options;
     Object.assign(options, this.options);
     if (!options.path) {
@@ -84,7 +84,7 @@ exports.default = {
     }
     this.$polygonObject = new google.maps.Polygon(options);
 
-    (0, _propsBinder2.default)(this, this.$polygonObject, (0, _omit3.default)(props, ['path', 'paths', 'deepWatch']));
+    (0, _propsBinder2.default)(this, this.$polygonObject, (0, _omit2.default)(props, ['path', 'paths', 'deepWatch']));
     (0, _eventsBinder2.default)(this, this.$polygonObject, events);
 
     var clearEvents = function clearEvents() {};

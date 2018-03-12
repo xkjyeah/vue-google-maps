@@ -25,39 +25,40 @@
    **/
 
 export var DeferredReady = {
-  install(Vue, options) { // eslint-disable-line no-unused-vars
+  install (Vue, options) { // eslint-disable-line no-unused-vars
     // Use the same merge strategy as regular hooks
-    Vue.config.optionMergeStrategies.deferredReady = Vue.config.optionMergeStrategies.created;
-    Vue.config.optionMergeStrategies.beforeDeferredReady = Vue.config.optionMergeStrategies.beforeDeferredReady;
+    Vue.config.optionMergeStrategies.deferredReady = Vue.config.optionMergeStrategies.created
+    Vue.config.optionMergeStrategies.beforeDeferredReady = Vue.config.optionMergeStrategies.beforeDeferredReady
   },
-};
+}
 
-function runHooks(vm) {
-  var hooks = vm.$options.deferredReady || [];
+function runHooks (vm) {
+  var hooks = vm.$options.deferredReady || []
 
   // Run the beforeDeferredReady methods first
-  var beforePromise = vm.beforeDeferredReady ?
-    ((typeof vm.beforeDeferredReady.then === 'function') ?
-      vm.beforeDeferredReady : Promise.all(vm.beforeDeferredReady))
-      : Promise.resolve(null);
+  var beforePromise = vm.beforeDeferredReady
+    ? ((typeof vm.beforeDeferredReady.then === 'function')
+      ? vm.beforeDeferredReady : Promise.all(vm.beforeDeferredReady))
+    : Promise.resolve(null)
 
   beforePromise.then(() => {
+    if (vm._isDestroyed) return
     if (typeof hooks === 'function') {
-      hooks = [hooks];
+      hooks = [hooks]
     }
     return Promise.all(hooks.map(x => {
       try {
-        return x.apply(vm);
+        return x.apply(vm)
       } catch (err) {
-        console.error(err.stack);  // eslint-disable-line no-console
+        console.error(err.stack) // eslint-disable-line no-console
       }
-    }));
+    }))
     // execute all handlers, expecting them to return promises
     // wait for the promises to complete, before allowing child to execute
   })
-  .then(() => {
-    vm.$deferredReadyPromiseResolve();
-  });
+    .then(() => {
+      vm.$deferredReadyPromiseResolve()
+    })
 }
 
 export var DeferredReadyMixin = {
@@ -68,33 +69,33 @@ export var DeferredReadyMixin = {
   $deferredReadyPromiseResolve: false,
   $deferredReadyAncestor: false,
 
-  created() {
+  created () {
     this.$deferredReadyPromise = new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
-      this.$deferredReadyPromiseResolve = resolve;
-    });
+      this.$deferredReadyPromiseResolve = resolve
+    })
 
-    let search = this.$parent;
+    let search = this.$parent
     while (search) {
       if (search.$deferredReadyPromise) {
-        this.$deferredReadyAncestor = search;
-        break;
+        this.$deferredReadyAncestor = search
+        break
       }
-      search = search.$parent;
+      search = search.$parent
     }
   },
 
-  mounted() {
+  mounted () {
     // Execute the hooks only if this is the first
     // ancestor that is a DeferredReady
     // this.$deferredReadyMountedPromiseResolve();
 
     if (!this.$deferredReadyAncestor) {
-      runHooks(this);
+      runHooks(this)
     } else {
       this.$deferredReadyAncestor.$deferredReadyPromise
-      .then(() => {
-        runHooks(this);
-      });
+        .then(() => {
+          runHooks(this)
+        })
     }
   },
-};
+}

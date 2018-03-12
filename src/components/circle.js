@@ -1,9 +1,9 @@
-import {clone} from 'lodash';
+import clone from 'lodash/clone'
 
-import eventBinder from '../utils/eventsBinder.js';
-import propsBinder from '../utils/propsBinder.js';
-import MapElementMixin from './mapElementMixin';
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js';
+import eventBinder from '../utils/eventsBinder.js'
+import propsBinder from '../utils/propsBinder.js'
+import MapElementMixin from './mapElementMixin'
+import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
 
 const props = {
   center: {
@@ -28,7 +28,7 @@ const props = {
     type: Object,
     twoWay: false
   }
-};
+}
 
 const events = [
   'click',
@@ -42,44 +42,44 @@ const events = [
   'mouseover',
   'mouseup',
   'rightclick'
-];
+]
 
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
   version: 2,
 
-  render() { return ''; },
+  render () { return '' },
 
-  deferredReady() {
-    const options = clone(this.getPropsValues());
-    options.map = this.$map;
-    delete options.bounds;
-    this.createCircle(options);
+  deferredReady () {
+    const options = clone(this.getPropsValues())
+    options.map = this.$map
+    delete options.bounds
+    this.createCircle(options)
   },
 
   methods: {
     createCircle (options) {
-      this.$circleObject = new google.maps.Circle(options);
-            // we cant bind bounds because there is no `setBounds` method
-            // on the Circle object
-      const boundProps = clone(props);
-      delete boundProps.bounds;
-      propsBinder(this, this.$circleObject, boundProps);
-      eventBinder(this, this.$circleObject, events);
+      this.$circleObject = new google.maps.Circle(options)
+      // we cant bind bounds because there is no `setBounds` method
+      // on the Circle object
+      const boundProps = clone(props)
+      delete boundProps.bounds
+      propsBinder(this, this.$circleObject, boundProps)
+      eventBinder(this, this.$circleObject, events)
 
       const updateBounds = () => {
-        this.$emit('bounds_changed', this.$circleObject.getBounds());
-      };
+        this.$emit('bounds_changed', this.$circleObject.getBounds())
+      }
 
-      this.$on('radius_changed', updateBounds);
-      this.$on('center_changed', updateBounds);
+      this.$on('radius_changed', updateBounds)
+      this.$on('center_changed', updateBounds)
     }
   },
 
   destroyed () {
     if (this.$circleObject) {
-      this.$circleObject.setMap(null);
+      this.$circleObject.setMap(null)
     }
   },
-};
+}

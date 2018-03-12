@@ -13,7 +13,9 @@
     "comma-dangle": 0
   },
   "globals": {
-    "google": true
+    "google": true,
+    "Vue": true,
+    "VueGoogleMaps": true
   },
   "plugins": [
     "html"

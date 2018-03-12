@@ -1,6 +1,6 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
-import {DeferredReadyMixin} from '../utils/deferredReady';
+import {DeferredReadyMixin} from '../utils/deferredReady'
 
 /**
  * @class MapElementMixin @mixins DeferredReadyMixin
@@ -15,44 +15,44 @@ export default {
 
   mixins: [DeferredReadyMixin],
 
-  created() {
+  created () {
     /* Search for the Map component in the parent */
     let search = this.$findAncestor(
       ans => ans.$mapCreated
-    );
+    )
 
     if (!search) {
-      throw new Error(`${this.constructor.name} component must be used within a <Map>`);
+      throw new Error(`${this.constructor.name} component must be used within a <Map>`)
     }
 
     this.$mapPromise = search.$mapCreated.then((map) => {
-      this.$map = map;
-    });
+      this.$map = map
+    })
     // FIXME: This is a hack to ensure correct loading
     // when the map has already be instantiated.
     if (search.$mapObject) {
-      this.$map = search.$mapObject;
+      this.$map = search.$mapObject
     }
-    this.$MapElementMixin = search;
-    this.$map = null;
+    this.$MapElementMixin = search
+    this.$map = null
   },
 
   beforeDeferredReady () {
-    return this.$mapPromise;
+    return this.$mapPromise
   },
 
   methods: {
-    $findAncestor(condition) {
-      let search = this.$parent;
+    $findAncestor (condition) {
+      let search = this.$parent
 
       while (search) {
         if (condition(search)) {
-          return search;
+          return search
         }
-        search = search.$parent;
+        search = search.$parent
       }
-      return null;
+      return null
     }
   }
 
-};
+}

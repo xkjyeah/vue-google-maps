@@ -1,11 +1,13 @@
-import {omit} from 'lodash';
+import omit from 'lodash/omit'
 
-import {loaded} from '../manager.js';
-import {DeferredReadyMixin} from '../utils/deferredReady.js';
-import eventsBinder from '../utils/eventsBinder.js';
-import propsBinder from '../utils/propsBinder.js';
-import getPropsMixin from '../utils/getPropsValuesMixin.js';
-import mountableMixin from '../utils/mountableMixin.js';
+import {loaded} from '../manager.js'
+import {DeferredReadyMixin} from '../utils/deferredReady.js'
+import eventsBinder from '../utils/eventsBinder.js'
+import propsBinder from '../utils/propsBinder.js'
+import getPropsMixin from '../utils/getPropsValuesMixin.js'
+import mountableMixin from '../utils/mountableMixin.js'
+
+import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
 
 const props = {
   zoom: {
@@ -37,26 +39,26 @@ const props = {
   options: {
     twoWay: false,
     type: Object,
-    default () {return {};}
+    default () { return {} }
   }
-};
+}
 
 const events = [
   'closeclick',
   'status_changed',
-];
+]
 
 // Other convenience methods exposed by Vue Google Maps
 const customMethods = {
-  resize() {
+  resize () {
     if (this.$panoObject) {
-      google.maps.event.trigger(this.$panoObject, 'resize');
+      google.maps.event.trigger(this.$panoObject, 'resize')
     }
   },
-};
+}
 
 // Methods is a combination of customMethods and linkedMethods
-const methods = Object.assign({}, customMethods);
+const methods = Object.assign({}, customMethods)
 
 export default {
   mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
@@ -64,13 +66,13 @@ export default {
   replace: false, // necessary for css styles
   methods,
 
-  created() {
+  created () {
     this.$panoCreated = new Promise((resolve, reject) => {
-      this.$panoCreatedDeferred = {resolve, reject};
-    });
+      this.$panoCreatedDeferred = {resolve, reject}
+    })
 
     const updateCenter = () => {
-      if (!this.panoObject) return;
+      if (!this.panoObject) return
 
       this.$panoObject.setPosition({
         lat: this.finalLat,
@@ -90,42 +92,66 @@ export default {
       return this.position &&
         (typeof this.position.lng === 'function') ? this.position.lng() : this.position.lng
     },
-  },
-
-  watch: {
-    zoom(zoom) {
-      if (this.$panoObject) {
-        this.$panoObject.setZoom(zoom);
+    finalLatLng () {
+      return {
+        lat: this.finalLat,
+        lng: this.finalLng,
       }
     }
   },
 
-  deferredReady() {
+  watch: {
+    zoom (zoom) {
+      if (this.$panoObject) {
+        this.$panoObject.setZoom(zoom)
+      }
+    }
+  },
+
+  deferredReady () {
     return loaded.then(() => {
       // getting the DOM element where to create the map
-      const element = this.$refs['vue-street-view-pano'];
+      const element = this.$refs['vue-street-view-pano']
 
       // creating the map
       const options = Object.assign({},
-          this.options,
-          omit(this.getPropsValues(), ['options'])
-        );
+        this.options,
+        omit(this.getPropsValues(), ['options'])
+      )
 
-      this.$panoObject = new google.maps.StreetViewPanorama(element, options);
+      this.$panoObject = new google.maps.StreetViewPanorama(element, options)
 
       // binding properties (two and one way)
       propsBinder(this, this.$panoObject,
-          omit(props, ['position', 'zoom']));
+        omit(props, ['position']))
 
-      //binding events
-      eventsBinder(this, this.$panoObject, events);
+      // manually trigger position
+      TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
+        // Panos take a while to load
+        increment()
 
-      this.$panoCreatedDeferred.resolve(this.$panoObject);
+        this.$panoObject.addListener('position_changed', () => {
+          if (shouldUpdate()) {
+            this.$emit('position_changed', this.$panoObject.getPosition())
+          }
+          decrement()
+        })
 
-      return this.$panoCreated;
+        this.$watch('finalLatLng', () => {
+          increment()
+          this.$panoObject.setPosition(this.finalLatLng)
+        })
+      })
+
+      // binding events
+      eventsBinder(this, this.$panoObject, events)
+
+      this.$panoCreatedDeferred.resolve(this.$panoObject)
+
+      return this.$panoCreated
     })
-    .catch((error) => {
-      throw error;
-    });
+      .catch((error) => {
+        throw error
+      })
   },
-};
+}

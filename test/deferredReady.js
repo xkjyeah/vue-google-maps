@@ -1,51 +1,40 @@
-import Lab from 'lab';
-import {jsdom} from 'jsdom';
-import _ from 'lodash';
-import {DeferredReadyMixin} from '../src/deferredReady';
-import {expect, fail} from 'code';
+import Lab from 'lab'
+import {jsdom} from 'jsdom'
+import {DeferredReadyMixin} from '../src/utils/deferredReady'
+import {expect} from 'code'
 
-export var lab = Lab.script();
+export var lab = Lab.script()
 
-global.document = jsdom('');
-global.window = document.defaultView;
+global.document = jsdom('')
+global.window = document.defaultView
 
-const VueRoot = require('vue/dist/vue');
-
-function JSDom(src) {
-  return new Promise((resolve, reject) => {
-    jsdom.env(src, [], function (err, window) {
-      if (err) return reject(err);
-
-      resolve(window);
-    });
-  })
-}
+const VueRoot = require('vue/dist/vue')
 
 lab.experiment('Deferred Ready', function () {
-  var Vue;
+  var Vue
 
   lab.beforeEach(async () => {
-    document.body.innerHTML = '';
-    document.body.innerHTML = '<div id="root"></div>';
+    document.body.innerHTML = ''
+    document.body.innerHTML = '<div id="root"></div>'
 
-    Vue = VueRoot.extend({});
-  });
+    Vue = VueRoot.extend({})
+  })
 
   lab.test('Hook is executed', async function () {
     await new Promise((resolve, reject) => {
       window.document.getElementById('root').innerHTML = `
       <dr-comp></dr-comp>
-      `;
+      `
 
       Vue.component('drComp', {
         template: '<span>Test</span>',
         mixins: [DeferredReadyMixin],
-        deferredReady() {
-          resolve();
+        deferredReady () {
+          resolve()
         }
-      });
+      })
 
-      var vue = new Vue({
+      new Vue({ // eslint-disable-line
         el: window.document.getElementById('root'),
       })
     })
@@ -55,26 +44,26 @@ lab.experiment('Deferred Ready', function () {
     await new Promise((resolve, reject) => {
       window.document.getElementById('root').innerHTML = `
       <parent-comp></parent-comp>
-      `;
+      `
 
-      var flag = false;
+      var flag = false
 
-      function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+      function delay (ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
       }
 
       var childComp = Vue.component('childComp', {
         template: '<span>Test</span>',
         mixins: [DeferredReadyMixin],
-        deferredReady() {
+        deferredReady () {
           try {
-            expect(flag).true();
-            resolve();
+            expect(flag).true()
+            resolve()
           } catch (err) {
-            reject(err);
+            reject(err)
           }
         }
-      });
+      })
 
       Vue.component('parentComp', {
         components: {
@@ -82,13 +71,13 @@ lab.experiment('Deferred Ready', function () {
         },
         template: '<child-comp></child-comp>',
         mixins: [DeferredReadyMixin],
-        async deferredReady() {
-          await delay(500);
-          flag = true;
+        async deferredReady () {
+          await delay(500)
+          flag = true
         }
-      });
+      })
 
-      var vue = new Vue({
+      new Vue({ // eslint-disable-line
         el: window.document.getElementById('root'),
       })
     })
@@ -98,41 +87,41 @@ lab.experiment('Deferred Ready', function () {
     await new Promise((resolve, reject) => {
       window.document.getElementById('root').innerHTML = `
       <parent-comp></parent-comp>
-      `;
+      `
 
-      var flag = false;
+      var flag = false
 
-      function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+      function delay (ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
       }
 
       var childComp = Vue.component('childComp', {
         template: '<span>Test</span>',
         mixins: [DeferredReadyMixin],
-        deferredReady() {
+        deferredReady () {
           try {
-            expect(flag).false();
-            resolve();
+            expect(flag).false()
+            resolve()
           } catch (err) {
-            reject(err);
+            reject(err)
           }
         }
-      });
+      })
 
       Vue.component('parentComp', {
         components: {
           childComp
         },
         template: '<child-comp></child-comp>',
-        async deferredReady() {
-          await delay(500);
-          flag = true;
+        async deferredReady () {
+          await delay(500)
+          flag = true
         }
-      });
+      })
 
-      var vue = new Vue({
+      new Vue({ // eslint-disable-line
         el: window.document.getElementById('root'),
       })
     })
   })
-});
+})

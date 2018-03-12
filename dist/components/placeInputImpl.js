@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _clone2 = require('lodash/clone');
+var _omit = require('lodash/omit');
 
-var _clone3 = _interopRequireDefault(_clone2);
+var _omit2 = _interopRequireDefault(_omit);
 
-var _omit2 = require('lodash/omit');
+var _clone = require('lodash/clone');
 
-var _omit3 = _interopRequireDefault(_omit2);
+var _clone2 = _interopRequireDefault(_clone);
 
 var _propsBinder = require('../utils/propsBinder.js');
 
@@ -81,7 +81,7 @@ exports.default = {
     });
 
     _manager.loaded.then(function () {
-      var options = (0, _clone3.default)(_this.getPropsValues());
+      var options = (0, _clone2.default)(_this.getPropsValues());
       if (_this.selectFirstOnEnter) {
         (0, _simulateArrowDown2.default)(_this.$refs.input);
       }
@@ -91,7 +91,7 @@ exports.default = {
       }
 
       _this.autoCompleter = new google.maps.places.Autocomplete(_this.$refs.input, options);
-      (0, _propsBinder2.default)(_this, _this.autoCompleter, (0, _omit3.default)(props, ['placeholder', 'place', 'selectFirstOnEnter', 'defaultPlace', 'className', 'label']));
+      (0, _propsBinder2.default)(_this, _this.autoCompleter, (0, _omit2.default)(props, ['placeholder', 'place', 'selectFirstOnEnter', 'defaultPlace', 'className', 'label']));
 
       _this.autoCompleter.addListener('place_changed', function () {
         _this.$emit('place_changed', _this.autoCompleter.getPlace());
@@ -99,7 +99,7 @@ exports.default = {
     });
   },
   created: function created() {
-    console.warn('The PlaceInput class is deprecated! Please consider using the Autocomplete input instead'); //eslint-disable-line no-console
+    console.warn('The PlaceInput class is deprecated! Please consider using the Autocomplete input instead'); // eslint-disable-line no-console
   },
 
   props: props
