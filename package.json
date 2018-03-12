@@ -30,7 +30,7 @@
     "marker-clusterer-plus": "^2.1.4"
   },
   "peerDependencies": {
-    "vue": "^2.2.1"
+    "vue": "^2.3.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
