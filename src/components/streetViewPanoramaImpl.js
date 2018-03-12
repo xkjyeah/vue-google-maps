@@ -125,6 +125,19 @@ export default {
       propsBinder(this, this.$panoObject,
         omit(props, ['position']))
 
+      this.$on('pano_changed', () => {
+        this.$emit('update:pano', this.$panoObject.pano)
+      })
+      this.$on('pov_changed', () => {
+        this.$emit('update:pov', this.$panoObject.pov)
+      })
+      this.$on('visible_changed', () => {
+        this.$emit('update:visible', this.$panoObject.visible)
+      })
+      this.$on('zoom_changed', () => {
+        this.$emit('update:zoom', this.$panoObject.zoom)
+      })
+
       // manually trigger position
       TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
         // Panos take a while to load
@@ -133,6 +146,8 @@ export default {
         this.$panoObject.addListener('position_changed', () => {
           if (shouldUpdate()) {
             this.$emit('position_changed', this.$panoObject.getPosition())
+            this.$emit('update:position', this.$panoObject.getPosition())
+
           }
           decrement()
         })
