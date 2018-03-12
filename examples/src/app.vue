@@ -111,7 +111,7 @@
 
     <gmap-info-window :position.sync="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
 
-    <gmap-polyline v-if="plvisible" :path="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
+    <gmap-polyline v-if="plvisible" :path.sync="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
     </gmap-polyline>
     <gmap-polygon v-if="pgvisible" :paths.sync="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}" @paths_changed="updatePolygonPaths($event)">
     </gmap-polygon>

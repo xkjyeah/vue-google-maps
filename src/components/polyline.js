@@ -76,6 +76,8 @@ export default {
 
         const updatePaths = () => {
           this.$emit('path_changed', this.$polylineObject.getPath())
+          this.$emit('update:path', this.$polylineObject.getPath())
+
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
