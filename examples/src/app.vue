@@ -109,14 +109,14 @@
       <b>{{mapClickedCount}}</b>
     </gmap-info-window>
 
-    <gmap-info-window :position.sync="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
+    <gmap-info-window :position="reportedCenter" :opened="ifw2">{{ifw2text}}</gmap-info-window>
 
-    <gmap-polyline v-if="plvisible" :path.sync="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
+    <gmap-polyline v-if="plvisible" :path="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
     </gmap-polyline>
-    <gmap-polygon v-if="pgvisible" :paths.sync="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}" @paths_changed="updatePolygonPaths($event)">
+    <gmap-polygon v-if="pgvisible" :paths="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}" @paths_changed="updatePolygonPaths($event)">
     </gmap-polygon>
-    <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center.sync="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
-    <gmap-rectangle v-if="displayRectangle" :bounds.sync="rectangleBounds" :options="{editable: true}" @bounds_changed="updateRectangle('bounds', $event)"></gmap-rectangle>
+    <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
+    <gmap-rectangle v-if="displayRectangle" :bounds="rectangleBounds" :options="{editable: true}" @bounds_changed="updateRectangle('bounds', $event)"></gmap-rectangle>
   </gmap-map>
 </div>
 </template>

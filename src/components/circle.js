@@ -66,7 +66,6 @@ export default {
       const boundProps = clone(props)
       delete boundProps.bounds
       propsBinder(this, this.$circleObject, boundProps)
-      eventBinder(this, this.$circleObject, events)
 
       const updateBounds = () => {
         this.$emit('bounds_changed', this.$circleObject.getBounds())
@@ -81,6 +80,9 @@ export default {
       }
       this.$on('radius_changed', radiusChange)
       this.$on('center_changed', centerChange)
+
+      eventBinder(this, this.$circleObject, events)
+
     }
   },
 

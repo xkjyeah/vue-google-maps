@@ -63,7 +63,16 @@ export default {
     propsBinder(this, this.$polylineObject, omit(props, ['deepWatch', 'path']))
     eventBinder(this, this.$polylineObject, events)
 
-    var clearEvents = () => {}
+    let clearEvents = () => {}
+
+    const extractPath = (mvcArray) => {
+      let path = []
+      for (let j = 0; j < mvcArray.getLength(); j++) {
+        let point = mvcArray.getAt(j)
+        path.push({lat: point.lat(), lng: point.lng()})
+      }
+      return path
+    }
 
     this.$watch('path', (path) => {
       if (path) {
@@ -76,8 +85,7 @@ export default {
 
         const updatePaths = () => {
           this.$emit('path_changed', this.$polylineObject.getPath())
-          this.$emit('update:path', this.$polylineObject.getPath())
-
+          this.$emit('update:path', extractPath(this.$polygonObject.getPath()))
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])

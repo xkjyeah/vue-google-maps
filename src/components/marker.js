@@ -134,7 +134,6 @@ export default {
     createMarker (options) {
       this.$markerObject = new google.maps.Marker(options)
       propsBinder(this, this.$markerObject, props)
-      eventsBinder(this, this.$markerObject, events)
 
       this.$on('animation_changed', () => {
         this.$emit('update:animation', this.$markerObject.animation)
@@ -163,6 +162,8 @@ export default {
       this.$on('zindex_changed', () => {
         this.$emit('update:zIndex', this.$markerObject.zIndex)
       })
+
+      eventsBinder(this, this.$markerObject, events)
 
       if (this.$clusterObject) {
         this.$clusterObject.addMarker(this.$markerObject)

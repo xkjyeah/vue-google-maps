@@ -56,11 +56,12 @@ export default {
     createRectangle (options) {
       this.$rectangleObject = new google.maps.Rectangle(options)
       propsBinder(this, this.$rectangleObject, props)
-      eventBinder(this, this.$rectangleObject, events)
 
       this.$on('bounds_changed', () => {
         this.$emit('update:bounds', this.$markerObject.bounds)
       })
+
+      eventBinder(this, this.$rectangleObject, events)
     },
 
   },
