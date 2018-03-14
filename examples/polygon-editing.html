@@ -16,7 +16,7 @@
     </ul>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
   <script src="vue-google-maps.js"></script>
 
@@ -31,25 +31,10 @@
       window.XXX = new Vue({
         el: '#root',
         data: {
-          edited: null,
           paths: [
             [ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ],
             [ {lat: 1.382, lng: 103.802}, {lat:1.382, lng: 103.808}, {lat: 1.388, lng: 103.808}, {lat: 1.388, lng: 103.802} ],
           ]
-        },
-        methods: {
-          updateEdited(mvcArray) {
-            let paths = [];
-            for (let i=0; i<mvcArray.getLength(); i++) {
-              let path = [];
-              for (let j=0; j<mvcArray.getAt(i).getLength(); j++) {
-                let point = mvcArray.getAt(i).getAt(j);
-                path.push({lat: point.lat(), lng: point.lng()});
-              }
-              paths.push(path);
-            }
-            this.edited = paths;
-          }
         }
       });
     });

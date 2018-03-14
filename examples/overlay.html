@@ -11,7 +11,7 @@
     </google-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
   <script src="vue-google-maps.js"></script>
 
@@ -28,7 +28,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       Vue.component('google-map', VueGoogleMaps.Map);
       Vue.component('ground-overlay', Vue.extend({
-        render() {
+        render: function () {
           return '';
         },
         mixins: [VueGoogleMaps.MapElementMixin],
