@@ -17,8 +17,8 @@ const props = {
   },
   types: {
     type: Array,
-    default: function () {
-      return []
+    default() {
+      return [];
     }
   },
   placeholder: {
@@ -67,13 +67,18 @@ export default {
         }
       })
 
-      this.$autocomplete = new google.maps.places.Autocomplete(this.$refs.input, finalOptions)
+      this.$autocomplete = this.createAutoCompleteObj(this.$refs.input, finalOptions)
       propsBinder(this, this.$autocomplete, omit(props, ['placeholder', 'place', 'selectFirstOnEnter', 'value', 'componentRestrictions']))
 
       this.$autocomplete.addListener('place_changed', () => {
         this.$emit('place_changed', this.$autocomplete.getPlace())
       })
     })
+  },
+  methods:{
+    createAutoCompleteObj (input, options) {
+      return new google.maps.places.Autocomplete(input, options)
+    }
   },
   props: props
 }
