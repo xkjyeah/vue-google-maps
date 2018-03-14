@@ -111,13 +111,10 @@ export default {
   },
 
   destroyed () {
-    if (!this.$markerObject) { return }
-
-    if (this.$clusterObject) {
-      this.$clusterObject.removeMarker(this.$markerObject)
-    } else {
-      this.$markerObject.setMap(null)
+    if (this.$markerObject) {
+      this.$parent.$emit('unregister-marker', {component: this, marker: this.$markerObject})
     }
+    this.$markerObject.setMap(null)
   },
 
   deferredReady () {
@@ -125,13 +122,6 @@ export default {
     options.map = this.$map
     delete options.options
     Object.assign(options, this.options)
-
-    // search ancestors for cluster object
-    let search = this.$findAncestor(
-      ans => ans.$clusterObject
-    )
-
-    this.$clusterObject = search ? search.$clusterObject : null
     this.createMarker(options)
   },
 
@@ -174,9 +164,7 @@ export default {
 
       eventsBinder(this, this.$markerObject, events)
 
-      if (this.$clusterObject) {
-        this.$clusterObject.addMarker(this.$markerObject)
-      }
+      this.$parent.$emit('register-marker', {component: this, marker: this.$markerObject})
     },
     registerInfoWindow (infoWindow) {
       infoWindow.$markerObject = this.$markerObject

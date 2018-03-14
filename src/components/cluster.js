@@ -62,6 +62,11 @@ export default {
     )
   },
 
+  created () {
+    this.$on('register-marker', this.registerMarker)
+    this.$on('unregister-marker', this.unregisterMarker)
+  },
+
   deferredReady () {
     const options = clone(this.getPropsValues())
     this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options);
@@ -75,6 +80,7 @@ export default {
     })
     eventsBinder(this, this.$clusterObject, events)
   },
+
   beforeDestroy () {
     /* Performance optimization when destroying a large number of markers */
     this.$children.forEach(marker => {
@@ -94,6 +100,16 @@ export default {
         throw new Error(errorMessage)
       }
       return new MarkerClusterer(map, opt_markers, opt_options)
+    },
+    registerMarker ({marker}) {
+      if (this.$clusterObject) {
+        this.$clusterObject.addMarker(marker)
+      }
+    },
+    unregisterMarker ({marker}) {
+      if (this.$clusterObject) {
+        this.$clusterObject.removeMarker(marker)
+      }
     }
   }
 }
