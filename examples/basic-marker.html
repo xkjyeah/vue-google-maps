@@ -1,27 +1,38 @@
 <body>
-  <div id="root">
+<div id="root">
     <google-map :center="center" :zoom="7" style="width: 100%; height: 500px">
-      <google-marker v-for="m in markers" :position="m.position" :clickable="true" :draggable="true" @click="center=m.position"></google-marker>
+        <google-marker
+                v-for="(m, $index) in markers"
+                :key="$index"
+                :position.sync="m.position"
+                :clickable="true"
+                :draggable="true"
+                @click="center=m.position;m.opened=!m.opened">
+            <google-info-window :opened.sync="m.opened">
+                Marker: {{ $index + 1 }}
+            </google-info-window>
+        </google-marker>
     </google-map>
-  </div>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
-  <script src="vue-google-maps.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+<script src="vue-google-maps.js"></script>
 
-  <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw'
-      },
-      // Demonstrating how we can customize the name of the components
-      installComponents: false,
-    });
+<script>
+  Vue.use(VueGoogleMaps, {
+    load: {
+      key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw'
+    },
+    // Demonstrating how we can customize the name of the components
+    installComponents: false,
+  })
 
-    document.addEventListener('DOMContentLoaded', function() {
-      Vue.component('google-map', VueGoogleMaps.Map);
-      Vue.component('google-marker', VueGoogleMaps.Marker);
-
+  document.addEventListener('DOMContentLoaded', function () {
+    Vue.component('google-map', VueGoogleMaps.Map)
+    Vue.component('google-marker', VueGoogleMaps.Marker)
+    Vue.component('google-info-window', VueGoogleMaps.InfoWindow)
+    VueGoogleMaps.loaded.then(function () {
       new Vue({
         el: '#root',
         data: {
@@ -33,16 +44,19 @@
             position: {
               lat: 10.0,
               lng: 10.0
-            }
+            },
+            opened: false
           }, {
-            position: {
+            position: new google.maps.LatLng({
               lat: 11.0,
               lng: 11.0
-            }
+            }),
+            opened: false
           }]
-        },
-      });
-    });
-  </script>
+        }
+      })
+    })
+  })
+</script>
 
 </body>

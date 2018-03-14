@@ -19,23 +19,22 @@ const props = {
   },
   position: {
     type: Object,
-    twoWay: true,
+    twoWay: true
   },
   zIndex: {
     type: Number,
-    twoWay: true,
+    twoWay: true
   }
 }
 
 const events = [
   'domready',
   'closeclick',
-  'content_changed',
+  'content_changed'
 ]
 
 export default {
   mixins: [MapElementMixin],
-  replace: false,
   props: props,
 
   mounted () {
@@ -43,19 +42,17 @@ export default {
     el.parentNode.removeChild(el)
   },
 
-  deferredReady () {
+  beforeCreate() {
     this.$markerObject = null
-    this.$markerComponent = this.$findAncestor(
-      (ans) => ans.$markerObject
-    )
+  },
 
-    if (this.$markerComponent) {
-      this.$markerObject = this.$markerComponent.$markerObject
-    }
+  deferredReady () {
+    this.$parent.$emit('register-info-window', this)
     this.createInfoWindow()
   },
 
   destroyed () {
+    this.$parent.$emit('unregister-info-window', this);
     if (this.disconnect) {
       this.disconnect()
     }
@@ -76,8 +73,10 @@ export default {
         this.$infoWindow.close()
       }
     },
-
-    createInfoWindow () {
+    createInfoWindowObject(options){
+      return new google.maps.InfoWindow(options)
+    },
+    createInfoWindow(map) {
       // setting options
       const options = clone(this.options)
       options.content = this.$refs.flyaway
@@ -87,7 +86,7 @@ export default {
         options.position = this.position
       }
 
-      this.$infoWindow = new google.maps.InfoWindow(options)
+      this.$infoWindow = this.createInfoWindowObject(options)
 
       // Binding
       propsBinder(this, this.$infoWindow, omit(props, ['opened']))
@@ -110,5 +109,5 @@ export default {
         this.openInfoWindow()
       })
     }
-  },
+  }
 }

@@ -1,4 +1,5 @@
 import mapValues from 'lodash/mapValues'
+import isFunction from 'lodash/isFunction'
 import eventsBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -29,8 +30,7 @@ const props = {
   icon: {
     twoWay: true
   },
-  label: {
-  },
+  label: {},
   opacity: {
     type: Number,
     default: 1
@@ -105,6 +105,11 @@ export default {
     }
   },
 
+  created () {
+    this.$on('register-info-window', this.registerInfoWindow)
+    this.$on('unregister-info-window', this.unregisterInfoWindow)
+  },
+
   destroyed () {
     if (!this.$markerObject) { return }
 
@@ -151,7 +156,11 @@ export default {
         this.$emit('update:icon', this.$markerObject.icon)
       })
       this.$on('position_changed', () => {
-        this.$emit('update:position', this.$markerObject.position)
+        this.$emit('update:position',
+          (isFunction(this.position.lat)) ? this.$markerObject.position : {
+            lat: this.$markerObject.position.lat(),
+            lng: this.$markerObject.position.lng()
+          })
       })
       this.$on('shape_changed', () => {
         this.$emit('update:shape', this.$markerObject.shape)
@@ -168,6 +177,13 @@ export default {
       if (this.$clusterObject) {
         this.$clusterObject.addMarker(this.$markerObject)
       }
-    }
+    },
+    registerInfoWindow (infoWindow) {
+      infoWindow.$markerObject = this.$markerObject
+    },
+    unregisterInfoWindow (infoWindow) {
+      infoWindow.$markerObject = null
+    },
+
   },
 }
