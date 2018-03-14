@@ -1,7 +1,7 @@
 import omit from 'lodash/omit'
 
-import {loaded} from '../manager.js'
-import {DeferredReadyMixin} from '../utils/deferredReady.js'
+import { loaded } from '../manager.js'
+import { DeferredReadyMixin } from '../utils/deferredReady.js'
 import eventsBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import getPropsMixin from '../utils/getPropsValuesMixin.js'
@@ -86,11 +86,11 @@ export default {
   computed: {
     finalLat () {
       return this.position &&
-        (typeof this.position.lat === 'function') ? this.position.lat() : this.position.lat
+      (typeof this.position.lat === 'function') ? this.position.lat() : this.position.lat
     },
     finalLng () {
       return this.position &&
-        (typeof this.position.lng === 'function') ? this.position.lng() : this.position.lng
+      (typeof this.position.lng === 'function') ? this.position.lng() : this.position.lng
     },
     finalLatLng () {
       return {
@@ -146,8 +146,10 @@ export default {
         this.$panoObject.addListener('position_changed', () => {
           if (shouldUpdate()) {
             this.$emit('position_changed', this.$panoObject.getPosition())
-            this.$emit('update:position', this.$panoObject.getPosition())
-
+            this.$emit('update:position', (isFunction(this.position.lat)) ? this.$panoObject.getPosition() : {
+              lat: this.$panoObject.getPosition().lat(),
+              lng: this.$panoObject.getPosition().lng()
+            })
           }
           decrement()
         })

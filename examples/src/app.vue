@@ -36,7 +36,7 @@
     <button @click="pgPath = opgPath">Reset Polygon to pentagon</button><br>
     <button @click="pgPath = originalPlPath">Reset Polygon to a simple polygon</button><br> Path: {{pgPath | json}}
     <br>
-    <h1>Circle</h1> Visible: <input type="checkbox" number v-model="displayCircle"><br> {{circleBounds | json}}
+    <h1>Circle</h1> Visible: <input type="checkbox" number v-model="displayCircle"><br>Center: {{ reportedCenter }}<br> {{circleBounds | json}}
     <br>
     <h1>Rectangle</h1> Visible: <input type="checkbox" number v-model="displayRectangle"><br> {{rectangleBounds | json}}
     <br>
@@ -91,32 +91,32 @@
   <gmap-map :center="center" :zoom="zoom" :map-type-id="mapType" :options="{styles: mapStyles, scrollwheel: scrollwheel}" @rightclick="mapRclicked" @drag="drag++" @click="mapClickedCount++" class="map-panel" @zoom_changed="update('zoom', $event)" @center_changed="update('reportedCenter', $event)"
       @maptypeid_changed="update('mapType', $event)" @bounds_changed="update('bounds', $event)">
     <gmap-cluster :grid-size="gridSize" v-if="clustering">
-      <gmap-marker v-if="m.enabled" :position="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++" @rightclick="m.rightClicked++" @dragend="m.dragended++" @position_changed="updateChild(m, 'position', $event)" v-for="m in activeMarkers"
+      <gmap-marker v-if="m.enabled" :position.sync="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++;m.ifw=!m.ifw" @rightclick="m.rightClicked++" @dragend="m.dragended++" v-for="m in activeMarkers"
           :key="m.id">
-        <gmap-info-window :opened="m.ifw">{{m.ifw2text}}</gmap-info-window>
+        <gmap-info-window :opened.sync="m.ifw">{{m.ifw2text}}</gmap-info-window>
       </gmap-marker>
     </gmap-cluster>
     <div v-if="!clustering">
-      <gmap-marker v-if="m.enabled" :position="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++" @rightclick="m.rightClicked++" @dragend="m.dragended++" @position_changed="updateChild(m, 'position', $event)" v-for="m in activeMarkers"
+      <gmap-marker v-if="m.enabled" :position.sync="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++;m.ifw=!m.ifw" @rightclick="m.rightClicked++" @dragend="m.dragended++" v-for="m in activeMarkers"
           :key="m.id">
-        <gmap-info-window :opened="m.ifw">{{m.ifw2text}}</gmap-info-window>
+        <gmap-info-window :opened.sync="m.ifw">{{m.ifw2text}}</gmap-info-window>
       </gmap-marker>
     </div>
 
-    <gmap-info-window :position="reportedCenter" :opened="ifw">
+    <gmap-info-window :position="reportedCenter" :opened.sync="ifw">
       To show you the bindings are working I will stay on the center of the screen whatever you do :)
       <br/> To show you that even my content is bound to vue here is the number of time you clicked on the map
       <b>{{mapClickedCount}}</b>
     </gmap-info-window>
 
-    <gmap-info-window :position="reportedCenter" :opened="ifw2">{{ifw2text}}</gmap-info-window>
+    <gmap-info-window :position="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
 
     <gmap-polyline v-if="plvisible" :path.sync="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
     </gmap-polyline>
     <gmap-polygon v-if="pgvisible" :paths.sync="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}" @paths_changed="updatePolygonPaths($event)">
     </gmap-polygon>
-    <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
-    <gmap-rectangle v-if="displayRectangle" :bounds="rectangleBounds" :options="{editable: true}" @bounds_changed="updateRectangle('bounds', $event)"></gmap-rectangle>
+    <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center.sync="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
+    <gmap-rectangle v-if="displayRectangle" :bounds.sync="rectangleBounds" :options="{editable: true}"></gmap-rectangle>
   </gmap-map>
 </div>
 </template>

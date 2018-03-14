@@ -15,7 +15,7 @@ const props = {
   opened: {
     type: Boolean,
     default: true,
-    twoWay:true
+    twoWay: true
   },
   position: {
     type: Object,
@@ -42,7 +42,7 @@ export default {
     el.parentNode.removeChild(el)
   },
 
-  beforeCreate() {
+  beforeCreate () {
     this.$markerObject = null
   },
 
@@ -52,7 +52,7 @@ export default {
   },
 
   destroyed () {
-    this.$parent.$emit('unregister-info-window', this);
+    this.$parent.$emit('unregister-info-window', this)
     if (this.disconnect) {
       this.disconnect()
     }
@@ -73,16 +73,16 @@ export default {
         this.$infoWindow.close()
       }
     },
-    createInfoWindowObject(options){
+    createInfoWindowObject (options) {
       return new google.maps.InfoWindow(options)
     },
-    createInfoWindow(map) {
+    createInfoWindow (map) {
       // setting options
       const options = clone(this.options)
       options.content = this.$refs.flyaway
 
       // only set the position if the info window is not bound to a marker
-      if (this.$markerComponent === null) {
+      if (this.$markerObject === null) {
         options.position = this.position
       }
 
@@ -92,7 +92,10 @@ export default {
       propsBinder(this, this.$infoWindow, omit(props, ['opened']))
 
       this.$on('position_changed', () => {
-        this.$emit('update:position', this.$infoWindow.position)
+        this.$emit('update:position', (isFunction(this.position.lat)) ? this.$infoWindow.position : {
+          lat: this.$infoWindow.position.lat(),
+          lng: this.$infoWindow.position.lng()
+        })
       })
       this.$on('zindex_changed', () => {
         this.$emit('update:zIndex', this.$infoWindow.zIndex)

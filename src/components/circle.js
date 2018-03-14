@@ -58,7 +58,7 @@ export default {
   },
 
   methods: {
-    createCircleObject(options){
+    createCircleObject (options) {
       return new google.maps.Circle(options)
     },
     createCircle (options) {
@@ -77,7 +77,10 @@ export default {
         updateBounds()
       }
       const centerChange = () => {
-        this.$emit('update:center', this.$circleObject.center)
+        this.$emit('update:center', (isFunction(this.center.lat)) ? this.$circleObject.center : {
+          lat: this.$circleObject.center.lat(),
+          lng: this.$circleObject.center.lng()
+        })
         updateBounds()
       }
       this.$on('radius_changed', radiusChange)

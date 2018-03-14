@@ -58,7 +58,7 @@ export default {
       propsBinder(this, this.$rectangleObject, props)
 
       this.$on('bounds_changed', () => {
-        this.$emit('update:bounds', this.$markerObject.bounds)
+        this.$emit('update:bounds', this.$rectangleObject.bounds)
       })
 
       eventBinder(this, this.$rectangleObject, events)

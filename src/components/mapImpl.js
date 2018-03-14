@@ -183,7 +183,7 @@ export default {
         this.$emit('update:mapTypeId', this.$mapObject.mapTypeId)
       })
       this.$on('heading_changed', () => {
-        this.$emit('update:heading', this.$infoWindow.heading)
+        this.$emit('update:heading', this.$mapObject.heading)
       })
 
       // binding events
