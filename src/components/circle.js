@@ -47,7 +47,6 @@ const events = [
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
-  version: 2,
 
   render () { return '' },
 
@@ -88,7 +87,6 @@ export default {
 
     }
   },
-
   destroyed () {
     if (this.$circleObject) {
       this.$circleObject.setMap(null)

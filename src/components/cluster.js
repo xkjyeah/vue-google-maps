@@ -64,14 +64,7 @@ export default {
 
   deferredReady () {
     const options = clone(this.getPropsValues())
-
-    if (typeof MarkerClusterer === 'undefined') {
-      /* eslint-disable no-console */
-      console.error('MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js')
-      throw new Error('MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js')
-    }
-
-    this.$clusterObject = new MarkerClusterer(this.$map, [], options)
+    this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options);
 
     propsBinder(this, this.$clusterObject, props, {
       afterModelChanged: (a, v) => { // eslint-disable-line no-unused-vars
@@ -82,7 +75,6 @@ export default {
     })
     eventsBinder(this, this.$clusterObject, events)
   },
-
   beforeDestroy () {
     /* Performance optimization when destroying a large number of markers */
     this.$children.forEach(marker => {
@@ -94,4 +86,14 @@ export default {
       this.$clusterObject.clearMarkers()
     }
   },
+  methods: {
+    createMarkerClusterObject (map, opt_markers, opt_options) {
+      if (typeof MarkerClusterer === 'undefined') {
+        let errorMessage = "MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"
+        console.error(errorMessage)
+        throw new Error(errorMessage)
+      }
+      return new MarkerClusterer(map, opt_markers, opt_options)
+    }
+  }
 }
