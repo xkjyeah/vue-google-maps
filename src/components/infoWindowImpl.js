@@ -1,5 +1,6 @@
 import omit from 'lodash/omit'
 import clone from 'lodash/clone'
+import isFunction from 'lodash/isFunction'
 import propsBinder from '../utils/propsBinder.js'
 import eventsBinder from '../utils/eventsBinder.js'
 import MapElementMixin from './mapElementMixin'
@@ -92,10 +93,11 @@ export default {
       propsBinder(this, this.$infoWindow, omit(props, ['opened']))
 
       this.$on('position_changed', () => {
-        this.$emit('update:position', (isFunction(this.position.lat)) ? this.$infoWindow.position : {
-          lat: this.$infoWindow.position.lat(),
-          lng: this.$infoWindow.position.lng()
-        })
+        this.$emit('update:position',
+          (this.position && isFunction(this.position.lat)) ? this.$infoWindow.position : {
+            lat: this.$infoWindow.position.lat(),
+            lng: this.$infoWindow.position.lng()
+          })
       })
       this.$on('zindex_changed', () => {
         this.$emit('update:zIndex', this.$infoWindow.zIndex)

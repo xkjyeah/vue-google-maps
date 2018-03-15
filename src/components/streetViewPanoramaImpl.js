@@ -146,10 +146,11 @@ export default {
         this.$panoObject.addListener('position_changed', () => {
           if (shouldUpdate()) {
             this.$emit('position_changed', this.$panoObject.getPosition())
-            this.$emit('update:position', (isFunction(this.position.lat)) ? this.$panoObject.getPosition() : {
-              lat: this.$panoObject.getPosition().lat(),
-              lng: this.$panoObject.getPosition().lng()
-            })
+            this.$emit('update:position',
+              (this.position && isFunction(this.position.lat)) ? this.$panoObject.getPosition() : {
+                lat: this.$panoObject.getPosition().lat(),
+                lng: this.$panoObject.getPosition().lng()
+              })
           }
           decrement()
         })

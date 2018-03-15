@@ -77,10 +77,11 @@ export default {
         updateBounds()
       }
       const centerChange = () => {
-        this.$emit('update:center', (isFunction(this.center.lat)) ? this.$circleObject.center : {
-          lat: this.$circleObject.center.lat(),
-          lng: this.$circleObject.center.lng()
-        })
+        this.$emit('update:center',
+          (this.center && isFunction(this.center.lat)) ? this.$circleObject.center : {
+            lat: this.$circleObject.center.lat(),
+            lng: this.$circleObject.center.lng()
+          })
         updateBounds()
       }
       this.$on('radius_changed', radiusChange)

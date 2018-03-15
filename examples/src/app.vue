@@ -7,7 +7,7 @@
     <br> Map center longitude:
     <input type="number" v-model.number="reportedCenter.lng" @change="updateMapCenter" />
     <br> Map bounds: {{mapBounds | json}}
-    <br> Map zoom: <input type="number" v-model.number.lazy="zoom" >
+    <br> Map zoom: <input type="number" v-model.number.lazy="zoom" min="0" max="21">
     <br> Dragged {{drag}} times
     <br> Left clicked {{mapClickedCount}} times
     <br> Map type:
@@ -26,7 +26,7 @@
     <br>
     <button @click="addMarker"> Add a new Marker</button> (or right click on the map :) )
     <h1>Clusters</h1> enabled: <input type="checkbox" v-model="clustering">
-    </br>
+    <br>
     Grid size: <input type="number" v-model.number="gridSize">
     <br>
     <h1>Polyline</h1> Editable: <input type="checkbox" v-model="pleditable">
@@ -44,8 +44,8 @@
     <h1>PlaceInput</h1>
     <gmap-place-input label="Add a marker at this place" :select-first-on-enter="true" @place_changed="updatePlace($event)"></gmap-place-input>
     <br>
-    <h1> Standalone infoWindow </h1> modal 1 : <input type="checkbox" number v-model="ifw"><br> modal 2: <input type="checkbox" number v-model="ifw2"> <input type="text" v-model="ifw2text">
-    <h1>Markers</h1> Display only markers with even ID (to test filters) <input type="checkbox" number v-model="markersEven"><br>
+    <h1> Standalone infoWindow </h1> modal 1 : <input type="checkbox" v-model="ifw"><br> modal 2: <input type="checkbox" v-model="ifw2"> <input type="text" v-model="ifw2text">
+    <h1>Markers</h1> Display only markers with even ID (to test filters) <input type="checkbox" v-model="markersEven"><br>
     <table>
       <tr>
         <th>lat</th>
@@ -68,7 +68,7 @@
           <input type="number" v-model.number="m.position.lng">
         </td>
         <td>
-          <input type="number" v-model.number="m.opacity">
+          <input type="number" v-model.number="m.opacity" step="0.1" min="0" max="1">
         </td>
         <td>
           <input type="checkbox" v-model="m.enabled">
@@ -112,9 +112,9 @@
 
     <gmap-info-window :position="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
 
-    <gmap-polyline v-if="plvisible" :path.sync="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
+    <gmap-polyline v-if="plvisible" :path.sync="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}">
     </gmap-polyline>
-    <gmap-polygon v-if="pgvisible" :paths.sync="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}" @paths_changed="updatePolygonPaths($event)">
+    <gmap-polygon v-if="pgvisible" :paths.sync="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}">
     </gmap-polygon>
     <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center.sync="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
     <gmap-rectangle v-if="displayRectangle" :bounds.sync="rectangleBounds" :options="{editable: true}"></gmap-rectangle>
@@ -429,14 +429,6 @@ export default {
           lng: event.lng(),
         };
       }
-    },
-
-    updatePolygonPaths(paths) { //eslint-disable-line no-unused-vars
-      // TODO
-    },
-
-    updatePolylinePath(paths) { //eslint-disable-line no-unused-vars
-      // TODO:
     },
 
     updateCircle(prop, value) {
