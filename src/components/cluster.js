@@ -83,6 +83,10 @@ export default {
     eventsBinder(this, this.$clusterObject, events)
   },
 
+  updated () {
+    this.$clusterObject.repaint()
+  },
+
   beforeDestroy () {
     /* Performance optimization when destroying a large number of markers */
     this.$children.forEach(marker => {
