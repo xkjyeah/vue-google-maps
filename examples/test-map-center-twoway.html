@@ -36,16 +36,15 @@
 
     <gmap-map :center="mapCenter" :zoom="12"
       ref="map"
-      @center_changed="updateCenter($refs.map.$mapObject.getCenter())"
-      @dragend="sync"
-      @zoom_changed="sync"
+      @center_changed="updateCenter"
+      @idle="sync"
       class="map-container">
     </gmap-map>
 
     <gmap-street-view-panorama
       :position="mapCenter"
       ref="pano"
-      @position_changed="updateCenter($refs.pano.$panoObject.getPosition())"
+      @position_changed="updateCenter"
       :pov="pov"
       class="map-container">
     </gmap-street-view-panorama>
