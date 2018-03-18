@@ -48,12 +48,11 @@ export default {
   },
 
   deferredReady () {
-    this.$parent.$emit('register-info-window', this)
     this.createInfoWindow()
   },
 
   destroyed () {
-    this.$parent.$emit('unregister-info-window', this)
+    this.$parent.$emit('unregister-info-window', {component: this, object: this.$infoWindow})
     if (this.disconnect) {
       this.disconnect()
     }
@@ -108,6 +107,8 @@ export default {
       this.$on('closeclick', () => {
         this.$emit('update:opened', false)
       })
+
+      this.$parent.$emit('register-info-window', {component: this, object: this.$infoWindow})
 
       this.openInfoWindow()
       this.$watch('opened', () => {

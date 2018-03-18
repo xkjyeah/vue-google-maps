@@ -9,6 +9,7 @@
 
 import clone from 'lodash/clone'
 import eventsBinder from '../utils/eventsBinder.js'
+import isObject from 'lodash/isObject'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -101,15 +102,17 @@ export default {
       }
       return new MarkerClusterer(map, optMarkers, optOptions)
     },
-    registerMarker ({marker}) {
-      if (this.$clusterObject) {
-        this.$clusterObject.addMarker(marker)
-      }
+    repaint () {
+      this.$clusterObject.repaint()
     },
-    unregisterMarker ({marker}) {
-      if (this.$clusterObject) {
-        this.$clusterObject.removeMarker(marker)
-      }
+    registerMarker ({object: marker}) {
+      if (!this.$clusterObject || !isObject(marker)) { return }
+      this.$clusterObject.addMarker(marker)
+      marker.addListener('position_changed', this.repaint)
+    },
+    unregisterMarker ({object: marker}) {
+      if (!this.$clusterObject || !isObject(marker)) { return }
+      this.$clusterObject.removeMarker(marker)
     }
   }
 }

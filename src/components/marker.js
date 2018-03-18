@@ -1,5 +1,6 @@
 import mapValues from 'lodash/mapValues'
 import isFunction from 'lodash/isFunction'
+import isObject from 'lodash/isObject'
 import eventsBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -112,7 +113,7 @@ export default {
 
   destroyed () {
     if (this.$markerObject) {
-      this.$parent.$emit('unregister-marker', {component: this, marker: this.$markerObject})
+      this.$parent.$emit('unregister-marker', {component: this, object: this.$markerObject})
     }
     this.$markerObject.setMap(null)
   },
@@ -167,13 +168,15 @@ export default {
 
       eventsBinder(this, this.$markerObject, events)
 
-      this.$parent.$emit('register-marker', {component: this, marker: this.$markerObject})
+      this.$parent.$emit('register-marker', {component: this, object: this.$markerObject})
     },
-    registerInfoWindow (infoWindow) {
-      infoWindow.$markerObject = this.$markerObject
+    registerInfoWindow ({component: instance}) {
+      if (!instance) { return }
+      instance.$markerObject = this.$markerObject
     },
-    unregisterInfoWindow (infoWindow) {
-      infoWindow.$markerObject = null
+    unregisterInfoWindow ({component: instance}) {
+      if (!instance) { return }
+      instance.$markerObject = null
     },
 
   },
