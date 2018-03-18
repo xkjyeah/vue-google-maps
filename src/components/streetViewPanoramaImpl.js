@@ -1,5 +1,5 @@
 import omit from 'lodash/omit'
-
+import isFunction from 'lodash/isFunction'
 import { loaded } from '../manager.js'
 import { DeferredReadyMixin } from '../utils/deferredReady.js'
 import eventsBinder from '../utils/eventsBinder.js'

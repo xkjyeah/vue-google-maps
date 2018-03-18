@@ -1,11 +1,11 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 /**
-  * @class Cluster
-  * @prop $clusterObject -- Exposes the marker clusterer to
-        descendent Marker classes. Override this if you area
-        extending the class
-**/
+ * @class Cluster
+ * @prop $clusterObject -- Exposes the marker clusterer to
+ descendent Marker classes. Override this if you area
+ extending the class
+ **/
 
 import clone from 'lodash/clone'
 import eventsBinder from '../utils/eventsBinder.js'
@@ -69,7 +69,7 @@ export default {
 
   deferredReady () {
     const options = clone(this.getPropsValues())
-    this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options);
+    this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options)
 
     propsBinder(this, this.$clusterObject, props, {
       afterModelChanged: (a, v) => { // eslint-disable-line no-unused-vars
@@ -93,13 +93,13 @@ export default {
     }
   },
   methods: {
-    createMarkerClusterObject (map, opt_markers, opt_options) {
+    createMarkerClusterObject (map, optMarkers, optOptions) {
       if (typeof MarkerClusterer === 'undefined') {
-        let errorMessage = "MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js"
+        let errorMessage = 'MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js'
         console.error(errorMessage)
         throw new Error(errorMessage)
       }
-      return new MarkerClusterer(map, opt_markers, opt_options)
+      return new MarkerClusterer(map, optMarkers, optOptions)
     },
     registerMarker ({marker}) {
       if (this.$clusterObject) {

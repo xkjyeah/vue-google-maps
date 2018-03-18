@@ -84,7 +84,7 @@ export default {
 
     const extractPaths = (mvcArray) => {
       let paths = []
-      for (let i=0; i<mvcArray.getLength(); i++) {
+      for (let i = 0; i < mvcArray.getLength(); i++) {
         paths.push(extractPath(mvcArray.getAt(i)))
       }
       return paths

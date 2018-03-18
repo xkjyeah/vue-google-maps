@@ -1,5 +1,5 @@
 import clone from 'lodash/clone'
-
+import isFunction from 'lodash/isFunction'
 import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
@@ -88,7 +88,6 @@ export default {
       this.$on('center_changed', centerChange)
 
       eventBinder(this, this.$circleObject, events)
-
     }
   },
   destroyed () {

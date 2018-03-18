@@ -17,8 +17,8 @@ const props = {
   },
   types: {
     type: Array,
-    default() {
-      return [];
+    default () {
+      return []
     }
   },
   placeholder: {
@@ -75,7 +75,7 @@ export default {
       })
     })
   },
-  methods:{
+  methods: {
     createAutoCompleteObj (input, options) {
       return new google.maps.places.Autocomplete(input, options)
     }
