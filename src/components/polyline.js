@@ -57,7 +57,7 @@ export default {
     const options = clone(this.getPropsValues())
     delete options.options
     Object.assign(options, this.options)
-    this.$polylineObject = new google.maps.Polyline(options)
+    this.$polylineObject = this.createPolylineObject(options)
 
     propsBinder(this, this.$polylineObject, omit(props, ['deepWatch', 'path']))
     eventBinder(this, this.$polylineObject, events)
@@ -104,4 +104,9 @@ export default {
     // Display the map
     this.$polylineObject.setMap(this.$map)
   },
+  methods: {
+    createPolylineObject (options) {
+      return new google.maps.Polyline(options)
+    }
+  }
 }

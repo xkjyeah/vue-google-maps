@@ -66,7 +66,7 @@ export default {
     if (!options.paths) {
       delete options.paths
     }
-    this.$polygonObject = new google.maps.Polygon(options)
+    this.$polygonObject = this.createPolygonObject(options)
 
     propsBinder(this, this.$polygonObject, omit(props, ['path', 'paths', 'deepWatch']))
     eventBinder(this, this.$polygonObject, events)
@@ -129,7 +129,7 @@ export default {
       if (path) {
         clearEvents()
 
-        this.$polygonObject.setPaths(path)
+        this.$polygonObject.setPath(path)
 
         const mvcPath = this.$polygonObject.getPath()
         const eventListeners = []
@@ -156,4 +156,9 @@ export default {
     // Display the map
     this.$polygonObject.setMap(this.$map)
   },
+  methods: {
+    createPolygonObject (options) {
+      return new google.maps.Polygon(options)
+    }
+  }
 }

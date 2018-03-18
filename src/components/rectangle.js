@@ -1,5 +1,5 @@
 import clone from 'lodash/clone'
-
+import isFunction from 'lodash/isFunction'
 import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
@@ -53,17 +53,27 @@ export default {
   },
 
   methods: {
+    createRectangleObject (options) {
+      return new google.maps.Rectangle(options)
+    },
     createRectangle (options) {
-      this.$rectangleObject = new google.maps.Rectangle(options)
+      this.$rectangleObject = this.createRectangleObject(options)
       propsBinder(this, this.$rectangleObject, props)
 
+      this.bounds && this.$rectangleObject.setBounds(this.bounds)
+
       this.$on('bounds_changed', () => {
-        this.$emit('update:bounds', this.$rectangleObject.bounds)
+        this.$emit('update:bounds',
+          (this.bounds && isFunction(this.bounds.getNorthEast)) ? this.$rectangleObject.bounds : {
+            north: this.$rectangleObject.bounds.getNorthEast().lat(),
+            east: this.$rectangleObject.bounds.getNorthEast().lat(),
+            south: this.$rectangleObject.bounds.getNorthEast().lat(),
+            west: this.$rectangleObject.bounds.getSouthWest().lat(),
+          })
       })
 
       eventBinder(this, this.$rectangleObject, events)
-    },
-
+    }
   },
 
   destroyed () {

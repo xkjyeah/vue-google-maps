@@ -126,8 +126,11 @@ export default {
   },
 
   methods: {
+    createMarkerObject (options) {
+      return new google.maps.Marker(options)
+    },
     createMarker (options) {
-      this.$markerObject = new google.maps.Marker(options)
+      this.$markerObject = this.createMarkerObject(options)
       propsBinder(this, this.$markerObject, props)
 
       this.$on('animation_changed', () => {

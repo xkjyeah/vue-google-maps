@@ -55,6 +55,9 @@ const customMethods = {
       google.maps.event.trigger(this.$panoObject, 'resize')
     }
   },
+  createStreetViewPanoramaObject (element, options) {
+    return new google.maps.StreetViewPanorama(element, options)
+  },
 }
 
 // Methods is a combination of customMethods and linkedMethods
@@ -119,7 +122,7 @@ export default {
         omit(this.getPropsValues(), ['options'])
       )
 
-      this.$panoObject = new google.maps.StreetViewPanorama(element, options)
+      this.$panoObject = this.createStreetViewPanoramaObject(element, options)
 
       // binding properties (two and one way)
       propsBinder(this, this.$panoObject,
