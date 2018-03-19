@@ -100,5 +100,10 @@ exports.default = {
     });
   },
 
+  methods: {
+    updateValue: function updateValue(value) {
+      this.$emit('input', value);
+    }
+  },
   props: props
 };

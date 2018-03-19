@@ -75,5 +75,10 @@ export default {
       })
     })
   },
+  methods: {
+    updateValue: function (value) {
+      this.$emit('input', value)
+    }
+  },
   props: props
 }
