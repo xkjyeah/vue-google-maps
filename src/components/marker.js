@@ -1,6 +1,5 @@
 import mapValues from 'lodash/mapValues'
 import isFunction from 'lodash/isFunction'
-import isObject from 'lodash/isObject'
 import eventsBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
