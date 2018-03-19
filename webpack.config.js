@@ -2,78 +2,75 @@
 var webpack = require('webpack');
 var path = require('path')
 var _ = require('lodash')
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+
 
 var baseConfig = {
-  entry: './src/main.js',
+  entry: [
+    path.resolve('./src/main.js')
+  ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader',
+        options: { target: 'node' }
       },
       {
         test: /\.js$/,
-        loader: 'babel',
-        exclude: /node_modules/
+        loader: 'babel-loader',
+        exclude: [
+          /node_modules/,
+          /src\/stubs/,
+        ]
       },
       {
-        // edit this for additional asset file types
         test: /\.(png|jpg|gif)$/,
-        loader: 'file?name=[name].[ext]?[hash]'
-      }
+        use: [{
+          loader: 'file-loader?name=[name].[ext]?[hash]',
+        }]
+      },
     ],
   },
-  // example: if you wish to apply custom babel options
-  // instead of using vue-loader's default:
-  babel: {
-    presets: ['es2015', 'stage-0'],
-    plugins: ['transform-runtime']
-  }
+  plugins: [
+    new LodashModuleReplacementPlugin()
+  ]
 }; /* baseConfig */
 
 /**
  * Web config uses a global Vue and Lodash object.
  * */
 var webConfig = _.clone(baseConfig);
-webConfig.resolve = {
-    alias: {
-      'vue': path.resolve('./src/stubs/vue'),
-      'lodash': path.resolve('./src/stubs/lodash'),
-    },
+webConfig.externals = {
+  vue: 'Vue',
+  'marker-clusterer-plus': 'MarkerClusterer'
 };
 webConfig.output = {
-	path: './dist',
+	path: path.resolve(__dirname, 'dist'),
     filename: "vue-google-maps.js",
-    library: ["VueGoogleMap"],
+    library: ["VueGoogleMaps"],
     libraryTarget: "umd"
 };
-/**
- *  npm config allows vue-google-maps to be distributed
- *  as an npm package without double-requiring vue
- * */
-var npmConfig = _.clone(baseConfig);
-npmConfig.resolve = {
-    alias: {
-      'vue': path.resolve('./src/stubs-dist/vue'),
-      'lodash': path.resolve('./src/stubs-dist/lodash'),
-      'q': path.resolve('./src/stubs-dist/q'),
-    },
+
+var stubbedConfig = _.clone(baseConfig);
+stubbedConfig.externals = {
+    lodash: '_',
+    'marker-clusterer-plus': 'MarkerClusterer'
 };
-npmConfig.module.noParse = [
-    /src\/stubs-dist/
-];
-npmConfig.output = {
-	path: './',
-    filename: "index.js",
-    library: ["VueGoogleMap"],
-    libraryTarget: "umd"
+stubbedConfig.module.noParse = /stub-/
+stubbedConfig.output = {
+	path: path.resolve(__dirname, 'dist'),
+    filename: "vue-google-maps-stubbed.js",
+    library: ["VueGoogleMaps"],
+    libraryTarget: "commonjs2"
 };
+stubbedConfig.target = 'node';
+
 
 module.exports = [
     webConfig,
-    npmConfig,
+    stubbedConfig,
 ];
-
 
 if (process.env.NODE_ENV === 'production') {
   console.log('THIS IS PROD');
@@ -89,9 +86,10 @@ if (process.env.NODE_ENV === 'production') {
             warnings: false
           }
         }),
-        new webpack.optimize.OccurenceOrderPlugin()
       ]
   }
 } else {
-  module.exports.devtool = '#source-map'
+  for (var i=0; i<module.exports.length; i++) {
+    module.exports[i].devtool = 'source-map'
+  }
 }

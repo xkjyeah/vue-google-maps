@@ -1,0 +1,55 @@
+<body>
+  <div id="root">
+    Only the dark dots in the middle of the marker are clickable
+
+    <google-map :center="center" :zoom="7" style="width: 100%; height: 500px">
+      <google-marker v-for="m in markers" :position="m.position" :clickable="true"
+      :draggable="true" @click="center=m.position" :shape="shape"></google-marker>
+    </google-map>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+  <script src="vue-google-maps.js"></script>
+
+  <script>
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw'
+      },
+      // Demonstrating how we can customize the name of the components
+      installComponents: false,
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      Vue.component('google-map', VueGoogleMaps.Map);
+      Vue.component('google-marker', VueGoogleMaps.Marker);
+
+      new Vue({
+        el: '#root',
+        data: {
+          center: {
+            lat: 10.0,
+            lng: 10.0
+          },
+          markers: [{
+            position: {
+              lat: 10.0,
+              lng: 10.0
+            }
+          }, {
+            position: {
+              lat: 11.0,
+              lng: 11.0
+            }
+          }],
+          shape: {
+            coords: [10, 10, 10, 15, 15, 15, 15, 10],
+            type: 'poly'
+          },
+        },
+      });
+    });
+  </script>
+
+</body>

@@ -1,75 +1,59 @@
 <body>
-<div style="width: 100%; height: 500px">
-<google-map
-        :center="{lat: 1.38, lng: 103.8}"
-        :zoom="12"
->
-  <ground-overlay
-    source="./overlay.png"
-    :bounds="{
-        north: 1.502,
-        south: 1.185,
-        east: 104.0262,
-        west: 103.5998,
-    }"
-    :opacity="0.5"
-  >
-  </ground-overlay>
-</google-map>
-</div>
+  <div id="root">
+    <google-map :center="{lat: 1.38, lng: 103.8}" :zoom="12" style="width: 100%; height: 500px">
+      <ground-overlay source="./overlay.png" :bounds="{
+            north: 1.502,
+            south: 1.185,
+            east: 104.0262,
+            west: 103.5998,
+        }" :opacity="0.5">
+      </ground-overlay>
+    </google-map>
+  </div>
 
-<button onclick="localStorage.apiKey = prompt('ApiKey'); window.location.reload()">
-Reset API Key
-</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+  <script src="vue-google-maps.js"></script>
 
-<script>
+  <script>
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
+        v: '3.26',
+      },
+      // Demonstrating how we can customize the name of the components
+      installComponents: false,
+    });
 
-console.log(localStorage.apiKey);
-if (!localStorage.apiKey) {
-    var apiKey = prompt("Paste API Key here")
-    localStorage.apiKey = apiKey;
-}
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.js"></script>
-<script src="../dist/vue-google-maps.js"></script>
-
-<script>
-
-VueGoogleMap.load({
-    key: localStorage['apiKey'],
-    v: '3.24',
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    Vue.component('google-map', VueGoogleMap.Map);
-    Vue.component('ground-overlay', VueGoogleMap.MapComponent.extend({
-        template: '',
+    document.addEventListener('DOMContentLoaded', function() {
+      Vue.component('google-map', VueGoogleMaps.Map);
+      Vue.component('ground-overlay', Vue.extend({
+        render() {
+          return '';
+        },
+        mixins: [VueGoogleMaps.MapElementMixin],
         props: ['source', 'bounds', 'opacity'],
+        created() {},
         deferredReady: function() {
-            console.log(this.source);
-            console.log(this.bounds);
-            this.$overlay = new google.maps.GroundOverlay(
-                this.source,
-                this.bounds
-                );
-            this.$overlay.setOpacity(this.opacity);
-            this.$overlay.setMap(this.$map);
+          this.$overlay = new google.maps.GroundOverlay(
+            this.source,
+            this.bounds
+          );
+          this.$overlay.setOpacity(this.opacity);
+          this.$overlay.setMap(this.$map);
         },
         destroyed: function() {
-            this.$overlay.setMap(null);
+          this.$overlay.setMap(null);
         },
-    }));
+      }));
 
-    new Vue({
-        el: 'body',
+      new Vue({
+        el: '#root',
         data: {
-            place: '',
+          place: '',
         },
+      });
     });
-});
-
-</script>
+  </script>
 
 </body>

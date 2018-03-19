@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": "standard",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "comma-dangle": 0
+  },
+  "globals": {
+    "google": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "settings": {
+    "html/html-extensions": [".html", ".vue"]
+  }
+}

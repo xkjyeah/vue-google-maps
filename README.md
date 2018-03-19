@@ -1,45 +1,110 @@
 # vue-google-maps
 
-## Demo:
+[![Build Status](https://travis-ci.org/xkjyeah/vue-google-maps.svg?branch=vue2)](https://travis-ci.org/xkjyeah/vue-google-maps)
 
-[Demo in production](http://en.papayapods.com/?utm_source=GtHub&utm_medium=LnK&utm_campaign=V.JS%20Map%20Cmpnt.#!/search/map?city=Lausanne)
+## Vue-2 port of vue-google-maps
 
-[Showcase with a lot of features](http://guillaumeleclerc.github.io/vue-google-maps-example/)
+This is the Vue 2.x port of vue-google-maps!
 
-## Presentation
+If you have used vue-google-maps with Vue 1.x before, refer to [Upgrading](UPGRADING.md).
 
-If you want to write google map this way : 
+## Installation
+
+### With npm (Recommended)
+
+```
+npm install vue2-google-maps
+```
+
+In your project:
+
+```js
+import Vue from 'vue'
+import * as VueGoogleMaps from 'vue2-google-maps'
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'YOUR_API_TOKEN',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+    // OR: libraries: 'places,drawing'
+    // OR: libraries: 'places,drawing,visualization'
+    // (as you require)
+  }
+})
+```
+
+### Nuxt.js projects
+
+For Nuxt.js projects, please import VueGoogleMaps in the following manner:
+```js
+import * as VueGoogleMaps from '~/node_modules/vue2-google-maps/src/main'
+```
+This is required for successful server-side rendering.
+
+(Note: as of v0.8.1, you should add `src/main` to the path)
+
+### Manually
+
+Just download `dist/vue-google-maps.js` file and include it from your HTML.
+***If you use this method, Vue 2.1.x is required***.
+
+[Example](http://xkjyeah.github.io/vue-google-maps/overlay.html).
+
+### Basic usage / Documentation
+
+[Generating an Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key).
+
+See [API](API.md).
+
+## Demos:
+
+[Showcase with a lot of features](http://xkjyeah.github.io/vue-google-maps/)
+
+## Brief
+
+If you want to write google map this way :
 
 ```html
-<map
+<gmap-map
   :center="{lat:10, lng:10}"
-  :map-type-id="terrain"
   :zoom="7"
-></map>
+  map-type-id="terrain"
+  style="width: 500px; height: 300px"
+></gmap-map>
 ```
 
 Or use the power of Vue.js within a google map like this:
 ```html
 <template>
-  <map
+  <gmap-map
     :center="center"
     :zoom="7"
+    style="width: 500px; height: 300px"
   >
-    <marker 
-      v-for="m in markers"
-      :position.sync="m.position"
+    <gmap-marker
+      :key="index"
+      v-for="(m, index) in markers"
+      :position="m.position"
       :clickable="true"
       :draggable="true"
-      @g-click="center=m.position"
-    ></marker>
-  </map>
+      @click="center=m.position"
+    ></gmap-marker>
+  </gmap-map>
 </template>
 
 <script>
-  import {load, Map, Marker} from 'vue-google-maps'
-  
-  load('YOUR_API_TOKEN','OPTIONAL VERSION NUMBER')
-  
+  /////////////////////////////////////////
+  // New in 0.4.0
+  import * as VueGoogleMaps from 'vue2-google-maps';
+  import Vue from 'vue';
+
+  Vue.use(VueGoogleMaps, {
+    load: {
+      key: 'YOUR_API_TOKEN',
+      v: 'OPTIONAL VERSION NUMBER',
+      // libraries: 'places', //// If you need to use place input
+    }
+  });
+
   export default {
     data () {
       return {
@@ -55,74 +120,87 @@ Or use the power of Vue.js within a google map like this:
 </script>
 ```
 
-## Example Project 
+## Use with `vue-router` / components that change their visibility
 
-You can see an project example [here](https://github.com/GuillaumeLeclerc/vue-google-maps-example).
+If you are using `vue-router`, you may encounter the problem where
+you see greyed-out areas because you haven't
+[triggered a resize](http://stackoverflow.com/questions/13059034/how-to-use-google-maps-event-triggermap-resize)
+on the map after its visibility has changed.
 
-It uses webpack and vue-loader and was "forked" from the vue-loader-example project
+You have two options:
 
-## Installation
+***Option A***
 
-### With npm (Recommended)
+(Version 0.5.0) Run `Vue.$gmapDefaultResizeBus.$emit('resize')`.
 
-```
-npm install vue-google-maps
-```
+For example, you can write the following to force all maps on your page
+to re-render:
 
-You can append `--save` or `--save-dev` to add it to your depency (if yor project also uses npm)
-
-### Manually
-
-Just download the `index.js` file on the root directory of this repository
-
-### Basic usage
-
-#### Reference `vue-google-maps` into your project
-
-If you are using a cool bundler (recommended) you can just do : 
-
-```javascript
-import {load, Map, Marker} from 'vue-google-maps'
+```js
+watch: {
+  '$route'(to, from) {
+    // Call resizePreserveCenter() on all maps
+    Vue.$gmapDefaultResizeBus.$emit('resize')
+  }
+}
 ```
 
-Or if you prefer the older ES5 syntax:
+If you wish to be more selective about which maps receive the `resize`
+event, you can define `resizeBus` individually on each map. (See API).
+This will disconnect the map from `Vue.$gmapDefaultResizeBus`.
 
-```javascript
-const VueGoogleMap = require('vue-google-maps')
-```
+***Option B***
+
+Call `vm.$refs.<YOUR_MAP_HERE>.resizePreserveCenter()` on every map
+instance that you have
+
+## Testing
+
+There is a non-comprehensive test for the DeferredReady mixin.
+More automated tests should be written to help new contributors.
+
+Meanwhile, please test your changes against the suite of [examples](examples).
+
+Improvements to the tests are welcome :)
 
 #### Standalone / CDN
 
-If you are not using any bundler (and you should feel bad). You can just reference the file in a script tag.
+If you are not using any bundler, include `vue-google-maps/dist/vue-google-maps.js`
+instead.
 The library will be available in a global object called `VueGoogleMap`.
 However you will need to include Vue and Lodash beforehand:
 
 ```html
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.17/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>
-<script src="dist/vue-google-maps.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+  <script src="dist/vue-google-maps.js"></script>
 </head>
 <body>
 
-<google-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
-    :center="{lat: 1.38, lng: 103.8}"
-    :zoom="12"
->
+  <div id="root">
+    <gmap-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
+        :center="{lat: 1.38, lng: 103.8}"
+        :zoom="12"
+    >
 
-</google-map>
+    </gmap-map>
+  </div>
 
-<script>
-VueGoogleMap.load({
-    'key': 'YOUR_API_KEY',
-})
-Vue.component('google-map', VueGoogleMap.Map);
-new Vue({
-    el: 'body',
-});
+  <script>
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'YOUR_API_TOKEN',
+        v: 'OPTIONAL VERSION NUMBER',
+        // libraries: 'places', //// If you need to use place input
+      }
+    })
 
-</script>
+    new Vue({
+        el: '#root',
+    });
+
+  </script>
 
 </body>
 ```
@@ -132,27 +210,15 @@ new Vue({
 To enable any `vue-google-maps` components you need to set your api token:
 
 ```javascript
-load({
-  key: 'YOUR_API_TOKEN',
-  v: '3.24',                // Google Maps API version
-  // libraries: 'places',   // If you want to use places input
+Vue.use(VueGoogleMap, {
+  load: {
+    key: 'YOUR_API_TOKEN',
+    v: '3.26',                // Google Maps API version
+    // libraries: 'places',   // If you want to use places input
+  }
 })
-// OR (depending on how you refereced it)
-VueGoogleMap.load({ ... })
 ```
 
 The parameters are passed in the query string to the Google Maps API, e.g. to set the [version](https://developers.google.com/maps/documentation/javascript/versions#version-rollover-and-version-types),
 [libraries](https://developers.google.com/maps/documentation/javascript/libraries),
 or for [localisation](https://developers.google.com/maps/documentation/javascript/basics).
-
-## Full documentation
-
-### Note on events
-
-__All events are prefixed with `g-`. Example : `g-click` so it does not interfere with DOM events.__
-
-__Documentation is up to date__: take a look at the wiki
-
-## Sponsor
-
-This component is sponsored by [PapayaPods](http://en.papayapods.com). Feel free to check out `vue-google-maps` in production !!

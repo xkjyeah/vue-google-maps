@@ -1,0 +1,70 @@
+<body>
+  <div id="root">
+    <h1>Changing Default Place updates text box</h1>
+    <button @click="setDescription('Tokyo')">Set to Tokyo</button><br/>
+    <button @click="setDescription('Shanghai')">Set to Shanghai</button><br/>
+    <button @click="setDescription('Seoul')">Set to Seoul</button><br/>
+    <label>
+      Das Label
+      <gmap-autocomplete :value="description"
+        @place_changed="setPlace">
+      </gmap-autocomplete>
+    </label>
+    <br/>
+    {{latLng.lat}},
+    {{latLng.lng}}
+
+    <div>
+      <h2>Options work</h2>
+      You cannot find the state of Texas in this
+      <label>
+        Only locations in Singapore:
+        <gmap-autocomplete
+          :value="description"
+          @place_changed="setPlace"
+          :options="{
+            bounds: {north: 1.4, south: 1.2, east: 104, west: 102},
+            strictBounds: true
+          }">
+        </gmap-autocomplete>
+      </label>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+<script src="vue-google-maps.js"></script>
+
+<script>
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
+    libraries: 'places'
+  },
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  new Vue({
+    el: '#root',
+    data: {
+      description: 'Singapore',
+      latLng: {}
+    },
+    methods: {
+      setDescription(description) {
+        this.description = description;
+      },
+      setPlace(place) {
+        this.latLng = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
+      }
+    }
+  });
+});
+
+</script>
+
+</body>

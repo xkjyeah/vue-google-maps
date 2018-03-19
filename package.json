@@ -1,42 +1,78 @@
 {
-  "name": "vue-google-maps",
-  "version": "0.1.21",
-  "description": "This is a google map component for Vue.js",
-  "main": "index.js",
+  "name": "vue2-google-maps",
+  "version": "0.8.8",
+  "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --quiet --port 9999",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build-copy": "node ./build-copy.js",
+    "build-babel": "babel src --out-dir dist",
+    "build-webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build": "npm run build-babel && npm run build-copy && npm run build-webpack",
+    "test": "npm run lab-tests && npm run lint",
+    "lint": "eslint --ext .vue,.js src && eslint --ext .vue,.html,.js test",
+    "lab-tests": "lab -T test/test-setup/babel-transform.js -l -S test",
+    "build-examples-webpack": "cd examples && cross-env NODE_ENV=production webpack",
+    "build-examples-before": "npm run build && shx cp dist/vue-google-maps.js examples",
+    "build-examples": "npm run build-examples-before && npm run build-examples-webpack",
+    "deploy": "npm run build-examples && gh-pages -d examples"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xkjyeah/vue-google-maps.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xkjyeah/vue-google-maps/issues"
+  },
+  "homepage": "https://github.com/xkjyeah/vue-google-maps#readme",
   "dependencies": {
-    "js-marker-clusterer": "^1.0.0"
+    "babel-runtime": "^5.8.0",
+    "marker-clusterer-plus": "^2.1.4"
   },
   "peerDependencies": {
-    "vue": "^1.0.0",
-    "lodash": "^4.15.0",
-    "q": "^1.4.1"
+    "vue": "^2.2.1"
   },
   "devDependencies": {
-    "babel-core": "^6.1.2",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-loader": "^6.1.0",
-    "babel-plugin-transform-runtime": "^6.1.2",
-    "babel-preset-es2015": "^6.1.2",
-    "babel-preset-stage-0": "^6.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-runtime": "^5.8.0",
-    "cross-env": "^1.0.5",
+    "code": "^5.2.0",
+    "cross-env": "^1.0.8",
     "css-loader": "^0.23.0",
+    "eslint": "^3.17.1",
+    "eslint-config-standard": "^7.0.1",
+    "eslint-plugin-html": "^2.0.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1",
     "file-loader": "^0.8.4",
-    "jade": "^1.11.0",
+    "gh-pages": "^0.11.0",
+    "jsdom": "^9.8.3",
+    "lab": "^15.2.0",
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
+    "lodash": "^4.15.0",
+    "lodash-es": "^4.17.4",
+    "lodash-webpack-plugin": "^0.11.4",
+    "puppeteer": "^1.1.0",
+    "raw-loader": "^0.5.1",
+    "shx": "^0.2.0",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.0",
     "template-html-loader": "0.0.3",
+    "vue": "^2.2.1",
     "vue-hot-reload-api": "^1.2.0",
     "vue-html-loader": "^1.0.0",
-    "vue-loader": "^7.2.0",
-    "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.0"
+    "vue-loader": "^11.1.3",
+    "vue-router": "^2.7.0",
+    "vue-template-compiler": "^2.1.6",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
   },
-  "author": "Guillaume Leclerc",
+  "author": "Daniel Sim, Guillaume Leclerc",
   "license": "MIT"
 }
