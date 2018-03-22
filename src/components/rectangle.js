@@ -66,9 +66,9 @@ export default {
         this.$emit('update:bounds',
           (this.bounds && isFunction(this.bounds.getNorthEast)) ? this.$rectangleObject.bounds : {
             north: this.$rectangleObject.bounds.getNorthEast().lat(),
-            east: this.$rectangleObject.bounds.getNorthEast().lat(),
-            south: this.$rectangleObject.bounds.getNorthEast().lat(),
-            west: this.$rectangleObject.bounds.getSouthWest().lat(),
+            east: this.$rectangleObject.bounds.getNorthEast().lng(),
+            south: this.$rectangleObject.bounds.getSouthWest().lat(),
+            west: this.$rectangleObject.bounds.getSouthWest().lng(),
           })
       })
 

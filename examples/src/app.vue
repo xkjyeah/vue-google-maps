@@ -89,8 +89,8 @@
       </tr>
     </table>
   </div>
-  <gmap-map :center="center" :zoom="zoom" :map-type-id="mapType" :options="{styles: mapStyles, scrollwheel: scrollwheel}" @rightclick="mapRclicked" @drag="drag++" @click="mapClickedCount++" class="map-panel" @zoom_changed="update('zoom', $event)" @center_changed="update('reportedCenter', $event)"
-      @maptypeid_changed="update('mapType', $event)" @bounds_changed="update('bounds', $event)">
+  <gmap-map :center="center" :zoom.sync="zoom" :bounds.sync="mapBounds" :map-type-id="mapType" :options="{styles: mapStyles, scrollwheel: scrollwheel}" @rightclick="mapRclicked" @drag="drag++" @click="mapClickedCount++" class="map-panel"
+     @center_changed="update('reportedCenter', $event)" @maptypeid_changed="update('mapType', $event)">
     <gmap-cluster :grid-size="gridSize" v-if="clustering">
       <gmap-marker v-if="m.enabled" :position.sync="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++;m.ifw=!m.ifw" @rightclick="m.rightClicked++" @dragend="m.dragended++" v-for="m in activeMarkers"
           :key="m.id">

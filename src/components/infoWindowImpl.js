@@ -52,7 +52,7 @@ export default {
   },
 
   destroyed () {
-    this.$parent.$emit('unregister-info-window', {component: this, object: this.$infoWindow})
+    this.$parent && this.$parent.$emit('unregister-info-window', {component: this, object: this.$infoWindow})
     if (this.disconnect) {
       this.disconnect()
     }
@@ -108,7 +108,7 @@ export default {
         this.$emit('update:opened', false)
       })
 
-      this.$parent.$emit('register-info-window', {component: this, object: this.$infoWindow})
+      this.$parent && this.$parent.$emit('register-info-window', {component: this, object: this.$infoWindow})
 
       this.openInfoWindow()
       this.$watch('opened', () => {
