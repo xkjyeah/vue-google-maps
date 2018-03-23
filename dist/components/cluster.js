@@ -55,6 +55,10 @@ var props = {
   styles: {
     type: Array,
     twoWay: false
+  },
+  zoomOnClick: {
+    type: Boolean,
+    twoWay: false
   }
 };
 
