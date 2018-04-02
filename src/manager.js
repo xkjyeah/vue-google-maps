@@ -38,7 +38,7 @@ export const loaded = new Promise((resolve, reject) => { // eslint-disable-line 
  *      })
  * ```
  */
-export const load = (apiKey, loadCn) => {
+export const load = (apiKey, version, libraries, loadCn) => {
   if (typeof document === 'undefined') {
     // Do nothing if run from server-side
     return
