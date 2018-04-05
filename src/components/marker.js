@@ -150,7 +150,7 @@ export default {
       })
       this.$on('position_changed', () => {
         this.$emit('update:position',
-          (this.position && isFunction(this.position.lat)) ? this.$markerObject.getPosition() : {
+          (!this.position || (this.position && isFunction(this.position.lat))) ? this.$markerObject.getPosition() : {
             lat: this.$markerObject.getPosition().lat(),
             lng: this.$markerObject.getPosition().lng()
           })

@@ -78,7 +78,7 @@ export default {
       }
       const centerChange = () => {
         this.$emit('update:center',
-          (this.center && isFunction(this.center.lat)) ? this.$circleObject.center : {
+          (!this.center || (this.center && isFunction(this.center.lat))) ? this.$circleObject.center : {
             lat: this.$circleObject.center.lat(),
             lng: this.$circleObject.center.lng()
           })

@@ -154,11 +154,10 @@ export default {
             let center = this.$mapObject.getCenter()
             this.$emit('center_changed', center)
             this.$emit('update:center',
-              (this.center && isFunction(this.center.lat)) ? center : {
+              (!this.center || (this.center && isFunction(this.center.lat))) ? center : {
                 lat: center.lat(),
                 lng: center.lng()
               })
-
           }
           decrement()
         })
@@ -183,7 +182,7 @@ export default {
         let bounds = this.$mapObject.getBounds()
         this.$emit('bounds_changed', bounds)
         this.$emit('update:bounds',
-          (this.bounds && isFunction(this.bounds.getNorthEast)) ? bounds : {
+          (!this.bounds || (this.bounds && isFunction(this.bounds.getNorthEast))) ? bounds : {
             north: (bounds && bounds.getNorthEast().lat()) || null,
             east: (bounds && bounds.getNorthEast().lng()) || null,
             south: (bounds && bounds.getSouthWest().lat()) || null,

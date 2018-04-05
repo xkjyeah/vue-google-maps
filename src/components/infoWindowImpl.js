@@ -93,7 +93,7 @@ export default {
 
       this.$on('position_changed', () => {
         this.$emit('update:position',
-          (this.position && isFunction(this.position.lat)) ? this.$infoWindow.position : {
+          (!this.position || (this.position && isFunction(this.position.lat))) ? this.$infoWindow.position : {
             lat: this.$infoWindow.position.lat(),
             lng: this.$infoWindow.position.lng()
           })

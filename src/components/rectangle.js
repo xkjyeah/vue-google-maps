@@ -64,7 +64,7 @@ export default {
 
       this.$on('bounds_changed', () => {
         this.$emit('update:bounds',
-          (this.bounds && isFunction(this.bounds.getNorthEast)) ? this.$rectangleObject.bounds : {
+          (!this.bounds || (this.bounds && isFunction(this.bounds.getNorthEast))) ? this.$rectangleObject.bounds : {
             north: this.$rectangleObject.bounds.getNorthEast().lat(),
             east: this.$rectangleObject.bounds.getNorthEast().lng(),
             south: this.$rectangleObject.bounds.getSouthWest().lat(),

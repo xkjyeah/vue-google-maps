@@ -150,7 +150,7 @@ export default {
           if (shouldUpdate()) {
             this.$emit('position_changed', this.$panoObject.getPosition())
             this.$emit('update:position',
-              (this.position && isFunction(this.position.lat)) ? this.$panoObject.getPosition() : {
+              (!this.position || (this.position && isFunction(this.position.lat))) ? this.$panoObject.getPosition() : {
                 lat: this.$panoObject.getPosition().lat(),
                 lng: this.$panoObject.getPosition().lng()
               })
