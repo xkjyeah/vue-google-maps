@@ -1,7 +1,7 @@
 import omit from 'lodash/omit'
-
-import {loaded} from '../manager.js'
-import {DeferredReadyMixin} from '../utils/deferredReady.js'
+import isFunction from 'lodash/isFunction'
+import { loaded } from '../manager.js'
+import { DeferredReadyMixin } from '../utils/deferredReady.js'
 import eventsBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import getPropsMixin from '../utils/getPropsValuesMixin.js'
@@ -55,6 +55,9 @@ const customMethods = {
       google.maps.event.trigger(this.$panoObject, 'resize')
     }
   },
+  createStreetViewPanoramaObject (element, options) {
+    return new google.maps.StreetViewPanorama(element, options)
+  },
 }
 
 // Methods is a combination of customMethods and linkedMethods
@@ -86,11 +89,11 @@ export default {
   computed: {
     finalLat () {
       return this.position &&
-        (typeof this.position.lat === 'function') ? this.position.lat() : this.position.lat
+      (typeof this.position.lat === 'function') ? this.position.lat() : this.position.lat
     },
     finalLng () {
       return this.position &&
-        (typeof this.position.lng === 'function') ? this.position.lng() : this.position.lng
+      (typeof this.position.lng === 'function') ? this.position.lng() : this.position.lng
     },
     finalLatLng () {
       return {
@@ -119,11 +122,24 @@ export default {
         omit(this.getPropsValues(), ['options'])
       )
 
-      this.$panoObject = new google.maps.StreetViewPanorama(element, options)
+      this.$panoObject = this.createStreetViewPanoramaObject(element, options)
 
       // binding properties (two and one way)
       propsBinder(this, this.$panoObject,
         omit(props, ['position']))
+
+      this.$on('pano_changed', () => {
+        this.$emit('update:pano', this.$panoObject.pano)
+      })
+      this.$on('pov_changed', () => {
+        this.$emit('update:pov', this.$panoObject.pov)
+      })
+      this.$on('visible_changed', () => {
+        this.$emit('update:visible', this.$panoObject.visible)
+      })
+      this.$on('zoom_changed', () => {
+        this.$emit('update:zoom', this.$panoObject.zoom)
+      })
 
       // manually trigger position
       TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
@@ -133,6 +149,11 @@ export default {
         this.$panoObject.addListener('position_changed', () => {
           if (shouldUpdate()) {
             this.$emit('position_changed', this.$panoObject.getPosition())
+            this.$emit('update:position',
+              (!this.position || (this.position && isFunction(this.position.lat))) ? this.$panoObject.getPosition() : {
+                lat: this.$panoObject.getPosition().lat(),
+                lng: this.$panoObject.getPosition().lng()
+              })
           }
           decrement()
         })

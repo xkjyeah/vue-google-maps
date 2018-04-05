@@ -66,12 +66,29 @@ export default {
     if (!options.paths) {
       delete options.paths
     }
-    this.$polygonObject = new google.maps.Polygon(options)
+    this.$polygonObject = this.createPolygonObject(options)
 
     propsBinder(this, this.$polygonObject, omit(props, ['path', 'paths', 'deepWatch']))
     eventBinder(this, this.$polygonObject, events)
 
-    var clearEvents = () => {}
+    let clearEvents = () => {}
+
+    const extractPath = (mvcArray) => {
+      let path = []
+      for (let j = 0; j < mvcArray.getLength(); j++) {
+        let point = mvcArray.getAt(j)
+        path.push({lat: point.lat(), lng: point.lng()})
+      }
+      return path
+    }
+
+    const extractPaths = (mvcArray) => {
+      let paths = []
+      for (let i = 0; i < mvcArray.getLength(); i++) {
+        paths.push(extractPath(mvcArray.getAt(i)))
+      }
+      return paths
+    }
 
     // Watch paths, on our own, because we do not want to set either when it is
     // empty
@@ -83,6 +100,7 @@ export default {
 
         const updatePaths = () => {
           this.$emit('paths_changed', this.$polygonObject.getPaths())
+          this.$emit('update:paths', extractPaths(this.$polygonObject.getPaths()))
         }
         const eventListeners = []
 
@@ -111,13 +129,14 @@ export default {
       if (path) {
         clearEvents()
 
-        this.$polygonObject.setPaths(path)
+        this.$polygonObject.setPath(path)
 
         const mvcPath = this.$polygonObject.getPath()
         const eventListeners = []
 
         const updatePaths = () => {
           this.$emit('path_changed', this.$polygonObject.getPath())
+          this.$emit('update:path', extractPath(this.$polygonObject.getPath()))
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
@@ -137,4 +156,9 @@ export default {
     // Display the map
     this.$polygonObject.setMap(this.$map)
   },
+  methods: {
+    createPolygonObject (options) {
+      return new google.maps.Polygon(options)
+    }
+  }
 }

@@ -12,7 +12,7 @@
     <h1>Panorama at Pembroke College, Cambridge, facing North, looking slightly upwards (10 degrees)</h1> Point-of-view updates when you pan around
 
     <gmap-street-view-panorama class="pano" :position="{lat: 52.201272, lng: 0.118720}"
-      :pov="pov" :zoom="1" @pano_changed="updatePano" @pov_changed="updatePov">
+      :pov.sync="pov" :zoom="1" @pano_changed="updatePano">
     </gmap-street-view-panorama>
     <ul>
       <li>Heading: {{pov && pov.heading}} <button @click="pov.heading = Math.random() * 360">Change</button></li>
@@ -22,7 +22,7 @@
     </ul>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
   <script src="vue-google-maps.js"></script>
 
@@ -44,9 +44,6 @@
           pano: null,
         },
         methods: {
-          updatePov(pov) {
-            this.pov = pov;
-          },
           updatePano(pano) {
             this.pano = pano;
           }

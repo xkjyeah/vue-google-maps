@@ -1,5 +1,5 @@
 import clone from 'lodash/clone'
-
+import isFunction from 'lodash/isFunction'
 import eventBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
@@ -47,7 +47,6 @@ const events = [
 export default {
   mixins: [MapElementMixin, getPropsValuesMixin],
   props: props,
-  version: 2,
 
   render () { return '' },
 
@@ -59,24 +58,38 @@ export default {
   },
 
   methods: {
+    createCircleObject (options) {
+      return new google.maps.Circle(options)
+    },
     createCircle (options) {
-      this.$circleObject = new google.maps.Circle(options)
+      this.$circleObject = this.createCircleObject(options)
       // we cant bind bounds because there is no `setBounds` method
       // on the Circle object
       const boundProps = clone(props)
       delete boundProps.bounds
       propsBinder(this, this.$circleObject, boundProps)
-      eventBinder(this, this.$circleObject, events)
 
       const updateBounds = () => {
         this.$emit('bounds_changed', this.$circleObject.getBounds())
       }
+      const radiusChange = () => {
+        this.$emit('update:radius', this.$circleObject.radius)
+        updateBounds()
+      }
+      const centerChange = () => {
+        this.$emit('update:center',
+          (!this.center || (this.center && isFunction(this.center.lat))) ? this.$circleObject.center : {
+            lat: this.$circleObject.center.lat(),
+            lng: this.$circleObject.center.lng()
+          })
+        updateBounds()
+      }
+      this.$on('radius_changed', radiusChange)
+      this.$on('center_changed', centerChange)
 
-      this.$on('radius_changed', updateBounds)
-      this.$on('center_changed', updateBounds)
+      eventBinder(this, this.$circleObject, events)
     }
   },
-
   destroyed () {
     if (this.$circleObject) {
       this.$circleObject.setMap(null)

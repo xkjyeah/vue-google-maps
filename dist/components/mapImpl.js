@@ -36,6 +36,10 @@ var _TwoWayBindingWrapper = require('../utils/TwoWayBindingWrapper.js');
 
 var _TwoWayBindingWrapper2 = _interopRequireDefault(_TwoWayBindingWrapper);
 
+var _WatchPrimitiveProperties = require('../utils/WatchPrimitiveProperties.js');
+
+var _WatchPrimitiveProperties2 = _interopRequireDefault(_WatchPrimitiveProperties);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var props = {
@@ -178,7 +182,8 @@ exports.default = {
           increment();
           _this2.$mapObject.setCenter(_this2.finalLatLng);
         };
-        _this2.$watch('finalLatLng', updateCenter);
+
+        (0, _WatchPrimitiveProperties2.default)(_this2, ['finalLat', 'finalLng'], updateCenter);
       });
       _this2.$mapObject.addListener('zoom_changed', function () {
         _this2.$emit('zoom_changed', _this2.$mapObject.getZoom());

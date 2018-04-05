@@ -3,19 +3,20 @@
 <div class="app-panel">
   <div class="settings-panel">
     <h1>Map information</h1> Map center latitude:
-    <input type="number" v-model="reportedCenter.lat" number @change="updateMapCenter" />
+    <input type="number" v-model.number="reportedCenter.lat" @change="updateMapCenter" />
     <br> Map center longitude:
-    <input type="number" v-model="reportedCenter.lng" number @change="updateMapCenter">
+    <input type="number" v-model.number="reportedCenter.lng" @change="updateMapCenter" />
     <br> Map bounds: {{mapBounds | json}}
-    <br> Map zoom: <input type="number" v-model="zoom" number>
+    <br> Map zoom: <input type="number" v-model.number.lazy="zoom" min="0" max="21">
     <br> Dragged {{drag}} times
     <br> Left clicked {{mapClickedCount}} times
-    <br> Map type: <select id="" name="" v-model="mapType">
-    <option value="roadmap">roadmap</option>
-    <option value="hybrid">hybrid</option>
-    <option value="satellite">satellite</option>
-    <option value="terrain">terrain</option>
-  </select>
+    <br> Map type:
+    <select id="" name="" v-model="mapType">
+      <option value="roadmap">roadmap</option>
+      <option value="hybrid">hybrid</option>
+      <option value="satellite">satellite</option>
+      <option value="terrain">terrain</option>
+    </select>
     <br> Map style: <select id="" name="" v-model="mapStyle">
     <option value="red">red</option>
     <option value="green">green</option>
@@ -24,27 +25,27 @@
     <br> Enable scrollwheel zooming on the map: <input type="checkbox" v-model="scrollwheel">
     <br>
     <button @click="addMarker"> Add a new Marker</button> (or right click on the map :) )
-    <h1>Clusters</h1> enabled: <input type="checkbox" v-model="clustering" number>
-    </br>
-    Grid size: <input type="number" v-model="gridSize" number>
+    <h1>Clusters</h1> enabled: <input type="checkbox" v-model="clustering">
     <br>
-    <h1>Polyline</h1> Editable: <input type="checkbox" number v-model="pleditable">
+    Grid size: <input type="number" v-model.number="gridSize">
+    <br>
+    <h1>Polyline</h1> Editable: <input type="checkbox" v-model="pleditable">
     <button @click="resetPlPath">Reset path</button>
-    <br> Visible: <input type="checkbox" number v-model="plvisible">
+    <br> Visible: <input type="checkbox" number v-model="plvisible"><br> Path: {{plPath | json}}
     <br>
-    <h1>Polygon</h1> Visible: <input type="checkbox" number v-model="pgvisible"> <br>
+    <h1>Polygon</h1> Visible: <input type="checkbox" v-model="pgvisible"> <br>
     <button @click="pgPath = opgPath">Reset Polygon to pentagon</button><br>
     <button @click="pgPath = originalPlPath">Reset Polygon to a simple polygon</button><br> Path: {{pgPath | json}}
     <br>
-    <h1>Circle</h1> Visible: <input type="checkbox" number v-model="displayCircle"><br> {{circleBounds | json}}
+    <h1>Circle</h1> Visible: <input type="checkbox" v-model="displayCircle"><br>Center: {{reportedCenter | json}}<br> {{circleBounds | json}}
     <br>
-    <h1>Rectangle</h1> Visible: <input type="checkbox" number v-model="displayRectangle"><br> {{rectangleBounds | json}}
+    <h1>Rectangle</h1> Visible: <input type="checkbox" v-model="displayRectangle"><br> {{rectangleBounds | json}}
     <br>
     <h1>PlaceInput</h1>
     <gmap-place-input label="Add a marker at this place" :select-first-on-enter="true" @place_changed="updatePlace($event)"></gmap-place-input>
     <br>
-    <h1> Standalone infoWindow </h1> modal 1 : <input type="checkbox" number v-model="ifw"><br> modal 2: <input type="checkbox" number v-model="ifw2"> <input type="text" v-model="ifw2text">
-    <h1>Markers</h1> Display only markers with even ID (to test filters) <input type="checkbox" number v-model="markersEven"><br>
+    <h1> Standalone infoWindow </h1> modal 1 : <input type="checkbox" v-model="ifw"><br> modal 2: <input type="checkbox" v-model="ifw2"> <input type="text" v-model="ifw2text">
+    <h1>Markers</h1> Display only markers with even ID (to test filters) <input type="checkbox" v-model="markersEven"><br>
     <table>
       <tr>
         <th>lat</th>
@@ -61,25 +62,25 @@
       </tr>
       <tr v-for="m in markers">
         <td>
-          <input type="number" v-model="m.position.lat" number>
+          <input type="number" v-model.number="m.position.lat">
         </td>
         <td>
-          <input type="number" v-model="m.position.lng" number>
+          <input type="number" v-model.number="m.position.lng">
         </td>
         <td>
-          <input type="number" v-model="m.opacity" number>
+          <input type="number" v-model.number="m.opacity" step="0.1" min="0" max="1">
         </td>
         <td>
-          <input type="checkbox" v-model="m.enabled" number>
+          <input type="checkbox" v-model="m.enabled">
         </td>
         <td>
-          <input type="checkbox" v-model="m.draggable" number>
+          <input type="checkbox" v-model="m.draggable">
         </td>
         <td>{{m.clicked}}</td>
         <td>{{m.rightClicked}}</td>
         <td>{{m.dragended}}</td>
         <td>
-          <input type="checkbox" v-model="m.ifw" number>
+          <input type="checkbox" v-model="m.ifw">
         </td>
         <td>
           <input type="text" v-model="m.ifw2text">
@@ -88,35 +89,35 @@
       </tr>
     </table>
   </div>
-  <gmap-map :center="center" :zoom="zoom" :map-type-id="mapType" :options="{styles: mapStyles, scrollwheel: scrollwheel}" @rightclick="mapRclicked" @drag="drag++" @click="mapClickedCount++" class="map-panel" @zoom_changed="update('zoom', $event)" @center_changed="update('reportedCenter', $event)"
-      @maptypeid_changed="update('mapType', $event)" @bounds_changed="update('bounds', $event)">
+  <gmap-map :center="center" :zoom.sync="zoom" :bounds.sync="mapBounds" :map-type-id="mapType" :options="{styles: mapStyles, scrollwheel: scrollwheel}" @rightclick="mapRclicked" @drag="drag++" @click="mapClickedCount++" class="map-panel"
+     @center_changed="update('reportedCenter', $event)" @maptypeid_changed="update('mapType', $event)">
     <gmap-cluster :grid-size="gridSize" v-if="clustering">
-      <gmap-marker v-if="m.enabled" :position="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++" @rightclick="m.rightClicked++" @dragend="m.dragended++" @position_changed="updateChild(m, 'position', $event)" v-for="m in activeMarkers"
+      <gmap-marker v-if="m.enabled" :position.sync="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++;m.ifw=!m.ifw" @rightclick="m.rightClicked++" @dragend="m.dragended++" v-for="m in activeMarkers"
           :key="m.id">
-        <gmap-info-window :opened="m.ifw">{{m.ifw2text}}</gmap-info-window>
+        <gmap-info-window :opened.sync="m.ifw">{{m.ifw2text}}</gmap-info-window>
       </gmap-marker>
     </gmap-cluster>
     <div v-if="!clustering">
-      <gmap-marker v-if="m.enabled" :position="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++" @rightclick="m.rightClicked++" @dragend="m.dragended++" @position_changed="updateChild(m, 'position', $event)" v-for="m in activeMarkers"
+      <gmap-marker v-if="m.enabled" :position.sync="m.position" :opacity="m.opacity" :draggable="m.draggable" @click="m.clicked++;m.ifw=!m.ifw" @rightclick="m.rightClicked++" @dragend="m.dragended++" v-for="m in activeMarkers"
           :key="m.id">
-        <gmap-info-window :opened="m.ifw">{{m.ifw2text}}</gmap-info-window>
+        <gmap-info-window :opened.sync="m.ifw">{{m.ifw2text}}</gmap-info-window>
       </gmap-marker>
     </div>
 
-    <gmap-info-window :position="reportedCenter" :opened="ifw">
+    <gmap-info-window :position="reportedCenter" :opened.sync="ifw">
       To show you the bindings are working I will stay on the center of the screen whatever you do :)
       <br/> To show you that even my content is bound to vue here is the number of time you clicked on the map
       <b>{{mapClickedCount}}</b>
     </gmap-info-window>
 
-    <gmap-info-window :position="reportedCenter" :opened="ifw2">{{ifw2text}}</gmap-info-window>
+    <gmap-info-window :position="reportedCenter" :opened.sync="ifw2">{{ifw2text}}</gmap-info-window>
 
-    <gmap-polyline v-if="plvisible" :path="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}" @path_changed="updatePolylinePath($event)">
+    <gmap-polyline v-if="plvisible" :path.sync="plPath" :editable="pleditable" :draggable="true" :options="{geodesic:true, strokeColor:'#FF0000'}">
     </gmap-polyline>
-    <gmap-polygon v-if="pgvisible" :paths="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}" @paths_changed="updatePolygonPaths($event)">
+    <gmap-polygon v-if="pgvisible" :paths.sync="pgPath" :editable="true" :options="{geodesic:true, strokeColor:'#FF0000', fillColor:'#000000'}">
     </gmap-polygon>
-    <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
-    <gmap-rectangle v-if="displayRectangle" :bounds="rectangleBounds" :options="{editable: true}" @bounds_changed="updateRectangle('bounds', $event)"></gmap-rectangle>
+    <gmap-circle v-if="displayCircle" :bounds="circleBounds" :center.sync="reportedCenter" :radius="100000" :options="{editable: true}" @radius_changed="updateCircle('radius', $event)" @bounds_changed="updateCircle('bounds', $event)"></gmap-circle>
+    <gmap-rectangle v-if="displayRectangle" :bounds.sync="rectangleBounds" :options="{editable: true}"></gmap-rectangle>
   </gmap-map>
 </div>
 </template>
@@ -428,14 +429,6 @@ export default {
           lng: event.lng(),
         };
       }
-    },
-
-    updatePolygonPaths(paths) { //eslint-disable-line no-unused-vars
-      // TODO
-    },
-
-    updatePolylinePath(paths) { //eslint-disable-line no-unused-vars
-      // TODO:
     },
 
     updateCircle(prop, value) {

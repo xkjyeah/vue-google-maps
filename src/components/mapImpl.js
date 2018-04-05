@@ -1,5 +1,6 @@
 import omit from 'lodash/omit'
 import clone from 'lodash/clone'
+import isFunction from 'lodash/isFunction'
 
 import { loaded } from '../manager.js'
 import { DeferredReadyMixin } from '../utils/deferredReady.js'
@@ -9,6 +10,7 @@ import getPropsMixin from '../utils/getPropsValuesMixin.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
+import WatchPrimitiveProperties from '../utils/WatchPrimitiveProperties.js'
 
 const props = {
   center: {
@@ -111,11 +113,11 @@ export default {
   computed: {
     finalLat () {
       return this.center &&
-        (typeof this.center.lat === 'function') ? this.center.lat() : this.center.lat
+      (typeof this.center.lat === 'function') ? this.center.lat() : this.center.lat
     },
     finalLng () {
       return this.center &&
-        (typeof this.center.lng === 'function') ? this.center.lng() : this.center.lng
+      (typeof this.center.lng === 'function') ? this.center.lng() : this.center.lng
     },
     finalLatLng () {
       return {lat: this.finalLat, lng: this.finalLng}
@@ -149,7 +151,13 @@ export default {
       TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
         this.$mapObject.addListener('center_changed', () => {
           if (shouldUpdate()) {
-            this.$emit('center_changed', this.$mapObject.getCenter())
+            let center = this.$mapObject.getCenter()
+            this.$emit('center_changed', center)
+            this.$emit('update:center',
+              (!this.center || (this.center && isFunction(this.center.lat))) ? center : {
+                lat: center.lat(),
+                lng: center.lng()
+              })
           }
           decrement()
         })
@@ -158,13 +166,38 @@ export default {
           increment()
           this.$mapObject.setCenter(this.finalLatLng)
         }
-        this.$watch('finalLatLng', updateCenter)
+
+        WatchPrimitiveProperties(
+          this,
+          ['finalLat', 'finalLng'],
+          updateCenter
+        )
       })
       this.$mapObject.addListener('zoom_changed', () => {
         this.$emit('zoom_changed', this.$mapObject.getZoom())
+        this.$emit('update:zoom', this.$mapObject.getZoom())
       })
+
       this.$mapObject.addListener('bounds_changed', () => {
-        this.$emit('bounds_changed', this.$mapObject.getBounds())
+        let bounds = this.$mapObject.getBounds()
+        this.$emit('bounds_changed', bounds)
+        this.$emit('update:bounds',
+          (!this.bounds || (this.bounds && isFunction(this.bounds.getNorthEast))) ? bounds : {
+            north: (bounds && bounds.getNorthEast().lat()) || null,
+            east: (bounds && bounds.getNorthEast().lng()) || null,
+            south: (bounds && bounds.getSouthWest().lat()) || null,
+            west: (bounds && bounds.getSouthWest().lng()) || null,
+          })
+      })
+
+      this.$on('tilt_changed', () => {
+        this.$emit('update:tilt', this.$mapObject.tilt)
+      })
+      this.$on('maptypeid_changed', () => {
+        this.$emit('update:mapTypeId', this.$mapObject.mapTypeId)
+      })
+      this.$on('heading_changed', () => {
+        this.$emit('update:heading', this.$mapObject.heading)
       })
 
       // binding events

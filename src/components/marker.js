@@ -1,4 +1,5 @@
 import mapValues from 'lodash/mapValues'
+import isFunction from 'lodash/isFunction'
 import eventsBinder from '../utils/eventsBinder.js'
 import propsBinder from '../utils/propsBinder.js'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -29,8 +30,7 @@ const props = {
   icon: {
     twoWay: true
   },
-  label: {
-  },
+  label: {},
   opacity: {
     type: Number,
     default: 1
@@ -105,14 +105,16 @@ export default {
     }
   },
 
-  destroyed () {
-    if (!this.$markerObject) { return }
+  created () {
+    this.$on('register-info-window', this.registerInfoWindow)
+    this.$on('unregister-info-window', this.unregisterInfoWindow)
+  },
 
-    if (this.$clusterObject) {
-      this.$clusterObject.removeMarker(this.$markerObject)
-    } else {
-      this.$markerObject.setMap(null)
+  destroyed () {
+    if (this.$markerObject) {
+      this.$parent && this.$parent.$emit('unregister-marker', {component: this, object: this.$markerObject})
     }
+    this.$markerObject.setMap(null)
   },
 
   deferredReady () {
@@ -120,25 +122,61 @@ export default {
     options.map = this.$map
     delete options.options
     Object.assign(options, this.options)
-
-    // search ancestors for cluster object
-    let search = this.$findAncestor(
-      ans => ans.$clusterObject
-    )
-
-    this.$clusterObject = search ? search.$clusterObject : null
     this.createMarker(options)
   },
 
   methods: {
+    createMarkerObject (options) {
+      return new google.maps.Marker(options)
+    },
     createMarker (options) {
-      this.$markerObject = new google.maps.Marker(options)
+      this.$markerObject = this.createMarkerObject(options)
       propsBinder(this, this.$markerObject, props)
+
+      this.$on('animation_changed', () => {
+        this.$emit('update:animation', this.$markerObject.animation)
+      })
+      this.$on('clickable_changed', () => {
+        this.$emit('update:clickable', this.$markerObject.clickable)
+      })
+      this.$on('cursor_changed', () => {
+        this.$emit('update:cursor', this.$markerObject.cursor)
+      })
+      this.$on('draggable_changed', () => {
+        this.$emit('update:draggable', this.$markerObject.draggable)
+      })
+      this.$on('icon_changed', () => {
+        this.$emit('update:icon', this.$markerObject.icon)
+      })
+      this.$on('position_changed', () => {
+        this.$emit('update:position',
+          (!this.position || (this.position && isFunction(this.position.lat))) ? this.$markerObject.getPosition() : {
+            lat: this.$markerObject.getPosition().lat(),
+            lng: this.$markerObject.getPosition().lng()
+          })
+      })
+      this.$on('shape_changed', () => {
+        this.$emit('update:shape', this.$markerObject.shape)
+      })
+      this.$on('visible_changed', () => {
+        this.$emit('update:visible', this.$markerObject.visible)
+      })
+      this.$on('zindex_changed', () => {
+        this.$emit('update:zIndex', this.$markerObject.zIndex)
+      })
+
       eventsBinder(this, this.$markerObject, events)
 
-      if (this.$clusterObject) {
-        this.$clusterObject.addMarker(this.$markerObject)
-      }
-    }
+      this.$parent && this.$parent.$emit('register-marker', {component: this, object: this.$markerObject})
+    },
+    registerInfoWindow ({component: instance}) {
+      if (!instance) { return }
+      instance.$markerObject = this.$markerObject
+    },
+    unregisterInfoWindow ({component: instance}) {
+      if (!instance) { return }
+      instance.$markerObject = null
+    },
+
   },
 }

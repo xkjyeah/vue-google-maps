@@ -57,13 +57,21 @@ export default {
     const options = clone(this.getPropsValues())
     delete options.options
     Object.assign(options, this.options)
-    this.$polylineObject = new google.maps.Polyline(options)
-    this.$polylineObject.setMap(this.$map)
+    this.$polylineObject = this.createPolylineObject(options)
 
     propsBinder(this, this.$polylineObject, omit(props, ['deepWatch', 'path']))
     eventBinder(this, this.$polylineObject, events)
 
-    var clearEvents = () => {}
+    let clearEvents = () => {}
+
+    const extractPath = (mvcArray) => {
+      let path = []
+      for (let j = 0; j < mvcArray.getLength(); j++) {
+        let point = mvcArray.getAt(j)
+        path.push({lat: point.lat(), lng: point.lng()})
+      }
+      return path
+    }
 
     this.$watch('path', (path) => {
       if (path) {
@@ -76,6 +84,7 @@ export default {
 
         const updatePaths = () => {
           this.$emit('path_changed', this.$polylineObject.getPath())
+          this.$emit('update:path', extractPath(this.$polylineObject.getPath()))
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
@@ -88,10 +97,16 @@ export default {
         }
       }
     }, {
-      deep: this.deepWatch
+      deep: this.deepWatch,
+      immediate: true,
     })
 
     // Display the map
     this.$polylineObject.setMap(this.$map)
   },
+  methods: {
+    createPolylineObject (options) {
+      return new google.maps.Polyline(options)
+    }
+  }
 }

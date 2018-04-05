@@ -1,14 +1,15 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
 
 /**
-  * @class Cluster
-  * @prop $clusterObject -- Exposes the marker clusterer to
-        descendent Marker classes. Override this if you area
-        extending the class
-**/
+ * @class Cluster
+ * @prop $clusterObject -- Exposes the marker clusterer to
+ descendent Marker classes. Override this if you area
+ extending the class
+ **/
 
 import clone from 'lodash/clone'
 import eventsBinder from '../utils/eventsBinder.js'
+import isObject from 'lodash/isObject'
 import propsBinder from '../utils/propsBinder.js'
 import MapElementMixin from './mapElementMixin'
 import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
@@ -66,16 +67,14 @@ export default {
     )
   },
 
+  created () {
+    this.$on('register-marker', this.registerMarker)
+    this.$on('unregister-marker', this.unregisterMarker)
+  },
+
   deferredReady () {
     const options = clone(this.getPropsValues())
-
-    if (typeof MarkerClusterer === 'undefined') {
-      /* eslint-disable no-console */
-      console.error('MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js')
-      throw new Error('MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js')
-    }
-
-    this.$clusterObject = new MarkerClusterer(this.$map, [], options)
+    this.$clusterObject = this.createMarkerClusterObject(this.$map, [], options)
 
     propsBinder(this, this.$clusterObject, props, {
       afterModelChanged: (a, v) => { // eslint-disable-line no-unused-vars
@@ -98,4 +97,26 @@ export default {
       this.$clusterObject.clearMarkers()
     }
   },
+  methods: {
+    createMarkerClusterObject (map, optMarkers, optOptions) {
+      if (typeof MarkerClusterer === 'undefined') {
+        let errorMessage = 'MarkerClusterer is not installed! require() it or include it from https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer.js'
+        console.error(errorMessage)
+        throw new Error(errorMessage)
+      }
+      return new MarkerClusterer(map, optMarkers, optOptions)
+    },
+    repaint () {
+      this.$clusterObject.repaint()
+    },
+    registerMarker ({object: marker}) {
+      if (!this.$clusterObject || !isObject(marker)) { return }
+      this.$clusterObject.addMarker(marker)
+      marker.addListener('position_changed', this.repaint)
+    },
+    unregisterMarker ({object: marker}) {
+      if (!this.$clusterObject || !isObject(marker)) { return }
+      this.$clusterObject.removeMarker(marker)
+    }
+  }
 }
