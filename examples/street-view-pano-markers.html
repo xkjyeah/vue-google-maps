@@ -1,0 +1,88 @@
+<head>
+  <style>
+    .pano {
+      width: 500px;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <h1>Streetview Panorama Markers</h1>
+
+    <gmap-street-view-panorama :pov="{heading: 190, pitch: 0}" class="pano" :position="{lat: 40.729884, lng: -73.990988}" :zoom="1">
+
+      <gmap-street-view-panorama-marker v-for="m in markers" :key="m.title" :title="m.title" :icon="m.icon" :position="m.position"></gmap-street-view-panorama-marker>
+
+    </gmap-street-view-panorama>
+
+    <h2>Markers:</h2>
+
+    <ul v-for="m in markers" :key="m.title" style="list-style-type:disc">
+        <li>Title: {{ m.title }}</li>
+        <li>Icon: {{ m.icon }}</li>
+        <li>Position: {{ m.position }}</li>
+      </ul>  
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+  <script src="../dist/vue-google-maps.js"></script>
+
+  <script>
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw',
+        libraries: 'places'
+      },
+      // Demonstrating how we can customize the name of the components
+      installComponents: true,
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      new Vue({
+        el: '#root',
+        data: {
+          pov: null,
+          pano: null,
+          markers: [{
+              title: 'Cafe',
+              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00',
+              position: {
+                lat: 40.730031,
+                lng: -73.991428
+              }
+            },
+            {
+              title: 'Bank',
+              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=dollar|FFFF00',
+              position: {
+                lat: 40.729681,
+                lng: -73.991138
+              }
+            },
+            {
+              title: 'Bus Stop',
+              icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=bus|FFFF00',
+              position: {
+                lat: 40.729559,
+                lng: -73.990741
+              }
+            }
+          ]
+        },
+        methods: {
+          updatePov(pov) {
+            this.pov = pov;
+          },
+          updatePano(pano) {
+            this.pano = pano;
+          }
+        }
+      });
+    });
+  </script>
+
+</body>

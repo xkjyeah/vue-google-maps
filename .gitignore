@@ -2,3 +2,4 @@
 node_modules
 examples/dist
 examples/vue-google-maps.js
+dist
