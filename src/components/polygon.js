@@ -1,10 +1,4 @@
-import omit from 'lodash/omit'
-import clone from 'lodash/clone'
-
-import eventBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import MapElementMixin from './mapElementMixin'
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import mapElementFactory from './mapElementFactory.js'
 
 const props = {
   draggable: {
@@ -18,16 +12,14 @@ const props = {
   },
   path: {
     type: Array,
-    twoWay: true
+    twoWay: true,
+    noBind: true,
   },
   paths: {
     type: Array,
-    twoWay: true
+    twoWay: true,
+    noBind: true,
   },
-  deepWatch: {
-    type: Boolean,
-    default: false
-  }
 }
 
 const events = [
@@ -44,33 +36,24 @@ const events = [
   'rightclick'
 ]
 
-export default {
-  mixins: [MapElementMixin, getPropsValuesMixin],
-  props: props,
-
-  render () { return '' },
-
-  destroyed () {
-    if (this.$polygonObject) {
-      this.$polygonObject.setMap(null)
+export default mapElementFactory({
+  props: {
+    deepWatch: {
+      type: Boolean,
+      default: false
     }
   },
+  events,
+  mappedProps: props,
+  name: 'polygon',
+  ctr: () => google.maps.Polygon,
 
-  deferredReady () {
-    const options = clone(this.getPropsValues())
-    delete options.options
-    Object.assign(options, this.options)
-    if (!options.path) {
-      delete options.path
-    }
-    if (!options.paths) {
-      delete options.paths
-    }
-    this.$polygonObject = new google.maps.Polygon(options)
+  beforeCreate (options) {
+    if (!options.path) delete options.path
+    if (!options.paths) delete options.paths
+  },
 
-    propsBinder(this, this.$polygonObject, omit(props, ['path', 'paths', 'deepWatch']))
-    eventBinder(this, this.$polygonObject, events)
-
+  afterCreate (inst) {
     var clearEvents = () => {}
 
     // Watch paths, on our own, because we do not want to set either when it is
@@ -79,14 +62,14 @@ export default {
       if (paths) {
         clearEvents()
 
-        this.$polygonObject.setPaths(paths)
+        inst.setPaths(paths)
 
         const updatePaths = () => {
-          this.$emit('paths_changed', this.$polygonObject.getPaths())
+          this.$emit('paths_changed', inst.getPaths())
         }
         const eventListeners = []
 
-        const mvcArray = this.$polygonObject.getPaths()
+        const mvcArray = inst.getPaths()
         for (let i = 0; i < mvcArray.getLength(); i++) {
           let mvcPath = mvcArray.getAt(i)
           eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
@@ -111,13 +94,13 @@ export default {
       if (path) {
         clearEvents()
 
-        this.$polygonObject.setPaths(path)
+        inst.setPaths(path)
 
-        const mvcPath = this.$polygonObject.getPath()
+        const mvcPath = inst.getPath()
         const eventListeners = []
 
         const updatePaths = () => {
-          this.$emit('path_changed', this.$polygonObject.getPath())
+          this.$emit('path_changed', inst.getPath())
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])
@@ -133,8 +116,5 @@ export default {
       deep: this.deepWatch,
       immediate: true,
     })
-
-    // Display the map
-    this.$polygonObject.setMap(this.$map)
-  },
-}
+  }
+})

@@ -11,8 +11,7 @@
     </google-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
@@ -27,24 +26,18 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       Vue.component('google-map', VueGoogleMaps.Map);
-      Vue.component('ground-overlay', Vue.extend({
-        render() {
-          return '';
+      Vue.component('ground-overlay', VueGoogleMaps.MapElementFactory({
+        mappedProps: {
+          'opacity': {}
         },
-        mixins: [VueGoogleMaps.MapElementMixin],
-        props: ['source', 'bounds', 'opacity'],
-        created() {},
-        deferredReady: function() {
-          this.$overlay = new google.maps.GroundOverlay(
-            this.source,
-            this.bounds
-          );
-          this.$overlay.setOpacity(this.opacity);
-          this.$overlay.setMap(this.$map);
+        props: {
+          'source': {type: String},
+          'bounds': {type: Object},
         },
-        destroyed: function() {
-          this.$overlay.setMap(null);
-        },
+        events: ['click', 'dblclick'],
+        name: 'groundOverlay',
+        ctr: () => google.maps.GroundOverlay,
+        ctrArgs: (options, {source, bounds}) => [source, bounds, options],
       }));
 
       new Vue({

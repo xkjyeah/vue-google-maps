@@ -1,25 +1,24 @@
-import omit from 'lodash/omit'
-import clone from 'lodash/clone'
-
 import { loaded } from '../manager.js'
-import { DeferredReadyMixin } from '../utils/deferredReady.js'
-import eventsBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import getPropsMixin from '../utils/getPropsValuesMixin.js'
+import bindEvents from '../utils/bindEvents.js'
+import {bindProps, getPropsValues} from '../utils/bindProps.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
+import WatchPrimitiveProperties from '../utils/WatchPrimitiveProperties.js'
+import { mappedPropsToVueProps } from './mapElementFactory.js'
 
 const props = {
   center: {
     required: true,
     twoWay: true,
-    type: Object
+    type: Object,
+    noBind: true,
   },
   zoom: {
     required: false,
     twoWay: true,
-    type: Number
+    type: Number,
+    noBind: true,
   },
   heading: {
     type: Number,
@@ -28,10 +27,6 @@ const props = {
   mapTypeId: {
     twoWay: true,
     type: String
-  },
-  bounds: {
-    twoWay: true,
-    type: Object,
   },
   tilt: {
     twoWay: true,
@@ -44,6 +39,7 @@ const props = {
 }
 
 const events = [
+  'bounds_changed',
   'click',
   'dblclick',
   'drag',
@@ -94,18 +90,17 @@ const customMethods = {
   }
 }
 
-// Methods is a combination of customMethods and linkedMethods
-const methods = Object.assign({}, customMethods, linkedMethods)
-
 export default {
-  mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
-  props: props,
-  replace: false, // necessary for css styles
+  mixins: [mountableMixin],
+  props: mappedPropsToVueProps(props),
 
-  created () {
-    this.$mapCreated = new Promise((resolve, reject) => {
-      this.$mapCreatedDeferred = { resolve, reject }
+  provide () {
+    this.$mapPromise = new Promise((resolve, reject) => {
+      this.$mapPromiseDeferred = { resolve, reject }
     })
+    return {
+      '$mapPromise': this.$mapPromise
+    }
   },
 
   computed: {
@@ -130,20 +125,23 @@ export default {
     }
   },
 
-  deferredReady () {
+  mounted () {
     return loaded.then(() => {
       // getting the DOM element where to create the map
       const element = this.$refs['vue-map']
 
       // creating the map
-      const copiedData = clone(this.getPropsValues())
-      delete copiedData.options
-      const options = clone(this.options)
-      Object.assign(options, copiedData)
+      const options = {
+        ...this.options,
+        ...getPropsValues(this, props),
+      }
+      delete options.options
       this.$mapObject = new google.maps.Map(element, options)
 
       // binding properties (two and one way)
-      propsBinder(this, this.$mapObject, omit(props, ['center', 'zoom', 'bounds']))
+      bindProps(this, this.$mapObject, props)
+      // binding events
+      bindEvents(this, this.$mapObject, events)
 
       // manually trigger center and zoom
       TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
@@ -158,7 +156,12 @@ export default {
           increment()
           this.$mapObject.setCenter(this.finalLatLng)
         }
-        this.$watch('finalLatLng', updateCenter)
+
+        WatchPrimitiveProperties(
+          this,
+          ['finalLat', 'finalLng'],
+          updateCenter
+        )
       })
       this.$mapObject.addListener('zoom_changed', () => {
         this.$emit('zoom_changed', this.$mapObject.getZoom())
@@ -167,16 +170,16 @@ export default {
         this.$emit('bounds_changed', this.$mapObject.getBounds())
       })
 
-      // binding events
-      eventsBinder(this, this.$mapObject, events)
+      this.$mapPromiseDeferred.resolve(this.$mapObject)
 
-      this.$mapCreatedDeferred.resolve(this.$mapObject)
-
-      return this.$mapCreated
+      return this.$mapObject
     })
-      .catch((error) => {
-        throw error
-      })
+    .catch((error) => {
+      throw error
+    })
   },
-  methods: methods
+  methods: {
+    ...customMethods,
+    ...linkedMethods,
+  },
 }

@@ -4,7 +4,7 @@ import {getPage, loadFile} from './test-setup/test-common'
 
 export const lab = Lab.script()
 
-lab.experiment('Basic tests', {timeout: 15000}, function () {
+lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
   let page = null
 
   async function loadPage () {
@@ -20,7 +20,7 @@ lab.experiment('Basic tests', {timeout: 15000}, function () {
 
     await page.evaluate(() => {
       // Ensure that the map has been created
-      return window.theVue.$refs.map.$mapCreated
+      return window.theVue.$refs.map.$mapPromise
       .then(() => {
         // Give some more time for the marker to initialize
         return new Promise(resolve => setTimeout(resolve, 100))

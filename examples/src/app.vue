@@ -3,19 +3,20 @@
 <div class="app-panel">
   <div class="settings-panel">
     <h1>Map information</h1> Map center latitude:
-    <input type="number" v-model="reportedCenter.lat" number @change="updateMapCenter" />
+    <input type="number" v-model.number="reportedCenter.lat" @change="updateMapCenter" />
     <br> Map center longitude:
-    <input type="number" v-model="reportedCenter.lng" number @change="updateMapCenter">
+    <input type="number" v-model.number="reportedCenter.lng" @change="updateMapCenter" />
     <br> Map bounds: {{mapBounds | json}}
-    <br> Map zoom: <input type="number" v-model="zoom" number>
+    <br> Map zoom: <input type="number" v-model.number.lazy="zoom" >
     <br> Dragged {{drag}} times
     <br> Left clicked {{mapClickedCount}} times
-    <br> Map type: <select id="" name="" v-model="mapType">
-    <option value="roadmap">roadmap</option>
-    <option value="hybrid">hybrid</option>
-    <option value="satellite">satellite</option>
-    <option value="terrain">terrain</option>
-  </select>
+    <br> Map type:
+    <select id="" name="" v-model="mapType">
+      <option value="roadmap">roadmap</option>
+      <option value="hybrid">hybrid</option>
+      <option value="satellite">satellite</option>
+      <option value="terrain">terrain</option>
+    </select>
     <br> Map style: <select id="" name="" v-model="mapStyle">
     <option value="red">red</option>
     <option value="green">green</option>
@@ -24,21 +25,21 @@
     <br> Enable scrollwheel zooming on the map: <input type="checkbox" v-model="scrollwheel">
     <br>
     <button @click="addMarker"> Add a new Marker</button> (or right click on the map :) )
-    <h1>Clusters</h1> enabled: <input type="checkbox" v-model="clustering" number>
+    <h1>Clusters</h1> enabled: <input type="checkbox" v-model="clustering">
     </br>
-    Grid size: <input type="number" v-model="gridSize" number>
+    Grid size: <input type="number" v-model.number="gridSize">
     <br>
-    <h1>Polyline</h1> Editable: <input type="checkbox" number v-model="pleditable">
+    <h1>Polyline</h1> Editable: <input type="checkbox" v-model="pleditable">
     <button @click="resetPlPath">Reset path</button>
     <br> Visible: <input type="checkbox" number v-model="plvisible">
     <br>
-    <h1>Polygon</h1> Visible: <input type="checkbox" number v-model="pgvisible"> <br>
+    <h1>Polygon</h1> Visible: <input type="checkbox" v-model="pgvisible"> <br>
     <button @click="pgPath = opgPath">Reset Polygon to pentagon</button><br>
     <button @click="pgPath = originalPlPath">Reset Polygon to a simple polygon</button><br> Path: {{pgPath | json}}
     <br>
-    <h1>Circle</h1> Visible: <input type="checkbox" number v-model="displayCircle"><br> {{circleBounds | json}}
+    <h1>Circle</h1> Visible: <input type="checkbox" v-model="displayCircle"><br> {{circleBounds | json}}
     <br>
-    <h1>Rectangle</h1> Visible: <input type="checkbox" number v-model="displayRectangle"><br> {{rectangleBounds | json}}
+    <h1>Rectangle</h1> Visible: <input type="checkbox" v-model="displayRectangle"><br> {{rectangleBounds | json}}
     <br>
     <h1>PlaceInput</h1>
     <gmap-place-input label="Add a marker at this place" :select-first-on-enter="true" @place_changed="updatePlace($event)"></gmap-place-input>
@@ -61,19 +62,19 @@
       </tr>
       <tr v-for="m in markers">
         <td>
-          <input type="number" v-model="m.position.lat" number>
+          <input type="number" v-model.number="m.position.lat">
         </td>
         <td>
-          <input type="number" v-model="m.position.lng" number>
+          <input type="number" v-model.number="m.position.lng">
         </td>
         <td>
-          <input type="number" v-model="m.opacity" number>
+          <input type="number" v-model.number="m.opacity">
         </td>
         <td>
-          <input type="checkbox" v-model="m.enabled" number>
+          <input type="checkbox" v-model="m.enabled">
         </td>
         <td>
-          <input type="checkbox" v-model="m.draggable" number>
+          <input type="checkbox" v-model="m.draggable">
         </td>
         <td>{{m.clicked}}</td>
         <td>{{m.rightClicked}}</td>

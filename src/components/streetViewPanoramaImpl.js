@@ -1,13 +1,11 @@
-import omit from 'lodash/omit'
-
 import {loaded} from '../manager.js'
-import {DeferredReadyMixin} from '../utils/deferredReady.js'
-import eventsBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import getPropsMixin from '../utils/getPropsValuesMixin.js'
+import bindEvents from '../utils/bindEvents.js'
+import {bindProps, getPropsValues} from '../utils/bindProps.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
+import WatchPrimitiveProperties from '../utils/WatchPrimitiveProperties.js'
+import { mappedPropsToVueProps } from './mapElementFactory.js'
 
 const props = {
   zoom: {
@@ -22,6 +20,7 @@ const props = {
   position: {
     twoWay: true,
     type: Object,
+    noBind: true,
   },
   pano: {
     twoWay: true,
@@ -48,39 +47,26 @@ const events = [
   'status_changed',
 ]
 
-// Other convenience methods exposed by Vue Google Maps
-const customMethods = {
-  resize () {
-    if (this.$panoObject) {
-      google.maps.event.trigger(this.$panoObject, 'resize')
-    }
-  },
-}
-
-// Methods is a combination of customMethods and linkedMethods
-const methods = Object.assign({}, customMethods)
-
 export default {
-  mixins: [getPropsMixin, DeferredReadyMixin, mountableMixin],
-  props: props,
+  mixins: [mountableMixin],
+  props: mappedPropsToVueProps(props),
   replace: false, // necessary for css styles
-  methods,
+  methods: {
+    resize () {
+      if (this.$panoObject) {
+        google.maps.event.trigger(this.$panoObject, 'resize')
+      }
+    },
+  },
 
-  created () {
-    this.$panoCreated = new Promise((resolve, reject) => {
-      this.$panoCreatedDeferred = {resolve, reject}
+  provide () {
+    const promise = new Promise((resolve, reject) => {
+      this.$panoPromiseDeferred = {resolve, reject}
     })
-
-    const updateCenter = () => {
-      if (!this.panoObject) return
-
-      this.$panoObject.setPosition({
-        lat: this.finalLat,
-        lng: this.finalLng,
-      })
+    return {
+      '$panoPromise': promise,
+      '$mapPromise': promise, // so that we can use it with markers
     }
-    this.$watch('finalLat', updateCenter)
-    this.$watch('finalLng', updateCenter)
   },
 
   computed: {
@@ -108,22 +94,24 @@ export default {
     }
   },
 
-  deferredReady () {
+  mounted () {
     return loaded.then(() => {
       // getting the DOM element where to create the map
       const element = this.$refs['vue-street-view-pano']
 
       // creating the map
-      const options = Object.assign({},
-        this.options,
-        omit(this.getPropsValues(), ['options'])
-      )
+      const options = {
+        ...this.options,
+        ...getPropsValues(this, props),
+      }
+      delete options.options
 
       this.$panoObject = new google.maps.StreetViewPanorama(element, options)
 
       // binding properties (two and one way)
-      propsBinder(this, this.$panoObject,
-        omit(props, ['position']))
+      bindProps(this, this.$panoObject, props)
+      // binding events
+      bindEvents(this, this.$panoObject, events)
 
       // manually trigger position
       TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
@@ -137,21 +125,24 @@ export default {
           decrement()
         })
 
-        this.$watch('finalLatLng', () => {
+        const updateCenter = () => {
           increment()
           this.$panoObject.setPosition(this.finalLatLng)
-        })
+        }
+
+        WatchPrimitiveProperties(
+          this,
+          ['finalLat', 'finalLng'],
+          updateCenter
+        )
       })
 
-      // binding events
-      eventsBinder(this, this.$panoObject, events)
+      this.$panoPromiseDeferred.resolve(this.$panoObject)
 
-      this.$panoCreatedDeferred.resolve(this.$panoObject)
-
-      return this.$panoCreated
+      return this.$panoPromise
     })
-      .catch((error) => {
-        throw error
-      })
+    .catch((error) => {
+      throw error
+    })
   },
 }

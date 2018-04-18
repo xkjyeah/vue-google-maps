@@ -1,8 +1,4 @@
-import mapValues from 'lodash/mapValues'
-import eventsBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
-import MapElementMixin from './mapElementMixin'
+import mapElementFactory from './mapElementFactory.js'
 
 const props = {
   animation: {
@@ -88,9 +84,17 @@ const events = [
  * reasons. Otherwise we should use a cluster-marker mixin or
  * subclass.
  */
-export default {
-  mixins: [MapElementMixin, getPropsValuesMixin],
-  props: props,
+export default mapElementFactory({
+  mappedProps: props,
+  events,
+  name: 'marker',
+  ctr: () => google.maps.Marker,
+
+  inject: {
+    '$clusterPromise': {
+      default: null,
+    },
+  },
 
   render (h) {
     if (!this.$slots.default || this.$slots.default.length === 0) {
@@ -108,37 +112,28 @@ export default {
   destroyed () {
     if (!this.$markerObject) { return }
 
-    if (this.$clusterObject) {
+    if (this.$clusterPromise) {
+      // Repaint will be performed in `updated()` of cluster
       this.$clusterObject.removeMarker(this.$markerObject, true)
     } else {
       this.$markerObject.setMap(null)
     }
   },
 
-  deferredReady () {
-    const options = mapValues(props, (value, prop) => this[prop])
-    options.map = this.$map
-    delete options.options
-    Object.assign(options, this.options)
+  beforeCreate (options) {
+    if (this.$clusterPromise) {
+      options.map = null
+    }
 
-    // search ancestors for cluster object
-    let search = this.$findAncestor(
-      ans => ans.$clusterObject
-    )
-
-    this.$clusterObject = search ? search.$clusterObject : null
-    this.createMarker(options)
+    return this.$clusterPromise
   },
 
-  methods: {
-    createMarker (options) {
-      this.$markerObject = new google.maps.Marker(options)
-      propsBinder(this, this.$markerObject, props)
-      eventsBinder(this, this.$markerObject, events)
-
-      if (this.$clusterObject) {
-        this.$clusterObject.addMarker(this.$markerObject)
-      }
+  afterCreate (inst) {
+    if (this.$clusterPromise) {
+      this.$clusterPromise.then((co) => {
+        co.addMarker(inst)
+        this.$clusterObject = co
+      })
     }
   },
-}
+})

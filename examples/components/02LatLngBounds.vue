@@ -32,7 +32,7 @@ export default {
         for (let m of markers) {
           bounds.extend(m.latLng)
         }
-        this.$refs.map.$mapObject.fitBounds(bounds)
+        this.$refs.map.fitBounds(bounds)
       }
     }
   },

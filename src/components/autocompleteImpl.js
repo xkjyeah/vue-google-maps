@@ -1,19 +1,17 @@
-import clone from 'lodash/clone'
-import pickBy from 'lodash/pickBy'
-import omit from 'lodash/omit'
-import propsBinder from '../utils/propsBinder.js'
+import {bindProps, getPropsValues} from '../utils/bindProps.js'
 import downArrowSimulator from '../utils/simulateArrowDown.js'
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
-import {
-  loaded
-} from '../manager.js'
+import {loaded} from '../manager.js'
+import {mappedPropsToVueProps} from './mapElementFactory'
 
-const props = {
+const mappedProps = {
   bounds: {
     type: Object
   },
   componentRestrictions: {
-    type: Object
+    type: Object,
+    // Do not bind -- must check for undefined
+    // in the property
+    noBind: true,
   },
   types: {
     type: Array,
@@ -21,6 +19,9 @@ const props = {
       return []
     }
   },
+}
+
+const props = {
   placeholder: {
     required: false,
     type: String
@@ -40,11 +41,8 @@ const props = {
 }
 
 export default {
-  mixins: [getPropsValuesMixin],
-
   mounted () {
     loaded.then(() => {
-      const options = clone(this.getPropsValues())
       if (this.selectFirstOnEnter) {
         downArrowSimulator(this.$refs.input)
       }
@@ -54,26 +52,29 @@ export default {
       }
 
       /* eslint-disable no-unused-vars */
-      const finalOptions = pickBy(Object.assign(
-        {},
-        omit(options, ['options', 'selectFirstOnEnter', 'value', 'place', 'placeholder']),
-        options.options
-      ), (v, k) => v !== undefined)
+      const finalOptions = {
+        ...getPropsValues(this, mappedProps),
+        ...this.options
+      }
 
-      // Component restrictions is rather particular. Undefined not allowed
+      this.$autocomplete = new google.maps.places.Autocomplete(this.$refs.input, finalOptions)
+      bindProps(this, this.$autocomplete, mappedProps)
+
       this.$watch('componentRestrictions', v => {
         if (v !== undefined) {
           this.$autocomplete.setComponentRestrictions(v)
         }
       })
 
-      this.$autocomplete = new google.maps.places.Autocomplete(this.$refs.input, finalOptions)
-      propsBinder(this, this.$autocomplete, omit(props, ['placeholder', 'place', 'selectFirstOnEnter', 'value', 'componentRestrictions']))
-
+      // Not using `bindEvents` because we also want
+      // to return the result of `getPlace()`
       this.$autocomplete.addListener('place_changed', () => {
         this.$emit('place_changed', this.$autocomplete.getPlace())
       })
     })
   },
-  props: props
+  props: {
+    ...mappedPropsToVueProps(mappedProps),
+    ...props
+  }
 }

@@ -11,5 +11,10 @@
         }
       }
     ]
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-inline-environment-variables",
+    "minify-dead-code-elimination"
   ]
 }

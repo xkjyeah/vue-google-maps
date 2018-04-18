@@ -6,8 +6,6 @@
 
 This is the Vue 2.x port of vue-google-maps!
 
-If you have used vue-google-maps with Vue 1.x before, refer to [Upgrading](UPGRADING.md).
-
 ## Installation
 
 ### With npm (Recommended)
@@ -16,11 +14,52 @@ If you have used vue-google-maps with Vue 1.x before, refer to [Upgrading](UPGRA
 npm install vue2-google-maps
 ```
 
-In your project:
+### Manually
+
+Just download `dist/vue-google-maps.js` file and include it from your HTML.
+
+Be aware that if you use this method, you cannot use TitleCase for your components and your attributes.
+That is, instead of writing `<GmapMap>`, you need to write `<gmap-map>`.
+
+[Example](http://xkjyeah.github.io/vue-google-maps/overlay.html) ([Source code](https://github.com/xkjyeah/vue-google-maps/blob/no-deferred-ready/examples/overlay.html)).
+
+## Basic usage / Documentation
+
+### Get an API key from Google
+
+[Generating an Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key).
+
+### Quickstart (Webpack, Nuxt):
+
+If you are using Webpack and Vue file components, just add the following to your code!
+
+```vue
+<GmapMap
+  :center="{lat:10, lng:10}"
+  :zoom="7"
+  map-type-id="terrain"
+  style="width: 500px; height: 300px"
+>
+  <GmapMarker
+    :key="index"
+    v-for="(m, index) in markers"
+    :position="m.position"
+    :clickable="true"
+    :draggable="true"
+    @click="center=m.position"
+  />
+</GmapMap>
+```
+
+In your `main.js` or inside a Nuxt plugin:
 
 ```js
 import Vue from 'vue'
+// Regular Webpack:
 import * as VueGoogleMaps from 'vue2-google-maps'
+//// If you encounter issues with UglifyJS and Nuxt.js, try the following instead:
+// import * as VueGoogleMaps from '~/node_modules/vue2-google-maps/src/main'
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'YOUR_API_TOKEN',
@@ -28,197 +67,146 @@ Vue.use(VueGoogleMaps, {
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'
     // (as you require)
-  }
+    
+    //// If you want to set the version, you can do so:
+    // v: '3.26',
+  },
+  
+  //// If you intend to programmatically custom event listener code
+  //// (e.g. `this.$refs.gmap.$on('zoom_changed', someFunc)`)
+  //// instead of going through Vue templates (e.g. `<GmapMap @zoom_changed="someFunc">`)
+  //// you might need to turn this on.
+  // autobindAllEvents: false,
+  
+  //// If you want to manually install components, e.g.
+  //// import {GmapMarker} from 'vue2-google-maps/src/components/marker'
+  //// Vue.component('GmapMarker', GmapMarker)
+  //// then disable the following:
+  // installComponents: true,
 })
 ```
 
-### Nuxt.js projects
-
-For Nuxt.js projects, please import VueGoogleMaps in the following manner:
-```js
-import * as VueGoogleMaps from '~/node_modules/vue2-google-maps/src/main'
-```
-This is required for successful server-side rendering.
-
-(Note: as of v0.8.1, you should add `src/main` to the path)
-
-### Manually
-
-Just download `dist/vue-google-maps.js` file and include it from your HTML.
-***If you use this method, Vue 2.1.x is required***.
-
-[Example](http://xkjyeah.github.io/vue-google-maps/overlay.html).
-
-### Basic usage / Documentation
-
-[Generating an Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key).
-
-See [API](API.md).
-
-## Demos:
-
-[Showcase with a lot of features](http://xkjyeah.github.io/vue-google-maps/)
-
-## Brief
-
-If you want to write google map this way :
-
-```html
-<gmap-map
-  :center="{lat:10, lng:10}"
-  :zoom="7"
-  map-type-id="terrain"
-  style="width: 500px; height: 300px"
-></gmap-map>
-```
-
-Or use the power of Vue.js within a google map like this:
-```html
+If you need to gain access to the `Map` instance (e.g. to call `panToBounds`, `panTo`):
+```vue
 <template>
-  <gmap-map
-    :center="center"
-    :zoom="7"
-    style="width: 500px; height: 300px"
-  >
-    <gmap-marker
-      :key="index"
-      v-for="(m, index) in markers"
-      :position="m.position"
-      :clickable="true"
-      :draggable="true"
-      @click="center=m.position"
-    ></gmap-marker>
-  </gmap-map>
+<GmapMap ref="mapRef" ...>
+</GmapMap>
 </template>
-
 <script>
-  /////////////////////////////////////////
-  // New in 0.4.0
-  import * as VueGoogleMaps from 'vue2-google-maps';
-  import Vue from 'vue';
-
-  Vue.use(VueGoogleMaps, {
-    load: {
-      key: 'YOUR_API_TOKEN',
-      v: 'OPTIONAL VERSION NUMBER',
-      // libraries: 'places', //// If you need to use place input
-    }
-  });
-
-  export default {
-    data () {
-      return {
-        center: {lat: 10.0, lng: 10.0},
-        markers: [{
-          position: {lat: 10.0, lng: 10.0}
-        }, {
-          position: {lat: 11.0, lng: 11.0}
-        }]
-      }
-    }
-  }
-</script>
-```
-
-## Use with `vue-router` / components that change their visibility
-
-If you are using `vue-router`, you may encounter the problem where
-you see greyed-out areas because you haven't
-[triggered a resize](http://stackoverflow.com/questions/13059034/how-to-use-google-maps-event-triggermap-resize)
-on the map after its visibility has changed.
-
-You have two options:
-
-***Option A***
-
-(Version 0.5.0) Run `Vue.$gmapDefaultResizeBus.$emit('resize')`.
-
-For example, you can write the following to force all maps on your page
-to re-render:
-
-```js
-watch: {
-  '$route'(to, from) {
-    // Call resizePreserveCenter() on all maps
-    Vue.$gmapDefaultResizeBus.$emit('resize')
+export default {
+  mounted () {
+    // At this point, the child GmapMap has been mounted, but
+    // its map has not been initialized.
+    // Therefore we need to write mapRef.$mapPromise.then(() => ...)
+    
+    this.$refs.mapRef.$mapPromise.then((map) => {
+      map.panTo({lat: 1.38, lng: 103.80})
+    })
   }
 }
 ```
 
-If you wish to be more selective about which maps receive the `resize`
-event, you can define `resizeBus` individually on each map. (See API).
-This will disconnect the map from `Vue.$gmapDefaultResizeBus`.
+If you need to gain access to the `google` object:
+```js
+import {loaded} from 'vue2-google-maps'
 
-***Option B***
+let size = null
+loaded.then(() => {
+  size = new google.maps.Size(500, 600)
+})
+```
 
-Call `vm.$refs.<YOUR_MAP_HERE>.resizePreserveCenter()` on every map
-instance that you have
+### Officially supported components:
+
+The list of officially support components are:
+
+- Rectangle, Circle
+- Polygon, Polyline
+- Marker
+- InfoWindow
+- Autocomplete
+- Cluster* (via `marker-clusterer-plus`)
+
+You can find examples of this [on the website](http://xkjyeah.github.io/vue-google-maps/).
+Auto-generated API documentation for these components are [here](http://xkjyeah.github.io/vue-google-maps/autoapi.html).
+
+For `Cluster`, you **must** import the class specifically, e.g.
+```js
+import GmapCluster from 'vue2-google-maps/src/components/cluster' // replace src with dist if you have Babel issues
+
+Vue.component('GmapCluster', GmapCluster)
+```
+Inconvenient, but this means all other users don't have to bundle the marker clusterer package
+in their source code.
+
+### Adding your own components
+
+It should be relatively easy to add your own components (e.g. Heatmap, GroundOverlay). please refer to the
+[source code for `MapElementFactory`](https://github.com/xkjyeah/vue-google-maps/blob/vue2/src/components/mapElementFactory.js).
+
+Example for [DirectionsRenderer](https://developers.google.com/maps/documentation/javascript/reference/3/#DirectionsRenderer):
+```js
+// DirectionsRenderer.js
+import {MapElementFactory} from 'vue2-google-maps'
+
+export default MapElementFactory({
+  name: 'directionsRenderer',
+  ctr: () => google.maps.DirectionsRenderer,
+  //// The following is optional, but necessary if the constructor takes multiple arguments
+  //// e.g. for GroundOverlay
+  // ctrArgs: (options, otherProps) => [options],
+  events: ['directions_changed'],
+  
+  // Mapped Props will automatically set up
+  //   this.$watch('propertyName', (v) => instance.setPropertyName(v))
+  //
+  // If you specify `twoWay`, then it also sets up:
+  //   google.maps.event.addListener(instance, 'propertyName_changed', () => {
+  //     this.$emit('propertyName_changed', instance.getPropertyName())
+  //   })
+  //
+  // If you specify `noBind`, then neither will be set up. You should manually
+  // create your watchers in `afterCreate()`.
+  mappedProps: {
+    routeIndex: { type: Number },
+    options: { type: Object },
+    panel: { },
+    directions: { type: Object },
+    //// If you have a property that comes with a `_changed` event,
+    //// you can specify `twoWay` to automatically bind the event, e.g. Map's `zoom`:
+    // zoom: {type: Number, twoWay: true}
+  },
+  // Any other properties you want to bind. Note: Must be in Object notation
+  props: {},
+  // Actions you want to perform before creating the object instance using the
+  // provided constructor (for example, you can modify the `options` object).
+  // If you return a promise, execution will suspend until the promise resolves
+  beforeCreate (options) {},
+  // Actions to perform after creating the object instance.
+  afterCreate (directionsRendererInstance) {},
+})
+```
+
+Thereafter, it's easy to use the newly-minted component!
+```vue
+<template>
+  <GmapMap :zoom="..." :center="...">
+    <DirectionsRenderer />
+  </GmapMap>
+</template>
+<script>
+import DirectionsRenderer from './DirectionsRenderer.js'
+
+export default {
+  components: {DirectionsRenderer}
+}
+</script>
+```
 
 ## Testing
 
-There is a non-comprehensive test for the DeferredReady mixin.
 More automated tests should be written to help new contributors.
 
 Meanwhile, please test your changes against the suite of [examples](examples).
 
 Improvements to the tests are welcome :)
-
-#### Standalone / CDN
-
-If you are not using any bundler, include `vue-google-maps/dist/vue-google-maps.js`
-instead.
-The library will be available in a global object called `VueGoogleMap`.
-However you will need to include Vue and Lodash beforehand:
-
-```html
-<head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
-  <script src="dist/vue-google-maps.js"></script>
-</head>
-<body>
-
-  <div id="root">
-    <gmap-map style="width: 100%; height: 100%; position: absolute; left:0; top:0"
-        :center="{lat: 1.38, lng: 103.8}"
-        :zoom="12"
-    >
-
-    </gmap-map>
-  </div>
-
-  <script>
-    Vue.use(VueGoogleMaps, {
-      load: {
-        key: 'YOUR_API_TOKEN',
-        v: 'OPTIONAL VERSION NUMBER',
-        // libraries: 'places', //// If you need to use place input
-      }
-    })
-
-    new Vue({
-        el: '#root',
-    });
-
-  </script>
-
-</body>
-```
-
-#### Set your api key
-
-To enable any `vue-google-maps` components you need to set your api token:
-
-```javascript
-Vue.use(VueGoogleMap, {
-  load: {
-    key: 'YOUR_API_TOKEN',
-    v: '3.26',                // Google Maps API version
-    // libraries: 'places',   // If you want to use places input
-  }
-})
-```
-
-The parameters are passed in the query string to the Google Maps API, e.g. to set the [version](https://developers.google.com/maps/documentation/javascript/versions#version-rollover-and-version-types),
-[libraries](https://developers.google.com/maps/documentation/javascript/libraries),
-or for [localisation](https://developers.google.com/maps/documentation/javascript/basics).

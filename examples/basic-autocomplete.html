@@ -5,7 +5,7 @@
     <button @click="setDescription('Shanghai')">Set to Shanghai</button><br/>
     <button @click="setDescription('Seoul')">Set to Seoul</button><br/>
     <label>
-      Das Label
+      Place:
       <gmap-autocomplete :value="description"
         @place_changed="setPlace">
       </gmap-autocomplete>

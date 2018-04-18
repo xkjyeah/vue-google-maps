@@ -1,10 +1,4 @@
-import omit from 'lodash/omit'
-import clone from 'lodash/clone'
-
-import eventBinder from '../utils/eventsBinder.js'
-import propsBinder from '../utils/propsBinder.js'
-import MapElementMixin from './mapElementMixin'
-import getPropsValuesMixin from '../utils/getPropsValuesMixin.js'
+import mapElementFactory from './mapElementFactory.js'
 
 const props = {
   draggable: {
@@ -21,10 +15,6 @@ const props = {
     type: Array,
     twoWay: true
   },
-  deepWatch: {
-    type: Boolean,
-    default: false,
-  }
 }
 
 const events = [
@@ -41,28 +31,20 @@ const events = [
   'rightclick'
 ]
 
-export default {
-  mixins: [MapElementMixin, getPropsValuesMixin],
-  props: props,
-
-  render () { return '' },
-
-  destroyed () {
-    if (this.$polylineObject) {
-      this.$polylineObject.setMap(null)
+export default mapElementFactory({
+  mappedProps: props,
+  props: {
+    deepWatch: {
+      type: Boolean,
+      default: false,
     }
   },
+  events,
 
-  deferredReady () {
-    const options = clone(this.getPropsValues())
-    delete options.options
-    Object.assign(options, this.options)
-    this.$polylineObject = new google.maps.Polyline(options)
-    this.$polylineObject.setMap(this.$map)
+  name: 'polyline',
+  ctr: () => google.maps.Polyline,
 
-    propsBinder(this, this.$polylineObject, omit(props, ['deepWatch', 'path']))
-    eventBinder(this, this.$polylineObject, events)
-
+  afterCreate (inst) {
     var clearEvents = () => {}
 
     this.$watch('path', (path) => {
@@ -90,8 +72,5 @@ export default {
     }, {
       deep: this.deepWatch
     })
-
-    // Display the map
-    this.$polylineObject.setMap(this.$map)
-  },
-}
+  }
+})

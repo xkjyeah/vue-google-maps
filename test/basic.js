@@ -38,7 +38,7 @@ lab.experiment('Basic tests', {timeout: 15000}, function () {
 
     assert(await page.evaluate(
       (vue) =>
-        vue.$refs.map.$mapCreated
+        vue.$refs.map.$mapPromise
           .then(() => vue.$refs.map.$mapObject instanceof google.maps.Map),
       vue), '$mapPromise is defined')
 
@@ -66,7 +66,7 @@ lab.experiment('Basic tests', {timeout: 15000}, function () {
 
     // Wait for map to load first...
     await page.evaluate((vue) =>
-      vue.$refs.map.$mapCreated
+      vue.$refs.map.$mapPromise
         .then(() => new Promise(resolve => setTimeout(resolve, 500))),
       vue)
 

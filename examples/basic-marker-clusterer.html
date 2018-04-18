@@ -1,15 +1,19 @@
 <body>
   <div id="root">
-    <google-map :center="center" :zoom="7" style="width: 100%; height: 500px">
-      <google-cluster>
-        <google-marker v-for="m in markers" :position="m.position" :clickable="true" :draggable="true" @click="center=m.position"></google-marker>
-      </google-cluster>
-    </google-map>
+    <gmap-map :center="center" :zoom="7" style="width: 100%; height: 500px">
+      <gmap-cluster>
+        <gmap-marker v-for="(m, index) in markers"
+          :position="m.position"
+          :clickable="true" :draggable="true"
+          @click="center=m.position"
+          :key="index"
+          ></gmap-marker>
+      </gmap-cluster>
+    </gmap-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.6/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
-  <script src="https://cdn.rawgit.com/mahnunchik/markerclustererplus/2.1.4/dist/markerclusterer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/markerclustererplus/2.1.4/markerclusterer.js"></script>
   <script src="vue-google-maps.js"></script>
 
   <script>
@@ -17,14 +21,11 @@
       load: {
         key: 'AIzaSyBzlLYISGjL_ovJwAehh6ydhB56fCCpPQw'
       },
-      // Demonstrating how we can customize the name of the components
-      installComponents: false,
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-      Vue.component('google-map', VueGoogleMaps.Map);
-      Vue.component('google-marker', VueGoogleMaps.Marker);
-      Vue.component('google-cluster', VueGoogleMaps.Cluster);
+      // gmapCluster *must* be manually imported
+      Vue.component('gmap-cluster', VueGoogleMaps.Cluster);
 
       new Vue({
         el: '#root',

@@ -1,9 +1,5 @@
-/* vim: set softtabstop=2 shiftwidth=2 expandtab : */
-
-import {DeferredReadyMixin} from '../utils/deferredReady'
-
 /**
- * @class MapElementMixin @mixins DeferredReadyMixin
+ * @class MapElementMixin
  *
  * Extends components to include the following fields:
  *
@@ -12,47 +8,24 @@ import {DeferredReadyMixin} from '../utils/deferredReady'
  *
  * */
 export default {
+  inject: {
+    '$mapPromise': { default: 'abcdef' }
+  },
 
-  mixins: [DeferredReadyMixin],
-
-  created () {
-    /* Search for the Map component in the parent */
-    let search = this.$findAncestor(
-      ans => ans.$mapCreated
-    )
-
-    if (!search) {
-      throw new Error(`${this.constructor.name} component must be used within a <Map>`)
-    }
-
-    this.$mapPromise = search.$mapCreated.then((map) => {
+  provide () {
+    // Note: although this mixin is not "providing" anything,
+    // components' expect the `$map` property to be present on the component.
+    // In order for that to happen, this mixin must intercept the $mapPromise
+    // .then(() =>) first before its component does so.
+    //
+    // Since a provide() on a mixin is executed before a provide() on the
+    // component, putting this code in provide() ensures that the $map is
+    // already set by the time the
+    // component's provide() is called.
+    this.$mapPromise.then((map) => {
       this.$map = map
     })
-    // FIXME: This is a hack to ensure correct loading
-    // when the map has already be instantiated.
-    if (search.$mapObject) {
-      this.$map = search.$mapObject
-    }
-    this.$MapElementMixin = search
-    this.$map = null
+
+    return {}
   },
-
-  beforeDeferredReady () {
-    return this.$mapPromise
-  },
-
-  methods: {
-    $findAncestor (condition) {
-      let search = this.$parent
-
-      while (search) {
-        if (condition(search)) {
-          return search
-        }
-        search = search.$parent
-      }
-      return null
-    }
-  }
-
 }

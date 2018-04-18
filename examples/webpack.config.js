@@ -58,33 +58,49 @@ const base = {
         loader: 'babel-loader',
       },
       {
+        test: /\.yml$/,
+        exclude: /node_modules/,
+        loader: 'json-loader!yaml-loader',
+      },
+      {
         // edit this for additional asset file types
         test: /\.(png|jpg|gif)$/,
         loader: 'file-loader?name=[name].[ext]?[hash]',
       }
     ],
   },
+  mode: process.env.NODE_ENV || 'development'
 };
 
-
-if (process.env.NODE_ENV === 'production') {
-  base.plugins = [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }),
-  ];
-} else {
-  base.devtool = 'source-map';
-}
-
 module.exports = [
-  Object.assign({}, base, {entry: './src/main.js', output: Object.assign({}, base.output, {filename: 'build.js'})}),
-  Object.assign({}, base, {entry: './src/ExamplesMain.js', output: Object.assign({}, base.output, {filename: 'build-examples.js'})}),
+  {
+    ...base,
+    entry: [
+      'babel-polyfill',
+      './src/main.js'
+    ],
+    output: {
+      ...base.output,
+      filename: 'build.js'
+    }
+  },
+  {
+    ...base,
+    entry: [
+      'babel-polyfill',
+      './src/autoapi.js'
+    ],
+    output: {
+      ...base.output,
+      filename: 'autoapi.js'
+    }
+  },
+  {
+    ...base,
+    entry: './src/ExamplesMain.js',
+    output: {
+      ...base.output,
+      filename: 'build-examples.js'
+    }
+  }
 ]

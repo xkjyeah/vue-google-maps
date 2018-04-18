@@ -1,11 +1,8 @@
 /* vim: set softtabstop=2 shiftwidth=2 expandtab : */
-var webpack = require('webpack');
-var path = require('path')
-var _ = require('lodash')
-var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const webpack = require('webpack');
+const path = require('path')
 
-
-var baseConfig = {
+const baseConfig = {
   entry: [
     path.resolve('./src/main.js')
   ],
@@ -32,64 +29,46 @@ var baseConfig = {
       },
     ],
   },
-  plugins: [
-    new LodashModuleReplacementPlugin()
-  ]
+  mode: process.env.NODE_ENV || 'development'
 }; /* baseConfig */
 
 /**
  * Web config uses a global Vue and Lodash object.
  * */
-var webConfig = _.clone(baseConfig);
-webConfig.externals = {
-  vue: 'Vue',
-  'marker-clusterer-plus': 'MarkerClusterer'
-};
-webConfig.output = {
-	path: path.resolve(__dirname, 'dist'),
+const webConfig = {
+  ...baseConfig,
+  externals: {
+    vue: 'Vue',
+    'marker-clusterer-plus': 'MarkerClusterer'
+  },
+  output: {
+  	path: path.resolve(__dirname, 'dist'),
     filename: "vue-google-maps.js",
     library: ["VueGoogleMaps"],
     libraryTarget: "umd"
-};
+  }
+}
 
-var stubbedConfig = _.clone(baseConfig);
-stubbedConfig.externals = {
+const stubbedConfig = {
+  ...baseConfig,
+  externals: {
     lodash: '_',
     'marker-clusterer-plus': 'MarkerClusterer'
-};
-stubbedConfig.module.noParse = /stub-/
-stubbedConfig.output = {
-	path: path.resolve(__dirname, 'dist'),
+  },
+  module: {
+    ...baseConfig.module,
+    noParse: /stub-/,
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
     filename: "vue-google-maps-stubbed.js",
     library: ["VueGoogleMaps"],
     libraryTarget: "commonjs2"
-};
-stubbedConfig.target = 'node';
-
+  },
+  target: 'node',
+}
 
 module.exports = [
-    webConfig,
-    stubbedConfig,
+  webConfig,
+  stubbedConfig,
 ];
-
-if (process.env.NODE_ENV === 'production') {
-  console.log('THIS IS PROD');
-  for (var i=0; i<module.exports.length; i++) {
-      module.exports[i].plugins = [
-        new webpack.DefinePlugin({
-          'process.env': {
-            NODE_ENV: '"production"'
-          }
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-          compress: {
-            warnings: false
-          }
-        }),
-      ]
-  }
-} else {
-  for (var i=0; i<module.exports.length; i++) {
-    module.exports[i].devtool = 'source-map'
-  }
-}
