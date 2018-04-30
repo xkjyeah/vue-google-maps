@@ -137,6 +137,14 @@ if (!isClient) {
 }
 ```
 
+In addition, for IE11 support, you will need the `babel-polyfill` vendor:
+```js
+// nuxt.config.js
+build: {
+  vendors: ['babel-polyfill']
+}
+```
+
 ### Officially supported components:
 
 The list of officially support components are:
