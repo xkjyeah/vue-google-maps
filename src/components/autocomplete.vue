@@ -1,6 +1,6 @@
 <template>
   <input type="text" :placeholder="placeholder" ref="input"
-    :value="value"/>
+    :value="value" v-on="$listeners"/>
 </template>
 
 <script>
