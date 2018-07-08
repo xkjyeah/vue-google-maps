@@ -70,7 +70,8 @@ export default mapElementFactory({
         }
       }
     }, {
-      deep: this.deepWatch
+      deep: this.deepWatch,
+      immediate: true,
     })
   }
 })
