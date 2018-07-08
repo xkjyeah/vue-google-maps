@@ -7,7 +7,8 @@
     <label>
       Place:
       <gmap-autocomplete :value="description"
-        @place_changed="setPlace">
+        @place_changed="setPlace"
+        :select-first-on-enter="true">
       </gmap-autocomplete>
     </label>
     <br/>
@@ -56,6 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
         this.description = description;
       },
       setPlace(place) {
+        if (place) return
+
         this.latLng = {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
