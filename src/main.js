@@ -120,5 +120,5 @@ function makeGmapApiPromiseLazy (options) {
 }
 
 export function gmapApi () {
-  return GmapApi.gmapApi && window.google
+  return GmapApi && GmapApi.gmapApi && window.google
 }
