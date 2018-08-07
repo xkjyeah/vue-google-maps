@@ -26,7 +26,6 @@
   "homepage": "https://github.com/xkjyeah/vue-google-maps#readme",
   "dependencies": {
     "babel-runtime": "^5.8.0",
-    "lazy-value": "^1.0.0",
     "marker-clusterer-plus": "^2.1.4"
   },
   "peerDependencies": {
