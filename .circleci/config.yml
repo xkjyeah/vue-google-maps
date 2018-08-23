@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    - image: circleci/node:8
+  working_directory: ~/repo
+  steps:
+    - checkout
+    - restore_cache:
+      keys:
+        - v1-dependencies-{{checksum "package.json"}}
+        - v1-dependencies-
+    - run: npm run install
+    - save_cache:
+      key: v1-dependencies-{{checksum "package.json"}}
+      paths:
+        - node_modules
+    - run: npm run test
