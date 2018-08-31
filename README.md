@@ -124,7 +124,7 @@ export default {
 
 Add the following to your `nuxt.config.js`'s `build.extend()`:
 ```js
-if (!isClient) {
+if (!ctx.isClient) {
   // This instructs Webpack to include `vue2-google-maps`'s Vue files
   // for server-side rendering
   config.externals.splice(0, 0, function (context, request, callback) {
