@@ -11,17 +11,17 @@ const props = {
     required: true,
     twoWay: true,
     type: Object,
-    noBind: true,
+    noBind: true
   },
   zoom: {
     required: false,
     twoWay: true,
     type: Number,
-    noBind: true,
+    noBind: true
   },
   heading: {
     type: Number,
-    twoWay: true,
+    twoWay: true
   },
   mapTypeId: {
     twoWay: true,
@@ -29,7 +29,7 @@ const props = {
   },
   tilt: {
     twoWay: true,
-    type: Number,
+    type: Number
   },
   options: {
     type: Object,
@@ -50,7 +50,7 @@ const events = [
   'mouseover',
   'resize',
   'rightclick',
-  'tilesloaded',
+  'tilesloaded'
 ]
 
 // Plain Google Maps methods exposed here for convenience
@@ -128,11 +128,14 @@ export default {
     return this.$gmapApiPromiseLazy().then(() => {
       // getting the DOM element where to create the map
       const element = this.$refs['vue-map']
+      if (!element) {
+        return
+      }
 
       // creating the map
       const options = {
         ...this.options,
-        ...getPropsValues(this, props),
+        ...getPropsValues(this, props)
       }
       delete options.options
       this.$mapObject = new google.maps.Map(element, options)
@@ -179,6 +182,6 @@ export default {
   },
   methods: {
     ...customMethods,
-    ...linkedMethods,
+    ...linkedMethods
   },
 }
