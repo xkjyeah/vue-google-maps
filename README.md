@@ -145,6 +145,25 @@ build: {
 }
 ```
 
+### IE11 Support using the Vue CLI Tool
+
+For IE11 support while using the [Vue CLI tools](https://cli.vuejs.org/) you will need to add the following polyfills to the `babel.config.js` file:
+```js
+// babel.config.js
+module.exports = {
+  presets: [
+    [
+      '@vue/app', {
+        polyfills: [
+          'es7.object.entries',
+          'es6.promise'
+        ]
+      }
+    ]
+  ]
+}
+```
+
 ### Officially supported components:
 
 The list of officially support components are:
