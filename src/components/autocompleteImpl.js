@@ -68,7 +68,9 @@ export default {
       // Not using `bindEvents` because we also want
       // to return the result of `getPlace()`
       this.$autocomplete.addListener('place_changed', () => {
-        this.$emit('place_changed', this.$autocomplete.getPlace())
+        if (this.$listeners && this.$listeners.place_changed) {
+          this.$emit('place_changed', this.$autocomplete.getPlace())
+        }
       })
     })
   },

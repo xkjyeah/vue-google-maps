@@ -145,7 +145,7 @@ export default {
       // manually trigger center and zoom
       TwoWayBindingWrapper((increment, decrement, shouldUpdate) => {
         this.$mapObject.addListener('center_changed', () => {
-          if (shouldUpdate()) {
+          if (this.$listeners && this.$listeners.center_changed && shouldUpdate()) {
             this.$emit('center_changed', this.$mapObject.getCenter())
           }
           decrement()
@@ -163,10 +163,14 @@ export default {
         )
       })
       this.$mapObject.addListener('zoom_changed', () => {
-        this.$emit('zoom_changed', this.$mapObject.getZoom())
+        if (this.$listeners && this.$listeners.zoom_changed) {
+          this.$emit('zoom_changed', this.$mapObject.getZoom())
+        }
       })
       this.$mapObject.addListener('bounds_changed', () => {
-        this.$emit('bounds_changed', this.$mapObject.getBounds())
+        if (this.$listeners && this.$listeners.zoom_changed) {
+          this.$emit('bounds_changed', this.$mapObject.getBounds())
+        }
       })
 
       this.$mapPromiseDeferred.resolve(this.$mapObject)

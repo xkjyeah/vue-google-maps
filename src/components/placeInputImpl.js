@@ -64,7 +64,9 @@ export default {
       bindProps(this, this.autoCompleter, rest)
 
       this.autoCompleter.addListener('place_changed', () => {
-        this.$emit('place_changed', this.autoCompleter.getPlace())
+        if (this.$listeners && this.$listeners.place_changed) {
+          this.$emit('place_changed', this.autoCompleter.getPlace())
+        }
       })
     })
   },

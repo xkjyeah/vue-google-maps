@@ -57,7 +57,9 @@ export default mapElementFactory({
         const eventListeners = []
 
         const updatePaths = () => {
-          this.$emit('path_changed', this.$polylineObject.getPath())
+          if (this.$listeners && this.$listeners.path_changed) {
+            this.$emit('path_changed', this.$polylineObject.getPath())
+          }
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])

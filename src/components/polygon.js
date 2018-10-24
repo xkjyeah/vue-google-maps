@@ -65,7 +65,9 @@ export default mapElementFactory({
         inst.setPaths(paths)
 
         const updatePaths = () => {
-          this.$emit('paths_changed', inst.getPaths())
+          if (this.$listeners && this.$listeners.paths_changed) {
+            this.$emit('paths_changed', inst.getPaths())
+          }
         }
         const eventListeners = []
 
@@ -100,7 +102,9 @@ export default mapElementFactory({
         const eventListeners = []
 
         const updatePaths = () => {
-          this.$emit('path_changed', inst.getPath())
+          if (this.$listeners && this.$listeners.paths_changed) {
+            this.$emit('path_changed', inst.getPath())
+          }
         }
 
         eventListeners.push([mvcPath, mvcPath.addListener('insert_at', updatePaths)])

@@ -118,7 +118,7 @@ export default {
         increment()
 
         this.$panoObject.addListener('position_changed', () => {
-          if (shouldUpdate()) {
+          if (this.$listeners && this.$listeners.position_changed && shouldUpdate()) {
             this.$emit('position_changed', this.$panoObject.getPosition())
           }
           decrement()
