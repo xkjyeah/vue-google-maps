@@ -26,7 +26,7 @@ const props = {
     type: String
   },
   selectFirstOnEnter: {
-    require: false,
+    required: false,
     type: Boolean,
     default: false
   },
@@ -40,6 +40,9 @@ const props = {
 }
 
 export default {
+  beforeMount() {
+    Object.assign(this.dataValue, this.value);
+  },
   mounted () {
     this.$gmapApiPromiseLazy().then(() => {
       if (this.selectFirstOnEnter) {
@@ -75,5 +78,25 @@ export default {
   props: {
     ...mappedPropsToVueProps(mappedProps),
     ...props
+  },
+  data() {
+    return {
+      dataValue: ''
+    }
+  },
+  computed: {
+    innerValue: {
+      get: function() {
+        return this.dataValue
+      },
+      set: function(v) {
+        this.dataValue = v
+      }
+    }
+  },
+  watch: {
+    innerValue: function(v) {
+      this.$emit('onchange', v);
+    }
   }
 }

@@ -1,6 +1,9 @@
 <template>
-  <input type="text" :placeholder="placeholder" ref="input"
-    :value="value"/>
+  <input
+    type="text"
+    :placeholder="placeholder"
+    ref="input"
+    v-model="innerValue"/>
 </template>
 
 <script>
