@@ -1,3 +1,20 @@
+# CONTRIBUTORS NEEDED!
+
+It's been increasingly difficult for me to make time to maintain this project.
+My projects at work have also gradually migrated away from Google Maps (but still on Vue -- Vue's awesome!),
+so there's less and less incentive to maintain.
+
+If you have time to contribute to a rather frequently used library, feel free to make a PR!
+For more background, please refer to [this issue](https://github.com/xkjyeah/vue-google-maps/issues/514).
+
+What's urgently needed are:
+
+1. Better automated tests
+2. Better integration tests with the popular frameworks, especially Nuxt and Vue template
+3. Better documentation (examples, recommendations)
+
+The above three will go a long way to keeping the project maintainable and contributable, and will address many of the open issues.
+
 # vue-google-maps
 
 [![Build Status](https://travis-ci.org/xkjyeah/vue-google-maps.svg?branch=vue2)](https://travis-ci.org/xkjyeah/vue-google-maps)
@@ -142,6 +159,25 @@ In addition, for IE11 support, you will need the `babel-polyfill` vendor:
 // nuxt.config.js
 build: {
   vendors: ['babel-polyfill']
+}
+```
+
+### IE11 Support using the Vue CLI Tool
+
+For IE11 support while using the [Vue CLI tools](https://cli.vuejs.org/) you will need to add the following polyfills to the `babel.config.js` file:
+```js
+// babel.config.js
+module.exports = {
+  presets: [
+    [
+      '@vue/app', {
+        polyfills: [
+          'es7.object.entries',
+          'es6.promise'
+        ]
+      }
+    ]
+  ]
 }
 ```
 
