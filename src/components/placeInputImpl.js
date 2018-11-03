@@ -1,4 +1,4 @@
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import downArrowSimulator from '../utils/simulateArrowDown.js'
 
 const props = {

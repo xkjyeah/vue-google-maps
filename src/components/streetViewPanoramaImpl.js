@@ -1,5 +1,5 @@
 import bindEvents from '../utils/bindEvents.js'
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
@@ -60,7 +60,7 @@ export default {
 
   provide () {
     const promise = new Promise((resolve, reject) => {
-      this.$panoPromiseDeferred = {resolve, reject}
+      this.$panoPromiseDeferred = { resolve, reject }
     })
     return {
       '$panoPromise': promise,

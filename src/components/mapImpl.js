@@ -1,5 +1,5 @@
 import bindEvents from '../utils/bindEvents.js'
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
@@ -112,7 +112,7 @@ export default {
         (typeof this.center.lng === 'function') ? this.center.lng() : this.center.lng
     },
     finalLatLng () {
-      return {lat: this.finalLat, lng: this.finalLng}
+      return { lat: this.finalLat, lng: this.finalLng }
     }
   },
 

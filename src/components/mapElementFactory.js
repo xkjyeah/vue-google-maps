@@ -1,5 +1,5 @@
 import bindEvents from '../utils/bindEvents.js'
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import MapElementMixin from './mapElementMixin'
 
 /**
@@ -62,7 +62,7 @@ export default function (options) {
   assert(!(rest.props instanceof Array), '`props` should be an object, not Array')
 
   return {
-    ...(typeof GENERATE_DOC !== 'undefined' ? {$vgmOptions: options} : {}),
+    ...(typeof GENERATE_DOC !== 'undefined' ? { $vgmOptions: options } : {}),
     mixins: [MapElementMixin],
     props: {
       ...props,
@@ -86,11 +86,11 @@ export default function (options) {
           const result = beforeCreate.bind(this)(options)
 
           if (result instanceof Promise) {
-            return result.then(() => ({options}))
+            return result.then(() => ({ options }))
           }
         }
-        return {options}
-      }).then(({options}) => {
+        return { options }
+      }).then(({ options }) => {
         const ConstructorObject = ctr()
         // https://stackoverflow.com/questions/1606797/use-of-apply-with-new-operator-is-this-possible
         this[instanceName] = ctrArgs
@@ -110,7 +110,7 @@ export default function (options) {
         return this[instanceName]
       })
       this[promiseName] = promise
-      return {[promiseName]: promise}
+      return { [promiseName]: promise }
     },
     destroyed () {
       // Note: not all Google Maps components support maps
