@@ -100,5 +100,5 @@ export default mapElementFactory({
     if (this.$clusterObject) {
       this.$clusterObject.clearMarkers()
     }
-  },
+  }
 })

@@ -6,7 +6,7 @@ const props = {
     type: Number
   },
   attribution: {
-    type: Object,
+    type: Object
   },
   clickable: {
     type: Boolean,
@@ -39,7 +39,7 @@ const props = {
   },
   position: {
     type: Object,
-    twoWay: true,
+    twoWay: true
   },
   shape: {
     type: Object,
@@ -55,8 +55,8 @@ const props = {
   },
   visible: {
     twoWay: true,
-    default: true,
-  },
+    default: true
+  }
 }
 
 const events = [
@@ -92,8 +92,8 @@ export default mapElementFactory({
 
   inject: {
     '$clusterPromise': {
-      default: null,
-    },
+      default: null
+    }
   },
 
   render (h) {
@@ -135,5 +135,5 @@ export default mapElementFactory({
         this.$clusterObject = co
       })
     }
-  },
+  }
 })

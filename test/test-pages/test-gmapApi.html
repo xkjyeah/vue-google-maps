@@ -1,30 +1,28 @@
 <head>
   <style>
-  .map-container {
-    width: 400px;
-    height: 400px;
-  }
+    .map-container {
+      width: 400px;
+      height: 400px;
+    }
+
   </style>
 </head>
+
 <body>
   <div id="test">
     <h2>Test 1</h2>
-    <gmap-map
-      :center="{lat: 1.38, lng: 103.8}"
-      :zoom="12"
-      class="map-container"
-      ref="map">
+    <gmap-map :center="{lat: 1.38, lng: 103.8}" :zoom="12" class="map-container" ref="map">
       <gmap-marker ref="myMarker" :position="google && new google.maps.LatLng(1.38, 103.8)"></gmap-marker>
     </gmap-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
   <script src="../../dist/vue-google-maps.js"></script>
 
   <script>
     Vue.use(VueGoogleMaps, {
       load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
       }
     })
     document.addEventListener('DOMContentLoaded', () => {
@@ -32,8 +30,9 @@
         computed: {
           google: VueGoogleMaps.gmapApi
         },
-        el: '#test',
+        el: '#test'
       })
     })
+
   </script>
 </body>

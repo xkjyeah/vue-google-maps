@@ -19,7 +19,7 @@ const props = {
   position: {
     twoWay: true,
     type: Object,
-    noBind: true,
+    noBind: true
   },
   pano: {
     twoWay: true,
@@ -32,7 +32,7 @@ const props = {
   visible: {
     twoWay: true,
     type: Boolean,
-    default: true,
+    default: true
   },
   options: {
     twoWay: false,
@@ -43,7 +43,7 @@ const props = {
 
 const events = [
   'closeclick',
-  'status_changed',
+  'status_changed'
 ]
 
 export default {
@@ -55,7 +55,7 @@ export default {
       if (this.$panoObject) {
         google.maps.event.trigger(this.$panoObject, 'resize')
       }
-    },
+    }
   },
 
   provide () {
@@ -64,7 +64,7 @@ export default {
     })
     return {
       '$panoPromise': promise,
-      '$mapPromise': promise, // so that we can use it with markers
+      '$mapPromise': promise // so that we can use it with markers
     }
   },
 
@@ -80,7 +80,7 @@ export default {
     finalLatLng () {
       return {
         lat: this.finalLat,
-        lng: this.finalLng,
+        lng: this.finalLng
       }
     }
   },
@@ -101,7 +101,7 @@ export default {
       // creating the map
       const options = {
         ...this.options,
-        ...getPropsValues(this, props),
+        ...getPropsValues(this, props)
       }
       delete options.options
 
@@ -140,8 +140,8 @@ export default {
 
       return this.$panoPromise
     })
-    .catch((error) => {
-      throw error
-    })
-  },
+      .catch((error) => {
+        throw error
+      })
+  }
 }

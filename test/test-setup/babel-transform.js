@@ -1,24 +1,23 @@
 // Adapted from https://github.com/nlf/lab-babel/blob/master/lib/index.js
-require('babel-polyfill')
-var Babel = require('babel-core')
+require('@babel/polyfill')
+const Babel = require('@babel/core')
 
-var internals = {}
-internals.transform = function (content, filename) {
+let internals = {}
+internals.transform = (content, filename) => {
   if (/^node_modules/.test(filename)) {
     return content
   }
 
-  var transformed = Babel.transform(content, {
+  let { code } = Babel.transform(content, {
     filename: filename,
     sourceMap: 'inline',
     sourceFileName: filename,
     auxiliaryCommentBefore: '$lab:coverage:off$',
     auxiliaryCommentAfter: '$lab:coverage:on$',
-    presets: ['es2015'],
-    plugins: ['transform-object-rest-spread'],
+    presets: ['@babel/env']
   })
 
-  return transformed.code
+  return code
 }
 
 internals.extensions = ['js', 'jsx', 'es', 'es6']

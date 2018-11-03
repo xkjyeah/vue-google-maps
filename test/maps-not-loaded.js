@@ -18,11 +18,11 @@ lab.experiment('On-demand API loading', {timeout: 15000}, function () {
       new Promise((resolve) => {
         new Vue({
           data: {
-            loadMap: false,
+            loadMap: false
           },
           mounted () {
             resolve(this)
-          },
+          }
         }).$mount('#test1')
       }))
   }
@@ -46,19 +46,19 @@ lab.experiment('On-demand API loading', {timeout: 15000}, function () {
     assert(await page.evaluate(
       (vue) => {
         return Promise.resolve(null)
-        .then(() => {
-          vue.loadMap = true
+          .then(() => {
+            vue.loadMap = true
 
-          return new Promise((resolve) => setTimeout(resolve, 100))
-        })
-        .then(() => vue.$refs.gmap.$mapPromise.then(() => !!window.google))
-        .then((isGoogleLoaded) => {
-          const allScriptElements = Array.prototype.slice.call(document.getElementsByTagName('SCRIPT'), 0)
-          return (
-            isGoogleLoaded &&
+            return new Promise((resolve) => setTimeout(resolve, 100))
+          })
+          .then(() => vue.$refs.gmap.$mapPromise.then(() => !!window.google))
+          .then((isGoogleLoaded) => {
+            const allScriptElements = Array.prototype.slice.call(document.getElementsByTagName('SCRIPT'), 0)
+            return (
+              isGoogleLoaded &&
             allScriptElements.some(s => s.src.toLowerCase().includes('maps.googleapis.com'))
-          )
-        })
+            )
+          })
       },
       vue), 'Google APIs are loaded')
   })

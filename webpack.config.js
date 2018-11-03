@@ -1,53 +1,25 @@
-/* vim: set softtabstop=2 shiftwidth=2 expandtab : */
-const webpack = require('webpack');
 const path = require('path')
+const env = process.env.NODE_ENV
 
-const baseConfig = {
-  entry: [
-    path.resolve('./src/main.js')
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: { target: 'node' }
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: [
-          /node_modules/,
-        ]
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
-        use: [{
-          loader: 'file-loader?name=[name].[ext]?[hash]',
-        }]
-      },
-    ],
-  },
-  mode: process.env.NODE_ENV || 'development'
-}; /* baseConfig */
+const config = require(`./config/webpack.${env}.config`)
 
 /**
  * Web config uses a global Vue and Lodash object.
  * */
 const webConfig = {
-  ...baseConfig,
+  ...config,
   externals: {
     vue: 'Vue',
     'marker-clusterer-plus': 'MarkerClusterer'
   },
   output: {
-  	path: path.resolve(__dirname, 'dist'),
-    filename: "vue-google-maps.js",
-    library: ["VueGoogleMaps"],
-    libraryTarget: "umd"
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'vue-google-maps.js',
+    library: ['VueGoogleMaps'],
+    libraryTarget: 'umd'
   }
 }
 
 module.exports = [
   webConfig
-];
+]

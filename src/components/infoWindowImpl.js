@@ -10,18 +10,18 @@ const props = {
   },
   position: {
     type: Object,
-    twoWay: true,
+    twoWay: true
   },
   zIndex: {
     type: Number,
-    twoWay: true,
+    twoWay: true
   }
 }
 
 const events = [
   'domready',
   'closeclick',
-  'content_changed',
+  'content_changed'
 ]
 
 export default mapElementFactory({
@@ -32,13 +32,13 @@ export default mapElementFactory({
   props: {
     opened: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
 
   inject: {
     '$markerPromise': {
-      default: null,
+      default: null
     }
   },
 
@@ -70,7 +70,7 @@ export default mapElementFactory({
       } else {
         this.$infoWindowObject.close()
       }
-    },
+    }
   },
 
   afterCreate () {

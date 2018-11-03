@@ -12,7 +12,7 @@ export default {
 
   data () {
     return {
-      _actualResizeBus: null,
+      _actualResizeBus: null
     }
   },
 

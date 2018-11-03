@@ -8,7 +8,7 @@ export default new Promise((resolve, reject) => {
   webpack(
     {
       ...webpackConfig,
-      mode: 'development',
+      mode: 'development'
     },
     (err, status) => {
       if (!err) {

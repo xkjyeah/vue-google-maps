@@ -7,11 +7,11 @@ const props = {
   },
   draggable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   editable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   options: {
     type: Object,
@@ -37,5 +37,5 @@ export default mapElementFactory({
   mappedProps: props,
   name: 'rectangle',
   ctr: () => google.maps.Rectangle,
-  events,
+  events
 })

@@ -101,7 +101,7 @@ function makeGmapApiPromiseLazy (options) {
             reject(err)
           }
         })
-        .then(onApiLoaded)
+          .then(onApiLoaded)
       }
     })
   } else { // If library should not handle API, provide

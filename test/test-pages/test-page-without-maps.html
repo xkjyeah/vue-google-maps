@@ -1,11 +1,13 @@
 <head>
   <style>
-  .map-container {
-    width: 400px;
-    height: 400px;
-  }
+    .map-container {
+      width: 400px;
+      height: 400px;
+    }
+
   </style>
 </head>
+
 <body>
   <div id="test1">
     <h2>Test 1</h2>
@@ -13,16 +15,16 @@
     <gmap-map v-if="loadMap" ref="gmap"></gmap-map>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
   <script src="../../dist/vue-google-maps.js"></script>
 
   <script>
-    // This page does not have maps, but we use Vue2-google-maps
-    // Must ensure that Google Maps library is NEVER loaded
+    // This page does not have maps, but we use Vue2-google-maps Must ensure that Google Maps library is NEVER loaded
     Vue.use(VueGoogleMaps, {
       load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
       }
     })
+
   </script>
 </body>

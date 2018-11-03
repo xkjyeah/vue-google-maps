@@ -10,14 +10,14 @@ const mappedProps = {
     type: Object,
     // Do not bind -- must check for undefined
     // in the property
-    noBind: true,
+    noBind: true
   },
   types: {
     type: Array,
     default: function () {
       return []
     }
-  },
+  }
 }
 
 const props = {

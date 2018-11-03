@@ -66,7 +66,7 @@ export default function (options) {
     mixins: [MapElementMixin],
     props: {
       ...props,
-      ...mappedPropsToVueProps(mappedProps),
+      ...mappedPropsToVueProps(mappedProps)
     },
     render () { return '' },
     provide () {
