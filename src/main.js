@@ -1,5 +1,5 @@
 import lazy from './utils/lazyValue'
-import { loadGmapAp i} from './manager'
+import { loadGmapApi } from './manager'
 
 import Marker from './components/marker'
 import Polyline from './components/polyline'
