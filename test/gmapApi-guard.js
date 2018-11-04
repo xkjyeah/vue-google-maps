@@ -1,10 +1,10 @@
 import Lab from 'lab'
 import assert from 'assert'
-import {getPage, loadFile} from './test-setup/test-common'
+import { getPage, loadFile } from './test-setup/test-common'
 
 export const lab = Lab.script()
 
-lab.experiment('Effectiveness of gmapApi guard', {timeout: 15000}, function () {
+lab.experiment('Effectiveness of gmapApi guard', { timeout: 15000 }, function () {
   let page = null
   let isError = false
 
@@ -14,7 +14,7 @@ lab.experiment('Effectiveness of gmapApi guard', {timeout: 15000}, function () {
     })
   }
 
-  lab.before({timeout: 15000}, getPage(p => {
+  lab.before({ timeout: 15000 }, getPage(p => {
     isError = false
     page = p
 

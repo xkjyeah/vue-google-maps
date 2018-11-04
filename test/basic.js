@@ -6,7 +6,7 @@ import { getPage, loadFile } from './test-setup/test-common'
 
 export const lab = Lab.script()
 
-lab.experiment('Basic tests', {timeout: 15000}, function () {
+lab.experiment('Basic tests', { timeout: 15000 }, function () {
   let page = null
 
   async function loadPage () {
@@ -26,7 +26,7 @@ lab.experiment('Basic tests', {timeout: 15000}, function () {
       }))
   }
 
-  lab.before({timeout: 15000}, getPage(p => { page = p }))
+  lab.before({ timeout: 15000 }, getPage(p => { page = p }))
 
   lab.test('Maps API is loaded', async function () {
     await loadPage()
@@ -46,7 +46,7 @@ lab.experiment('Basic tests', {timeout: 15000}, function () {
     'Parent of $mapObject.div is a .map-container')
   })
 
-  lab.test('Panning of map works', {timeout: 30000}, async function () {
+  lab.test('Panning of map works', { timeout: 30000 }, async function () {
     await loadPage()
     const vue = await mountVue()
 
@@ -69,13 +69,13 @@ lab.experiment('Basic tests', {timeout: 15000}, function () {
     // Then try to pan the page
     await page.mouse.move(right - 4, top + 4)
     await page.mouse.down()
-    await page.mouse.move(left + 4, bottom - 4, {steps: 20})
+    await page.mouse.move(left + 4, bottom - 4, { steps: 20 })
     await new Promise(resolve => setTimeout(resolve, 100))
     await page.mouse.up()
 
-    const {lat, lng} = await page.evaluate((vue) => {
+    const { lat, lng } = await page.evaluate((vue) => {
       const c = vue.$refs.map.$mapObject.getCenter()
-      return {lat: c.lat(), lng: c.lng()}
+      return { lat: c.lat(), lng: c.lng() }
     }, vue)
     assert(lat > 1.45, 'Lat greater than 1.45')
     assert(lng > 103.9, 'Lng greater than 103.9')

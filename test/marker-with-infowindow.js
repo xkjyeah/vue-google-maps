@@ -1,10 +1,10 @@
 import Lab from 'lab'
 import assert from 'assert'
-import {getPage, loadFile} from './test-setup/test-common'
+import { getPage, loadFile } from './test-setup/test-common'
 
 export const lab = Lab.script()
 
-lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
+lab.experiment('Marker / Infowindow tests', { timeout: 15000 }, function () {
   let page = null
 
   async function loadPage () {
@@ -13,7 +13,7 @@ lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
     })
   }
 
-  lab.before({timeout: 15000}, getPage(p => { page = p }))
+  lab.before({ timeout: 15000 }, getPage(p => { page = p }))
 
   lab.test('Clicking the marker triggers the infowindow', async function () {
     await loadPage()

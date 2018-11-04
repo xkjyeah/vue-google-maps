@@ -1,10 +1,10 @@
 import Lab from 'lab'
 import assert from 'assert'
-import {getPage, loadFile} from './test-setup/test-common'
+import { getPage, loadFile } from './test-setup/test-common'
 
 export const lab = Lab.script()
 
-lab.experiment('On-demand API loading', {timeout: 15000}, function () {
+lab.experiment('On-demand API loading', { timeout: 15000 }, function () {
   let page = null
 
   async function loadPage () {
@@ -27,7 +27,7 @@ lab.experiment('On-demand API loading', {timeout: 15000}, function () {
       }))
   }
 
-  lab.before({timeout: 15000}, getPage(p => { page = p }))
+  lab.before({ timeout: 15000 }, getPage(p => { page = p }))
 
   lab.test('Maps API is loaded only on demand', async function () {
     await loadPage()
