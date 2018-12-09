@@ -138,7 +138,8 @@ export default {
 ```
 
 Add options to you Map through the options property:
-Exmaple of [MapOptions](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions):
+
+Example of [MapOptions](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions):
  ```vue
  <GmapMap
   :options="{
@@ -155,6 +156,7 @@ Exmaple of [MapOptions](https://developers.google.com/maps/documentation/javascr
 ```
 
 Add region and language localization:
+
 Example for [Localization](https://developers.google.com/maps/documentation/javascript/localization):
 ```vue
 Vue.use(VueGoogleMaps, {
