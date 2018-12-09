@@ -137,7 +137,7 @@ export default {
 </script>
 ```
 
-Add options to you Map through the options property:
+Add options with the options property:
 
 Example of [MapOptions](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions):
  ```vue
