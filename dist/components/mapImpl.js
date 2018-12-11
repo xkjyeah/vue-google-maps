@@ -162,8 +162,8 @@ exports.default = {
       Object.assign(options, copiedData);
       _this2.$mapObject = new google.maps.Map(element, options);
       // console.log('map: ', this.$mapObject)
-      var streetViewLayer = new google.maps.StreetViewCoverageLayer();
-      streetViewLayer.setMap(_this2.$mapObject);
+      // var streetViewLayer = new google.maps.StreetViewCoverageLayer();
+      // streetViewLayer.setMap(this.$mapObject);
       // binding properties (two and one way)
       (0, _propsBinder2.default)(_this2, _this2.$mapObject, (0, _omit3.default)(props, ['center', 'zoom', 'bounds']));
 
