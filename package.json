@@ -71,8 +71,8 @@
     "vue-loader": "^14.2.2",
     "vue-router": "^2.7.0",
     "vue-template-compiler": "^2.1.6",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.10",
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0",
     "yaml-loader": "^0.5.0"
   },
   "author": "Daniel Sim, Guillaume Leclerc",
