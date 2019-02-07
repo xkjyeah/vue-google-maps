@@ -52,10 +52,10 @@ export const loadGmapApi = (options, loadCn) => {
     }
     options['callback'] = 'vueGoogleMapsInit'
 
-    let baseUrl = '//maps.googleapis.com/'
+    let baseUrl = 'https://maps.googleapis.com/'
 
     if (typeof loadCn === 'boolean' && loadCn === true) {
-      baseUrl = '//maps.google.cn/'
+      baseUrl = 'https://maps.google.cn/'
     }
 
     let url = baseUrl + 'maps/api/js?' +
