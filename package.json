@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/xkjyeah/vue-google-maps#readme",
   "dependencies": {
-    "babel-runtime": "^5.8.0",
+    "babel-runtime": "^6.26.0",
     "marker-clusterer-plus": "^2.1.4"
   },
   "devDependencies": {
@@ -38,7 +38,6 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "babel-runtime": "^5.8.0",
     "code": "^5.2.0",
     "cross-env": "^1.0.8",
     "css-loader": "^0.23.0",
@@ -57,7 +56,7 @@
     "lodash": "^4.15.0",
     "lodash-es": "^4.17.4",
     "lodash-webpack-plugin": "^0.11.4",
-    "node-sass": "^4.8.3",
+    "node-sass": "^4.9.4",
     "puppeteer": "^1.1.0",
     "raw-loader": "^0.5.1",
     "sass-loader": "^7.0.1",
