@@ -3,7 +3,7 @@ import ExamplePageDefault from './ExamplePageDefault.vue'
 import ExamplePage from './ExamplePage.vue'
 import Examples from '../examples-index'
 import Vue from 'vue'
-import * as VueGoogleMaps from '../../dist/main.js';
+import * as VueGoogleMaps from '../../dist/main.js'
 import VueRouter from 'vue-router'
 
 Vue.config.optionMergeStrategies.description = (a, b) => a || b
@@ -12,8 +12,8 @@ Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
     libraries: 'places'
-  },
-});
+  }
+})
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -25,15 +25,15 @@ const router = new VueRouter({
       name: e.name,
       description: e.description,
       source: e.source,
-      component: e.module,
+      component: e.module
     }
   }))
     .concat([
-      {path: '/', component: ExamplePageDefault},
+      { path: '/', component: ExamplePageDefault }
     ])
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-  new (Vue.extend(ExamplesApp))({router})
-  .$mount('#app')
+  new (Vue.extend(ExamplesApp))({ router })
+    .$mount('#app')
 })

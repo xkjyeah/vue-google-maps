@@ -43,6 +43,6 @@ export default function TwoWayBindingWrapper (fn) {
   fn(
     () => { counter += 1 },
     () => { counter = Math.max(0, counter - 1) },
-    () => counter === 0,
+    () => counter === 0
   )
 }

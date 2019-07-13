@@ -31,6 +31,10 @@ const props = {
     type: Number,
     twoWay: false
   },
+  averageCenter: {
+    type: Boolean,
+    twoWay: false
+  },
   ignoreHidden: {
     type: Boolean,
     twoWay: false
@@ -86,7 +90,7 @@ export default mapElementFactory({
     }
     return MarkerClusterer
   },
-  ctrArgs: ({map, ...otherOptions}) => [map, [], otherOptions],
+  ctrArgs: ({ map, ...otherOptions }) => [map, [], otherOptions],
 
   render (h) {
     // <div><slot></slot></div>
@@ -127,5 +131,5 @@ export default mapElementFactory({
     if (this.$clusterObject) {
       this.$clusterObject.clearMarkers()
     }
-  },
+  }
 })

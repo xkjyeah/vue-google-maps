@@ -26,7 +26,7 @@ export function getPropsValues (vueInst, props) {
   */
 export function bindProps (vueInst, googleMapsInst, props, options) {
   for (let attribute in props) {
-    let {twoWay, type, trackProperties, noBind} = props[attribute]
+    let { twoWay, type, trackProperties, noBind } = props[attribute]
 
     if (noBind) continue
 

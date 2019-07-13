@@ -1,17 +1,17 @@
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import downArrowSimulator from '../utils/simulateArrowDown.js'
 
 const props = {
   bounds: {
-    type: Object,
+    type: Object
   },
   defaultPlace: {
     type: String,
-    default: '',
+    default: ''
   },
   componentRestrictions: {
     type: Object,
-    default: null,
+    default: null
   },
   types: {
     type: Array,
@@ -71,5 +71,5 @@ export default {
   created () {
     console.warn('The PlaceInput class is deprecated! Please consider using the Autocomplete input instead') // eslint-disable-line no-console
   },
-  props: props,
+  props: props
 }

@@ -12,11 +12,11 @@ const props = {
   },
   draggable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   editable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   options: {
     type: Object,
@@ -42,5 +42,5 @@ export default mapElementFactory({
   mappedProps: props,
   name: 'circle',
   ctr: () => google.maps.Circle,
-  events,
+  events
 })

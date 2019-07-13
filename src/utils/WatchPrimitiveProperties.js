@@ -19,6 +19,6 @@ export default function WatchPrimitiveProperties (vueInst, propertiesToTrack, ha
   }
 
   for (let prop of propertiesToTrack) {
-    vueInst.$watch(prop, requestHandle, {immediate})
+    vueInst.$watch(prop, requestHandle, { immediate })
   }
 }

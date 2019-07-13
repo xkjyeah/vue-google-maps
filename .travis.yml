@@ -6,9 +6,9 @@ script:
 before_deploy: 'npm run build-examples'
 deploy:
   provider: pages
-  github-token: $GITHUB_TOKEN
-  keep-history: true
-  local-dir: examples
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  local_dir: examples
   on:
     branch: vue2
   skip_cleanup: true

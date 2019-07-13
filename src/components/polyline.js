@@ -5,7 +5,7 @@ const props = {
     type: Boolean
   },
   editable: {
-    type: Boolean,
+    type: Boolean
   },
   options: {
     twoWay: false,
@@ -14,7 +14,7 @@ const props = {
   path: {
     type: Array,
     twoWay: true
-  },
+  }
 }
 
 const events = [
@@ -36,7 +36,7 @@ export default mapElementFactory({
   props: {
     deepWatch: {
       type: Boolean,
-      default: false,
+      default: false
     }
   },
   events,
@@ -71,7 +71,7 @@ export default mapElementFactory({
       }
     }, {
       deep: this.deepWatch,
-      immediate: true,
+      immediate: true
     })
   }
 })

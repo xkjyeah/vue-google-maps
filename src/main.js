@@ -1,5 +1,5 @@
 import lazy from './utils/lazyValue'
-import {loadGmapApi} from './manager'
+import { loadGmapApi } from './manager'
 
 import Marker from './components/marker'
 import Polyline from './components/polyline'
@@ -31,9 +31,9 @@ const Cluster = (process.env.BUILD_DEV === '1')
 let GmapApi = null
 
 // export everything
-export {loadGmapApi, Marker, Polyline, Polygon, Circle, Cluster, Rectangle,
+export { loadGmapApi, Marker, Polyline, Polygon, Circle, Cluster, Rectangle,
   InfoWindow, Map, PlaceInput, MapElementMixin, MapElementFactory, Autocomplete,
-  MountableMixin, StreetViewPanorama}
+  MountableMixin, StreetViewPanorama }
 
 export function install (Vue, options) {
   // Set defaults
@@ -48,7 +48,7 @@ export function install (Vue, options) {
   // via:
   //   import {gmapApi} from 'vue2-google-maps'
   //   export default {  computed: { google: gmapApi }  }
-  GmapApi = new Vue({data: {gmapApi: null}})
+  GmapApi = new Vue({ data: { gmapApi: null } })
 
   const defaultResizeBus = new Vue()
 
@@ -101,7 +101,7 @@ function makeGmapApiPromiseLazy (options) {
             reject(err)
           }
         })
-        .then(onApiLoaded)
+          .then(onApiLoaded)
       }
     })
   } else { // If library should not handle API, provide

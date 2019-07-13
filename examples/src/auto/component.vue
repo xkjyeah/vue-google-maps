@@ -88,7 +88,7 @@
 
   </div>
 </template>
-<style lang="scss">
+<style lang="css">
 li, div, a {
   font-family: sans-serif;
 }
@@ -99,19 +99,20 @@ h1, h2 {
 }
 h1 {
   cursor: pointer;
-
-  &:hover {
-    background: #DEF;
-  }
-  &.expanded:before {
-    content: "- ";
-    opacity: 0.5;
-  }
-  &:not(.expanded):before {
-    content: "+";
-    opacity: 0.5;
-  }
 }
+
+h1:hover {
+  background: #DEF;
+}
+h1.expanded:before {
+  content: "- ";
+  opacity: 0.5;
+}
+h1:not(.expanded):before {
+  content: "+";
+  opacity: 0.5;
+}
+
 .component {
   border: solid 1px #888;
   padding: 12px;

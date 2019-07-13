@@ -1,5 +1,5 @@
 import bindEvents from '../utils/bindEvents.js'
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
@@ -19,7 +19,7 @@ const props = {
   position: {
     twoWay: true,
     type: Object,
-    noBind: true,
+    noBind: true
   },
   pano: {
     twoWay: true,
@@ -32,7 +32,7 @@ const props = {
   visible: {
     twoWay: true,
     type: Boolean,
-    default: true,
+    default: true
   },
   options: {
     twoWay: false,
@@ -43,7 +43,7 @@ const props = {
 
 const events = [
   'closeclick',
-  'status_changed',
+  'status_changed'
 ]
 
 export default {
@@ -55,16 +55,16 @@ export default {
       if (this.$panoObject) {
         google.maps.event.trigger(this.$panoObject, 'resize')
       }
-    },
+    }
   },
 
   provide () {
     const promise = new Promise((resolve, reject) => {
-      this.$panoPromiseDeferred = {resolve, reject}
+      this.$panoPromiseDeferred = { resolve, reject }
     })
     return {
       '$panoPromise': promise,
-      '$mapPromise': promise, // so that we can use it with markers
+      '$mapPromise': promise // so that we can use it with markers
     }
   },
 
@@ -80,7 +80,7 @@ export default {
     finalLatLng () {
       return {
         lat: this.finalLat,
-        lng: this.finalLng,
+        lng: this.finalLng
       }
     }
   },
@@ -101,7 +101,7 @@ export default {
       // creating the map
       const options = {
         ...this.options,
-        ...getPropsValues(this, props),
+        ...getPropsValues(this, props)
       }
       delete options.options
 
@@ -140,8 +140,8 @@ export default {
 
       return this.$panoPromise
     })
-    .catch((error) => {
-      throw error
-    })
-  },
+      .catch((error) => {
+        throw error
+      })
+  }
 }

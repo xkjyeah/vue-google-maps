@@ -1,6 +1,6 @@
-const webpack = require('webpack');
-const path = require('path');
-const fs = require('fs');
+const path = require('path')
+const fs = require('fs')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 // Write out the list of examples to the examples index
 const examplesDir = path.resolve(__dirname, 'components')
@@ -53,30 +53,42 @@ const base = {
         }
       },
       {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
         test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
       },
       {
         test: /\.yml$/,
         exclude: /node_modules/,
-        loader: 'json-loader!yaml-loader',
+        loader: 'json-loader!yaml-loader'
       },
       {
         // edit this for additional asset file types
         test: /\.(png|jpg|gif)$/,
-        loader: 'file-loader?name=[name].[ext]?[hash]',
+        loader: 'file-loader?name=[name].[ext]?[hash]'
       }
-    ],
+    ]
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   mode: process.env.NODE_ENV || 'development'
-};
+}
 
 module.exports = [
   {
     ...base,
     entry: [
-      'babel-polyfill',
+      '@babel/polyfill',
       './src/main.js'
     ],
     output: {
@@ -87,7 +99,7 @@ module.exports = [
   {
     ...base,
     entry: [
-      'babel-polyfill',
+      '@babel/polyfill',
       './src/autoapi.js'
     ],
     output: {

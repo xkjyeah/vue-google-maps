@@ -1,5 +1,5 @@
 import bindEvents from '../utils/bindEvents.js'
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import mountableMixin from '../utils/mountableMixin.js'
 
 import TwoWayBindingWrapper from '../utils/TwoWayBindingWrapper.js'
@@ -11,17 +11,17 @@ const props = {
     required: true,
     twoWay: true,
     type: Object,
-    noBind: true,
+    noBind: true
   },
   zoom: {
     required: false,
     twoWay: true,
     type: Number,
-    noBind: true,
+    noBind: true
   },
   heading: {
     type: Number,
-    twoWay: true,
+    twoWay: true
   },
   mapTypeId: {
     twoWay: true,
@@ -29,7 +29,7 @@ const props = {
   },
   tilt: {
     twoWay: true,
-    type: Number,
+    type: Number
   },
   options: {
     type: Object,
@@ -50,7 +50,7 @@ const events = [
   'mouseover',
   'resize',
   'rightclick',
-  'tilesloaded',
+  'tilesloaded'
 ]
 
 // Plain Google Maps methods exposed here for convenience
@@ -112,7 +112,7 @@ export default {
         (typeof this.center.lng === 'function') ? this.center.lng() : this.center.lng
     },
     finalLatLng () {
-      return {lat: this.finalLat, lng: this.finalLng}
+      return { lat: this.finalLat, lng: this.finalLng }
     }
   },
 
@@ -132,7 +132,7 @@ export default {
       // creating the map
       const options = {
         ...this.options,
-        ...getPropsValues(this, props),
+        ...getPropsValues(this, props)
       }
       delete options.options
       this.$mapObject = new google.maps.Map(element, options)
@@ -173,12 +173,12 @@ export default {
 
       return this.$mapObject
     })
-    .catch((error) => {
-      throw error
-    })
+      .catch((error) => {
+        throw error
+      })
   },
   methods: {
     ...customMethods,
-    ...linkedMethods,
-  },
+    ...linkedMethods
+  }
 }

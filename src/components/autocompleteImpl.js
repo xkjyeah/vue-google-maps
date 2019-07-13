@@ -1,6 +1,6 @@
-import {bindProps, getPropsValues} from '../utils/bindProps.js'
+import { bindProps, getPropsValues } from '../utils/bindProps.js'
 import downArrowSimulator from '../utils/simulateArrowDown.js'
-import {mappedPropsToVueProps} from './mapElementFactory'
+import { mappedPropsToVueProps } from './mapElementFactory'
 
 const mappedProps = {
   bounds: {
@@ -10,14 +10,14 @@ const mappedProps = {
     type: Object,
     // Do not bind -- must check for undefined
     // in the property
-    noBind: true,
+    noBind: true
   },
   types: {
     type: Array,
     default: function () {
       return []
     }
-  },
+  }
 }
 
 const props = {

@@ -1,10 +1,10 @@
 import Lab from 'lab'
 import assert from 'assert'
-import {getPage, loadFile} from './test-setup/test-common'
+import { getPage, loadFile } from './test-setup/test-common'
 
 export const lab = Lab.script()
 
-lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
+lab.experiment('Marker / Infowindow tests', { timeout: 15000 }, function () {
   let page = null
 
   async function loadPage () {
@@ -13,7 +13,7 @@ lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
     })
   }
 
-  lab.before({timeout: 15000}, getPage(p => { page = p }))
+  lab.before({ timeout: 15000 }, getPage(p => { page = p }))
 
   lab.test('Clicking the marker triggers the infowindow', async function () {
     await loadPage()
@@ -21,10 +21,10 @@ lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
     await page.evaluate(() => {
       // Ensure that the map has been created
       return window.theVue.$refs.map.$mapPromise
-      .then(() => {
+        .then(() => {
         // Give some more time for the marker to initialize
-        return new Promise(resolve => setTimeout(resolve, 100))
-      })
+          return new Promise(resolve => setTimeout(resolve, 100))
+        })
     })
 
     // Is the infowindow hidden?
@@ -48,7 +48,7 @@ lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
 
       return Promise.resolve([
         el.offsetLeft + 0.5 * el.offsetWidth,
-        el.offsetTop + 0.5 * el.offsetHeight,
+        el.offsetTop + 0.5 * el.offsetHeight
       ])
     })
 
@@ -57,9 +57,9 @@ lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
     // Clicked is now true!
     assert(await page.evaluate(() => {
       return new Promise(resolve => setTimeout(resolve, 100))
-      .then(() => {
-        return window.theVue.clicked
-      })
+        .then(() => {
+          return window.theVue.clicked
+        })
     }),
     'marker is clicked')
 
@@ -73,12 +73,12 @@ lab.experiment('Marker / Infowindow tests', {timeout: 15000}, function () {
     assert(await page.evaluate(() => {
       window.theVue.infoWindow.open = false
       return new Promise(resolve => setTimeout(resolve, 100))
-      .then(() => {
-        return !document.getElementById('thediv') || (
-          document.getElementById('thediv').offsetWidth === 0 &&
-          document.getElementById('thediv').offsetHeight === 0
-        )
-      })
+        .then(() => {
+          return !document.getElementById('thediv') || (
+            document.getElementById('thediv').offsetWidth === 0 &&
+            document.getElementById('thediv').offsetHeight === 0
+          )
+        })
     }), 'setting open=false closes #thediv')
   })
 })

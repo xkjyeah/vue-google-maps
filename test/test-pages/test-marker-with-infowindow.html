@@ -1,28 +1,16 @@
 <html>
+
 <head>
   <meta charset="utf-8">
 </head>
+
 <body>
   <div id="app">
-    <gmap-map
-      :center="randomInitialLatLng"
-      :zoom="7"
-      style="height: 400px; width: 100%;"
-      ref="map"
-      id="themap">
+    <gmap-map :center="randomInitialLatLng" :zoom="7" style="height: 400px; width: 100%;" ref="map" id="themap">
 
-      <gmap-marker
-        :position="randomInitialLatLng"
-        :clickable="true"
-        @click="openInfoWindowTemplate(randomInitialLatLng)"
-        ref="markers">
-      </gmap-marker>
+      <gmap-marker :position="randomInitialLatLng" :clickable="true" @click="openInfoWindowTemplate(randomInitialLatLng)" ref="markers"></gmap-marker>
 
-      <gmap-info-window
-        :options="{maxWidth: 300}"
-        :position="infoWindow.position"
-        :opened="infoWindow.open"
-        @closeclick="infoWindow.open = false">
+      <gmap-info-window :options="{maxWidth: 300}" :position="infoWindow.position" :opened="infoWindow.open" @closeclick="infoWindow.open = false">
         <div id="thediv">hello</div>
       </gmap-info-window>
     </gmap-map>
@@ -34,7 +22,7 @@
   <script>
     Vue.use(VueGoogleMaps, {
       load: {
-        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc'
       }
     })
 
@@ -44,16 +32,22 @@
         data () {
           return {
             infoWindow: {
-              position: {lat: 50, lng: 90},
+              position: {
+                lat: 50,
+                lng: 90
+              },
               open: false,
               template: ''
             },
-            clicked: false,
+            clicked: false
           }
         },
         computed: {
           randomInitialLatLng () {
-            return ({lat: 50 + Math.random(), lng: 90 + Math.random()})
+            return ({
+              lat: 50 + Math.random(),
+              lng: 90 + Math.random()
+            })
           }
         },
         methods: {
@@ -66,6 +60,8 @@
         }
       })
     })
+
   </script>
 </body>
+
 </html>
