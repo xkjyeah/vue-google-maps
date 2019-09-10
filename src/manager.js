@@ -33,6 +33,12 @@ export const loadGmapApi = (options, loadCn) => {
     // Do nothing if run from server-side
     return
   }
+
+  if(!!window.google) {
+    // Do nothing if window.google is alreay exists
+    return
+  }
+
   if (!isApiSetUp) {
     isApiSetUp = true
 
