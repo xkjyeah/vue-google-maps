@@ -34,6 +34,11 @@ const props = {
   },
   options: {
     type: Object
+  },
+  fields: {
+    required: false,
+    type: Array,
+    default: null
   }
 }
 
@@ -70,6 +75,12 @@ export default {
           this.$autocomplete.setComponentRestrictions(v)
         }
       })
+      
+      // IMPORTANT: To avoid paying for data that you don't need,
+      // be sure to use Autocomplete.setFields() to specify only the place data that you will use.
+      if(_this.fields) {
+        _this.$autocomplete.setFields(_this.fields);
+      }
 
       // Not using `bindEvents` because we also want
       // to return the result of `getPlace()`
