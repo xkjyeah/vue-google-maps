@@ -78,8 +78,8 @@ export default {
       
       // IMPORTANT: To avoid paying for data that you don't need,
       // be sure to use Autocomplete.setFields() to specify only the place data that you will use.
-      if(_this.fields) {
-        _this.$autocomplete.setFields(_this.fields);
+      if(this.fields) {
+        this.$autocomplete.setFields(this.fields);
       }
 
       // Not using `bindEvents` because we also want
