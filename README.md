@@ -207,7 +207,7 @@ Inconvenient, but this means all other users don't have to bundle the marker clu
 in their source code.
 
 ### Autocomplete component
-The autocomplete supports cutsom text field via scoped slot
+The autocomplete supports custom text field via scoped slot
 
 ```html
           <gmap-autocomplete class="introInput" >
@@ -228,6 +228,10 @@ The ref on the element must be called input, if the element is a vue component t
 The v-on:listeners is rquired, v-on:attrs may or may not be required depending on your implementation.
 
 This requires vue 2.6 or higher for the new slot support.
+
+**NOTE: The official NPM package does not support this until the NPM package is updated, you can use this alternate temporary one or build your own version from source.**
+
+https://www.npmjs.com/package/vue2-google-maps-withscopedautocomp
 
 ### Adding your own components
 
