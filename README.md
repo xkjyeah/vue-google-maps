@@ -23,6 +23,14 @@ The above three will go a long way to keeping the project maintainable and contr
 
 This is the Vue 2.x port of vue-google-maps!
 
+## Attention!
+
+This great package doesn't release the last features added to it for different reasons, is because it that some developers land a new package with the last features added to it.
+
+If you want to use the last features in this package you can use [gmap-vue](https://www.npmjs.com/package/gmap-vue), it is a fork of this repository and has all new fixes and features added to it.
+
+This new package has new documentation with live examples that can you test with your own gmap key. You can visit it following this link [gmap-vue docs](https://diegoazh.github.io/gmap-vue/).
+
 ## Installation
 
 ### With npm (Recommended)
