@@ -59,7 +59,7 @@ export default (() => {
       let baseUrl = 'https://maps.googleapis.com/'
 
       if (typeof loadCn === 'boolean' && loadCn === true) {
-        baseUrl = 'https://maps.google.cn/'
+        baseUrl = 'https://www.google.cn//'
       }
 
       const query = Object.keys(options)
