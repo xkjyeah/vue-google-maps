@@ -62,7 +62,11 @@ const props = {
   zoomOnClick: {
     type: Boolean,
     twoWay: false
-  }
+  },
+  clusterClass: {
+  	type: String,
+  	twoWay: false
+  },
 }
 
 const events = [
