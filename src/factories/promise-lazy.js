@@ -1,5 +1,12 @@
 import lazy from '../utils/lazy-value'
 
+let resolveLoaded
+let rejectLoaded
+export const loaded = new Promise((resolve, reject) => {
+  resolveLoaded = resolve
+  rejectLoaded = reject
+})
+
 export default function (loadGmapApi, GmapApi) {
   return function promiseLazyCreator (options) {
     // Things to do once the API is loaded
@@ -21,7 +28,7 @@ export default function (loadGmapApi, GmapApi) {
             } catch (err) {
               reject(err)
             }
-          }).then(onApiLoaded)
+          }).then(onApiLoaded).then(resolveLoaded).catch(rejectLoaded)
         }
       })
     } else { // If library should not handle API, provide
@@ -33,7 +40,7 @@ export default function (loadGmapApi, GmapApi) {
           return
         }
         window.vueGoogleMapsInit = resolve
-      }).then(onApiLoaded)
+      }).then(onApiLoaded).then(resolveLoaded).catch(rejectLoaded)
 
       return lazy(() => promise)
     }
