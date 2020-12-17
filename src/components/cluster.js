@@ -125,7 +125,7 @@ export default mapElementFactory({
     this.$children.forEach(marker => {
       if (marker.$clusterObject === this.$clusterObject) {
         marker.$clusterObject = null
-        marker.setMap(null);
+        marker.setMap(null)
       }
     })
 
