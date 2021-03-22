@@ -19,17 +19,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xkjyeah/vue-google-maps.git"
+    "url": "git+https://github.com/Inventory-Shield/vue-google-maps.git"
   },
   "bugs": {
-    "url": "https://github.com/xkjyeah/vue-google-maps/issues"
+    "url": "https://github.com/Inventory-Shield/vue-google-maps/issues"
   },
-  "homepage": "https://github.com/xkjyeah/vue-google-maps#readme",
+  "homepage": "https://github.com/Inventory-Shield/vue-google-maps#readme",
   "dependencies": {
-    "marker-clusterer-plus": "^2.1.4"
+    "@googlemaps/markerclustererplus": "^1.1.0"
   },
   "peerDependencies": {
-    "vue": "^2.6.10"
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -62,10 +62,10 @@
     "style-loader": "^1.0.0",
     "template-html-loader": "1.0.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "vue": "^2.6.10",
+    "vue": "^2.6.12",
     "vue-loader": "^15.7.1",
     "vue-router": "^3.1.3",
-    "vue-template-compiler": "^2.6.10",
+    "vue-template-compiler": "^2.6.12",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9",
     "yaml-loader": "^0.5.0"
