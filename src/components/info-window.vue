@@ -10,5 +10,6 @@
 </template>
 
 <script>
-export default ((x) => x.default || x)(require('../components-implementation/info-window'))
+import r from "../components-implementation/info-window";
+export default ((x) => x.default || x)(r)
 </script>
