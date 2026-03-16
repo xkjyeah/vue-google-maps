@@ -1,0 +1,8 @@
+label: Basic usage
+position: 4
+collapsible: true
+collapsed: true
+link:
+  type: generated-index
+  title: Basic usage
+  description: Some basics usage of the plugin

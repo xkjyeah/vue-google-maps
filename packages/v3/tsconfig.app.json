@@ -1,0 +1,68 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.type.ts",
+    "src/**/*.interface.ts"
+  ],
+  "exclude": [
+    "src/tests/**/*",
+    "src/cypress/**/*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "noEmit": false,
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "target": "ES2022",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "types": [
+      "google.maps",
+      "node"
+    ],
+    "outDir": "dist/types",
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitThis": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "stripInternal": true,
+    "isolatedModules": true,
+    /* Language and Environment */
+    "module": "ESNext", // Use ESNext modules
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file naming
+    /* Linting/Code Quality */
+    "noUnusedLocals": true, // Report unused local variables
+    "noUnusedParameters": true, // Report unused function parameters
+    "noUncheckedIndexedAccess": true, // Enable index signature checks (prevents undefined returns)
+    /* Node.js Specific */
+    "allowJs": true, // Allow JavaScript files in the project (for mixed JS/TS codebases)
+    "checkJs": false, // Don't type-check JavaScript files unless explicitly enabled
+    "skipLibCheck": true, // Skip checking library declaration files (speeds up build)
+    "emitDecoratorMetadata": true, // Enable metadata for decorators (commonly used with frameworks like TypeORM or NestJS)
+    "experimentalDecorators": true, // Enable support for decorators
+    /* Performance and Optimization */
+    "incremental": true, // Speed up recompilation by using incremental builds
+    "pretty": true // Output readable, colored TypeScript error messages
+  }
+}

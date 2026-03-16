@@ -1,0 +1,8 @@
+label: Developers
+position: 4
+collapsible: true
+collapsed: true
+link:
+  type: generated-index
+  title: Developers
+  description: Documentation for developers

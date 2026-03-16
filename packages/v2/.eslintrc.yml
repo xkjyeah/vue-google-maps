@@ -1,0 +1,41 @@
+env:
+  browser: true
+  commonjs: true
+  es6: true
+  node: true
+extends:
+  - plugin:vue/strongly-recommended
+  - airbnb-base
+  - prettier
+  - plugin:eslint-comments/recommended
+parserOptions:
+  parser: "@babel/eslint-parser"
+  ecmaVersion: 8
+  requireConfigFile: false
+  sourceType: module
+  ecmaFeatures:
+    modules: true
+plugins:
+  - vue
+globals:
+  google: true
+root: true
+rules:
+  eslint-comments/disable-enable-pair: error
+  eslint-comments/no-aggregating-enable: error
+  eslint-comments/no-duplicate-disable: error
+  eslint-comments/no-unlimited-disable: error
+  eslint-comments/no-unused-disable: error
+  eslint-comments/no-unused-enable: error
+  eslint-comments/require-description:
+    - error
+    - ignore:
+        - eslint-enable
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies: true
+      optionalDependencies: false
+      peerDependencies: false
+  no-param-reassign:
+    - error
+    - props: false

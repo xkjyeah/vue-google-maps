@@ -1,75 +1,25 @@
 {
-  "name": "vue2-google-maps",
-  "version": "0.12.1",
-  "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
-  "main": "dist/main.js",
+  "name": "monorepo-gmap-vue",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:diegoazh/gmap-vue.git",
+  "author": "\"Daniel Sim, Guillaume Leclerc\",",
+  "license": "MIT",
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
-    "build": "npm run build:babel && npm run build:webpack",
-    "build:babel": "shx mkdir -p dist && shx rm -r dist && cross-env BUILD_DEV=1 babel src -D --out-dir dist && echo {} > dist/.babelrc",
-    "build:webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "build:examples": "npm run build:examples:before && npm run build:examples:webpack",
-    "build:examples:before": "npm run build && shx cp dist/vue-google-maps.js examples",
-    "build:examples:webpack": "cd examples && cross-env NODE_ENV=production webpack",
-    "lab:tests": "lab -T test/test-setup/babel-transform.js -l -S test",
-    "lint": "eslint --ext .vue,.js src && eslint --ext .vue,.html,.js test",
-    "lint:fix": "eslint --fix --ext .vue,.js src && eslint --ext .vue,.html,.js test",
-    "test": "npm run lab:tests && npm run lint",
-    "deploy": "npm run build:examples && gh-pages -d examples",
-    "prepare": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xkjyeah/vue-google-maps.git"
-  },
-  "bugs": {
-    "url": "https://github.com/xkjyeah/vue-google-maps/issues"
-  },
-  "homepage": "https://github.com/xkjyeah/vue-google-maps#readme",
-  "dependencies": {
-    "marker-clusterer-plus": "^2.1.4"
-  },
-  "peerDependencies": {
-    "vue": "^2.6.10"
+    "serve:docs": "pnpm run --filter docs start",
+    "build:all": "pnpm run --recursive build",
+    "test": "pnpm run --recursive test:ci",
+    "test:e2e": "pnpm run --recursive test:e2e:ci",
+    "lint": "pnpm run --recursive lint",
+    "clean": "rimraf ./packages/**/node_modules && rimraf ./packages/**/package-lock.json && rimraf ./pnpm-lock.yaml && rimraf ./node_modules",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.4",
-    "@babel/core": "^7.6.4",
-    "@babel/polyfill": "^7.6.0",
-    "@babel/preset-env": "^7.6.3",
-    "@hapi/lab": "^20.4.0",
-    "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-minify-dead-code-elimination": "^0.5.1",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "consolidate": "^0.15.1",
-    "cross-env": "^6.0.3",
-    "css-loader": "^3.2.0",
-    "eslint": "^6.5.1",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-html": "^6.0.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-vue": "^5.2.3",
-    "file-loader": "^4.2.0",
-    "gh-pages": "^2.1.1",
-    "json-loader": "^0.5.7",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "puppeteer": "^1.20.0",
-    "raw-loader": "^3.1.0",
-    "shx": "^0.3.2",
-    "style-loader": "^1.0.0",
-    "template-html-loader": "1.0.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "vue": "^2.6.10",
-    "vue-loader": "^15.7.1",
-    "vue-router": "^3.1.3",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.41.1",
-    "webpack-cli": "^3.3.9",
-    "yaml-loader": "^0.5.0"
-  },
-  "author": "Daniel Sim, Guillaume Leclerc",
-  "license": "MIT"
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "rimraf": "^6.0.1"
+  }
 }

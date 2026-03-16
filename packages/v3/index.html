@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="module">
+      import { createApp } from 'vue';
+      import { GmapVuePlugin } from './src/main.ts';
+      import App from './cypress/runner/components/App.vue';
+
+      window.app = createApp(App)
+        .use(GmapVuePlugin, {
+          excludeEventsOnAllComponents() {
+            return [
+              'mousedown',
+              'mousemove',
+              'mouseout',
+              'mouseover',
+              'mouseup',
+            ];
+          },
+          load: {
+            key: import.meta.env.VITE_GOOGLE_API_KEY,
+            libraries: 'places,visualization,drawing',
+          },
+        })
+        .mount('#app');
+    </script>
+  </body>
+</html>

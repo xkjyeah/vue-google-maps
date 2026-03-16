@@ -1,0 +1,21 @@
+{
+  "name": "old-docs",
+  "version": "1.0.10",
+  "description": "documentation of gmap-vue plugin",
+  "main": "index.js",
+  "author": "Diego A. Zapata Hantsch",
+  "license": "MIT",
+  "scripts": {
+    "serve:docs": "vuepress dev docs",
+    "build:docs": "vuepress build docs",
+    "snyk-protect": "snyk protect",
+    "prepare": "pnpm run snyk-protect"
+  },
+  "dependencies": {
+    "gmap-vue": "^3.5.4",
+    "lodash": "^4.17.21",
+    "snyk": "^1.1064.0",
+    "vuepress": "^1.9.7"
+  },
+  "snyk": true
+}

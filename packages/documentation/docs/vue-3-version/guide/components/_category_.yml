@@ -1,0 +1,8 @@
+label: Components
+position: 5
+collapsible: true
+collapsed: true
+link:
+  type: generated-index
+  title: Components
+  description: Documentation about all plugin components

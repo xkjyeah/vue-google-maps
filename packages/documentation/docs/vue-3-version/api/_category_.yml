@@ -1,0 +1,8 @@
+label: API
+position: 3
+collapsible: true
+collapsed: true
+link:
+  type: generated-index
+  title: API
+  description: API documentation

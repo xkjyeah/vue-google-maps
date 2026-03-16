@@ -1,0 +1,98 @@
+{
+  "name": "@gmap-vue/v2",
+  "version": "3.5.4",
+  "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
+  "type": "module",
+  "main": "dist/main.js",
+  "module": "dist/esm/main.js",
+  "unpkg": "dist/gmap-vue.min.js",
+  "jsdelivr": "dist/gmap-vue.min.js",
+  "browser": {
+    "./sfc": "dist/components"
+  },
+  "engines": {
+    "node": ">=12",
+    "npm": ">6"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean:build": "rimraf ./dist",
+    "build": "pnpm run clean:build && cross-env NODE_ENV=production rollup --config",
+    "build:dev": "pnpm run clean:build && cross-env NODE_ENV=development rollup --config",
+    "build:test": "pnpm run clean:build && cross-env NODE_ENV=test rollup --config",
+    "lint": "prettier --write ./src && eslint --fix --ext .vue,.js,.html ./src",
+    "test": "echo 'not implemented yet'",
+    "lint-staged": "lint-staged",
+    "gen:api:docs": "rimraf ../documentation/docs/code && npx vuepress-jsdoc --dist ../documentation/docs --title \"GmapVue API\" --readme ./README.md",
+    "release": "semantic-release"
+  },
+  "exports": {
+    "import": "./dist/esm/main.js",
+    "require": "./dist/main.js",
+    "default": "./dist/esm/main.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diegoazh/gmap-vue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/diegoazh/gmap-vue/issues"
+  },
+  "homepage": "https://github.com/diegoazh/gmap-vue#readme",
+  "dependencies": {
+    "@googlemaps/markerclusterer": "^2.0.11"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.22.1",
+    "@babel/eslint-parser": "^7.21.8",
+    "@babel/preset-env": "^7.22.4",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "babel-loader": "^9.1.2",
+    "babel-plugin-minify-dead-code-elimination": "^0.5.2",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.4",
+    "better-docs": "^2.7.2",
+    "cross-env": "^7.0.3",
+    "documentation": "^14.0.2",
+    "eslint": "^8.41.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-vue": "^9.14.1",
+    "gh-pages": "^5.0.0",
+    "jsdoc": "^4.0.2",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "rollup": "^4.22.4",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-css-only": "^4.3.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-vue": "^6.0.0",
+    "semantic-release": "^21.0.2",
+    "semantic-release-cli": "^5.4.4",
+    "vue-docgen-api": "^4.72.3",
+    "vue-loader": "^17.2.1",
+    "vue-template-compiler": "^2.7.14",
+    "vuepress-jsdoc": "4.3.1"
+  },
+  "author": "Diego A. Zapata Häntsch, Daniel Sim, Guillaume Leclerc",
+  "license": "MIT"
+}

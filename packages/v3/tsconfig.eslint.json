@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": [
+    "env.d.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "cypress.config.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.interface.ts",
+    "src/**/*.type.ts",
+    "src/components/**/*.vue", // Add recursive inclusion
+    "cypress/**/*.ts",
+    "cypress/**/*.cy.ts",
+    "cypress/runner/components/**/*.vue", // Fix for nested .vue files in `runner`
+    "tests/**/*.spec.ts"
+  ],
+  "exclude": [
+    "dist",
+    "coverage",
+    "node_modules"
+  ]
+}

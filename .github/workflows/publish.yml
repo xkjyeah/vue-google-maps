@@ -1,0 +1,213 @@
+name: publish
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: "*"
+
+jobs:
+  install-and-cache:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Upload pnpm-lock.yaml as artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pnpm-lock
+          path: pnpm-lock.yaml
+    outputs:
+      lock-file: ./pnpm-lock.yaml
+
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    needs: [install-and-cache]
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - name: Download pnpm-lock.yaml artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: pnpm-lock
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build package
+        working-directory: ./packages/v3
+        run: pnpm run build
+      - name: Upload dist as artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: ./packages/v3/dist
+
+  test:
+    name: Test project
+    runs-on: ${{ matrix.os }}
+    needs: [install-and-cache, build]
+
+    strategy:
+      matrix:
+        include:
+          # Previous LTS (20.x) - amd64 on Ubuntu
+          - os: ubuntu-latest
+            node-version: 20.x
+            test-plan: test
+          - os: ubuntu-latest
+            node-version: 20.x
+            test-plan: "test:e2e"
+          # Current LTS (22.x) - full coverage
+          - os: ubuntu-latest
+            node-version: 22.x
+            test-plan: test
+          - os: ubuntu-latest
+            node-version: 22.x
+            test-plan: "test:e2e"
+          - os: windows-latest
+            node-version: 22.x
+            test-plan: test
+          - os: windows-latest
+            node-version: 22.x
+            test-plan: "test:e2e"
+          # - os: macos-14-arm64
+          #   node-version: 22.x
+          #   test-plan: test
+          # - os: macos-14-arm64
+          #   node-version: 22.x
+          #   test-plan: "test:e2e"
+          # Incoming LTS (24.x) - amd64 on Ubuntu
+          - os: ubuntu-latest
+            node-version: 24.x
+            test-plan: test
+          - os: ubuntu-latest
+            node-version: 24.x
+            test-plan: "test:e2e"
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: pnpm install
+      - name: Create env file
+        run: |
+          touch ./packages/v3/cypress/runner/.env
+          echo VITE_GOOGLE_API_KEY=${{ secrets.VITE_GOOGLE_API_KEY }} >> ./packages/v3/cypress/runner/.env
+      - name: Run unit tests
+        if: matrix.test-plan == 'test'
+        run: pnpm run test
+      # start-server-and-test@2.0.8 → ps-tree@1.2.0 → wmic.exe, which was
+      # removed from Windows Server 2025 (windows-latest). Tests complete
+      # successfully but the post-test cleanup crashes with ENOENT, causing
+      # exit code 1. Work around by managing the server lifecycle directly
+      # with bash (available on all runners via Git Bash), so process teardown
+      # uses bash's built-in kill instead of wmic.exe.
+      - name: Build and run e2e tests
+        if: matrix.test-plan == 'test:e2e'
+        shell: bash
+        working-directory: ./packages/v3
+        run: |
+          pnpm run test:e2e:build
+          pnpm exec cypress install
+          # Start vite preview in the background
+          pnpm exec vite preview --config cypress/runner/vite.config.mts &
+          SERVER_PID=$!
+          # Wait up to 60 s for the server using Node.js built-in http
+          # (no extra runtime dependencies required)
+          node -e "
+            const http = require('http');
+            const check = (n) => {
+              http.get('http://localhost:4173/', () => process.exit(0))
+                  .on('error', () => n > 0 ? setTimeout(() => check(n - 1), 1000)
+                                           : process.exit(1));
+            };
+            check(60);
+          "
+          # Run Cypress; capture exit code so we can forward it after cleanup
+          pnpm exec cypress run --e2e
+          CYPRESS_EXIT=$?
+          # Shut down the preview server with bash kill — no wmic.exe involved
+          kill $SERVER_PID 2>/dev/null || true
+          exit $CYPRESS_EXIT
+
+  publish:
+    name: NPM publish
+    runs-on: ubuntu-latest
+    needs: [install-and-cache, build, test]
+    if: ${{ github.ref == 'refs/heads/master'}}
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+      - name: Download pnpm-lock.yaml artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: pnpm-lock
+      - name: Download dist artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Configure git credentials
+        uses: OleksiyRudenko/gha-git-credentials@v2.1.2
+        with:
+          global: true
+          name: "${{ secrets.GH_USER }}"
+          email: "${{ secrets.GH_EMAIL }}"
+          actor: "${{ secrets.GH_FULL_NAME }}"
+          token: "${{ secrets.GH_TOKEN_REPO }}"
+      - name: Update origin push URI
+        run: |
+          git remote set-url origin "https://${{ secrets.GH_TOKEN_REPO }}@github.com/${{ secrets.GH_USER }}/${{ secrets.GH_REPOSITORY }}.git" > /dev/null 2>&1
+          git checkout master
+      - name: Preparing new release
+        working-directory: ./packages/v3
+        run: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_REPO }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          CI: true
+      - name: Publish new version to npm
+        uses: JS-DevTools/npm-publish@v4.1.5
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./packages/v3/package.json
