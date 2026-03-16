@@ -1,8 +1,0 @@
-label: Guide
-position: 2
-collapsible: true
-collapsed: true
-link:
-  type: generated-index
-  title: Guide
-  description: How to use the plugin

@@ -1,1 +1,0 @@
-pnpm run --recursive lint-staged #&& pnpm run gen:api:docs

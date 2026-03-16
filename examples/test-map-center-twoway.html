@@ -1,0 +1,96 @@
+<head>
+  <meta charset="utf-8" />
+  <style>
+  .map-container {
+    width: 400px;
+    height: 400px;
+    display: inline-block;
+  }
+  </style>
+</head>
+<body>
+  <script>
+  var tests = [];
+
+  </script>
+
+  <div id="test1">
+    <h2>Test 1</h2>
+    <ol>
+      <li>You can pan around this map, and the center is updated.</li>
+      <li>When you edit the lat/lng the map center is updated</li>
+    </ol>
+
+    <div>
+      Lat: <input type="number"
+        v-model.number.lazy="reportedMapCenter.lat"
+        @change="sync"
+        step="0.00001" />
+    </div>
+    <div>
+      Lng: <input type="number"
+        v-model.number.lazy="reportedMapCenter.lng"
+        @change="sync"
+        step="0.00001" />
+    </div>
+
+    <gmap-map :center="mapCenter" :zoom="12"
+      ref="map"
+      @center_changed="updateCenter"
+      @idle="sync"
+      class="map-container">
+    </gmap-map>
+
+    <gmap-street-view-panorama
+      :position="mapCenter"
+      ref="pano"
+      @position_changed="updateCenter"
+      :pov="pov"
+      class="map-container">
+    </gmap-street-view-panorama>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.js"></script>
+  <script src="vue-google-maps.js"></script>
+
+  <script>
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      new Vue({
+        el: '#test1',
+        data: {
+          reportedMapCenter: {
+            lat: 1.32,
+            lng: 103.8
+          },
+          mapCenter: null,
+          pov: {
+            pitch: 0,
+            heading: 0,
+          },
+        },
+        created () {
+          this.sync()
+        },
+        methods: {
+          updateCenter(latLng) {
+            this.reportedMapCenter = {
+              lat: latLng.lat(),
+              lng: latLng.lng(),
+            }
+          },
+          sync () {
+            this.mapCenter = this.reportedMapCenter
+          }
+        }
+      });
+    });
+  </script>
+
+</body>

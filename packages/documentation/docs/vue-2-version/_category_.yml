@@ -1,9 +1,0 @@
-label: Documentation
-position: 1
-collapsible: true
-collapsed: true
-link:
-  slug: vue-2-docs
-  type: generated-index
-  title: Vue 2 plugin documentation
-  description: Documentation for the plugin version used in Vue 2
