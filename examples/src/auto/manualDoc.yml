@@ -1,0 +1,166 @@
+# MapElementFactory:
+#   name: Unsupported Classes
+#   isIrregular: true
+#   is3rdParty: true
+#   description: >
+#     <p>If you need to wrap around any other class in
+#     the Google Maps API, you might find the <code>MapElementFactory</code>
+#     function useful.</p>
+#     <p>For example to wrap around the <code>GroundOverlay</code>
+#     class, one would write something like:</p>
+#     <pre>
+#     Vue.component('ground-overlay', VueGoogleMaps.MapElementFactory({
+#       mappedProps: {
+#         'opacity': {}
+#       },
+#       props: {
+#         'source': {type: String},
+#         'bounds': {type: Object},
+#       },
+#       events: ['click', 'dblclick'],
+#       name: 'groundOverlay',
+#       ctr: () => google.maps.GroundOverlay,
+#       ctrArgs: (options, {source, bounds}) => [source, bounds, options],
+#     }));
+#     </pre>
+#     <p>Please refer to <code>src/components/mapElementFactory.js</code>
+#     for more info.</p>
+#   mappedProps:
+#     PROPERTY:
+#       description: >
+#         <p>Properties can be mapped from Google Maps to your
+#         component by adding them as a key to the <code>mappedProps</code>
+#         option.</p>
+#         <p>You can specify a number of options, such as:</p>
+#         <ul>
+#         <li><code>twoWay</code> - to also bind to the <code>PROPERTY_changed</code> event.</li>
+#         <li><code>noBind</code> - if you need to manually set up the watchers.</li>
+#         <li><code>type</code> - specify a type to also enable property type validation by Vue.</li>
+#         </ul>
+#   props: {}
+
+Autocomplete:
+  name: autocomplete
+  isIrregular: true
+  description:
+    If you need to capture the native <code>input</code> / <code>change</code> / <code>keyup</code> /
+     <code>keydown</code> etc. events, just add a <code>.native</code> modifier to the event.
+  mappedProps:
+    bounds: {}
+    componentRestrictions: {}
+    types: {}
+  props:
+    placeholder: {}
+    selectFirstOnEnter:
+      description:
+        Modifies the behaviour of the <code>Autocomplete</code>
+        to select the first suggestion if the user presses
+        <code>Enter</code>.
+    value: {}
+    options: {}
+  events: ['place_changed', 'input.native', 'change.native', 'focus.native', '*.native']
+
+StreetViewPanorama:
+  description:
+    <p>The documentation for this class is incomplete.
+    You might want to refer to the source code ;)</p>
+  name: streetViewPanorama
+  isIrregular: true
+  mappedProps:
+    zoom:
+      twoWay: true
+    pov:
+      twoWay: true
+    position:
+      twoWay: true
+    pano:
+      twoWay: true
+    motionTracking:
+      twoWay: true
+    visible:
+      twoWay: true
+    options: {}
+  events:
+    - closeclick
+    - status_changed
+
+Map:
+  name: map
+  isIrregular: true
+  events:
+    - bounds_changed
+    - click
+    - dblclick
+    - drag
+    - dragend
+    - dragstart
+    - idle
+    - mousemove
+    - mouseout
+    - mouseover
+    - resize
+    - rightclick
+    - tilesloaded
+  mappedProps:
+    center:
+      twoWay: true
+    zoom:
+      twoWay: true
+    heading:
+      twoWay: true
+    mapTypeId:
+      twoWay: true
+    tilt:
+      twoWay: true
+    options: {}
+  props: {}
+
+
+Cluster:
+  is3rdParty: true
+  description: >
+    <p>
+    <strong>Note:</strong>
+    Using <code>Cluster</code> requires <code>marker-clusterer-plus</code>
+    to be installed.
+    </p>
+
+    <p>
+    Because <code>Cluster</code> has a dependency on an extra package
+    which many users might not need, you need to explicitly import this dependency
+    by writing:
+    </p>
+    <pre>
+
+    import GmapCluster from 'vue2-google-maps/src/components/cluster'
+    <br>
+    <br>Vue.component('GmapCluster', GmapCluster)
+    </pre>
+
+Polyline:
+  props:
+    deepWatch:
+      description:
+        <p>If <code>true</code>, will watch the <code>path</code> property deeply
+        (i.e. every element of the array) for changes.
+        This will be expensive for large polygons / polylines.</p>
+
+        <p>If you know that your <code>path</code> is unlikely to change, then
+        leave this as <code>false</code></p>
+
+Polygon:
+  props:
+    deepWatch:
+      description:
+        <p>If <code>true</code>, will watch the <code>path</code>/<code>paths</code> property deeply
+        (i.e. every element of the array) for changes.
+        This will be expensive for large polygons / polylines.</p>
+
+        <p>If you know that your <code>path</code> is unlikely to change, then
+        leave this as <code>false</code></p>
+
+InfoWindow:
+  description: >
+    <p>Displays an info window. To add your content, write something like
+      <code>&lt;GmapInfoWindow>(Your content here)&lt;/GmapInfoWindow></code> tag</p>
+

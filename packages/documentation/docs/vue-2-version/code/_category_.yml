@@ -1,8 +1,0 @@
-label: API
-position: 3
-collapsible: true
-collapsed: true
-link:
-  type: generated-index
-  title: API
-  description: Documentation about the API of the plugin

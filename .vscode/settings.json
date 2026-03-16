@@ -1,17 +1,7 @@
 {
+  "files.exclude": {
+    "**/dist": true
+  },
   "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true,
-  "cSpell.words": [
-    "closeclick",
-    "Clusterer",
-    "commitlint",
-    "composables",
-    "gmap",
-    "markerclusterer",
-    "Midx",
-    "pano",
-    "rightclick",
-    "VITE",
-    "zindex"
-  ]
+  "files.trimTrailingWhitespace": true
 }

@@ -1,0 +1,146 @@
+<head>
+  <meta charset="utf-8" />
+</head>
+<body>
+  <div id="root">
+    <label>
+      Start at:
+      <gmap-autocomplete @place_changed="updateCenter($event)" />
+    </label>
+
+    <gmap-map :center="center" :zoom="12" style="width: 100%; height: 500px" ref="map">
+      <gmap-polygon v-if="paths.length > 0" :paths="paths" :editable="true" @paths_changed="updateEdited($event)"
+          @rightclick="handleClickForDelete"
+          ref="polygon">
+      </gmap-polygon>
+    </gmap-map>
+
+    <div>
+      <button @click="addPath()">Add Path</button>
+      <button @click="removePath()">Remove Path</button>
+    </div>
+
+    <div>
+      <textarea :value="polygonGeojson" style="width: 100%; height: 200px"
+        @input="readGeojson">
+      </textarea>
+      <div v-if="errorMessage">{{errorMessage}}</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.0/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+  <script src="vue-google-maps.js"></script>
+
+  <script>
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'AIzaSyDf43lPdwlF98RCBsJOFNKOkoEjkwxb5Sc',
+        libraries: 'places',
+      },
+    });
+
+    function closeLoop (path) {
+      return path.concat(path.slice(0, 1))
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      window.XXX = new Vue({
+        el: '#root',
+        data: {
+          center: {lat: 1.38, lng: 103.8},
+          edited: null,
+          paths: [
+          ],
+          mvcPaths: null,
+          errorMessage: null,
+          polygonGeojson: '',
+        },
+        watch: {
+          polygonPaths: _.throttle(function (paths) {
+            if (paths) {
+              this.paths = paths
+              this.polygonGeojson = JSON.stringify({
+                type: 'Polygon',
+                coordinates: this.paths.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat])))
+              }, null, 2)
+            }
+          }, 1000)
+        },
+        computed: {
+          polygonPaths: function () {
+            if (!this.mvcPaths) return null
+
+            let paths = [];
+            for (let i=0; i < this.mvcPaths.getLength(); i++) {
+              let path = [];
+              for (let j=0; j<this.mvcPaths.getAt(i).getLength(); j++) {
+                let point = this.mvcPaths.getAt(i).getAt(j);
+                path.push({lat: point.lat(), lng: point.lng()});
+              }
+              paths.push(path);
+            }
+            return paths
+          },
+        },
+        methods: {
+          updateCenter: function (place) {
+            this.center = {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng(),
+            }
+          },
+          updateEdited: function (mvcPaths) {
+            this.mvcPaths = mvcPaths
+          },
+          addPath: function () {
+            // obtain the bounds, so we can guess how big the polygon should be
+            var bounds = this.$refs.map.$mapObject.getBounds()
+            var northEast = bounds.getNorthEast()
+            var southWest = bounds.getSouthWest()
+            var center = bounds.getCenter()
+            var degree = this.paths.length + 1;
+            var f = Math.pow(0.66, degree)
+
+            // Draw a triangle. Use f to control the size of the triangle.
+            // i.e., every time we add a path, we reduce the size of the triangle
+            var path = [
+              { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
+              { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+              { lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+            ]
+
+            this.paths.push(path)
+          },
+          removePath: function () {
+            this.paths.splice(this.paths.length - 1, 1)
+          },
+          handleClickForDelete($event) {
+            if ($event.vertex) {
+              this.$refs.polygon.$polygonObject.getPaths()
+                .getAt($event.path)
+                .removeAt($event.vertex)
+            }
+          },
+          readGeojson: function ($event) {
+            try {
+              this.polygonGeojson = $event.target.value
+
+              var v = JSON.parse($event.target.value);
+
+              this.paths = v.coordinates.map(linearRing =>
+                linearRing.slice(0, linearRing.length - 1)
+                .map(([lng, lat]) => ({lat, lng}))
+              )
+
+              this.errorMessage = null
+            } catch (err) {
+              this.errorMessage = err.message
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
