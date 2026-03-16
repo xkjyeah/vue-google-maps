@@ -19,6 +19,8 @@ import MapElementMixin from './mixins/map-element'
 import MapElementFactory from './factories/map-element'
 import MountableMixin from './mixins/mountable'
 
+export { loaded } from './factories/promise-lazy'
+
 // HACK: Cluster should be loaded conditionally
 // However in the web version, it's not possible to write
 // `import 'vue2-google-maps/src/components/cluster'`, so we need to

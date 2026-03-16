@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/xkjyeah/vue-google-maps#readme",
   "dependencies": {
-    "marker-clusterer-plus": "^2.1.4"
+    "marker-clusterer-plus": "^2.1.4",
+    "terser-webpack-plugin": "^4.1.0"
   },
   "peerDependencies": {
     "vue": "^2.6.10"
