@@ -4,7 +4,7 @@
   "description": "This is a google map component for Vue.js, updated for Vue 2 compatibility",
   "main": "dist/main.js",
   "scripts": {
-    "build": "npm run build:babel && npm run build:webpack",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build:babel && npm run build:webpack",
     "build:babel": "shx mkdir -p dist && shx rm -r dist && cross-env BUILD_DEV=1 babel src -D --out-dir dist && echo {} > dist/.babelrc",
     "build:webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "build:examples": "npm run build:examples:before && npm run build:examples:webpack",
