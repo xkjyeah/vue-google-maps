@@ -184,7 +184,7 @@ For Nuxt.js projects, please import VueGoogleMaps in the following manner:
 import * as VueGoogleMaps from '~/node_modules/vue2-google-maps'
 ```
 
-Add the following to your `nuxt.config.js`'s `build.extend()`:
+Add the following to your `nuxt.config.js`'s `build.transpile`:
 
 ```js
 transpile: [/^vue2-google-maps($|\/)/]
